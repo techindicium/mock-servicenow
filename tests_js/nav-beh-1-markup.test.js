@@ -38,3 +38,10 @@ test("new stylesheet and scripts are wired in", () => {
   assert.match(html, /<script src="\/static\/js\/directory-logic\.js"><\/script>/);
   assert.match(html, /<script src="\/static\/js\/directory\.js"><\/script>/);
 });
+
+test("nav.css defines the nav-rail and app-shell layout rules", () => {
+  const css = readFileSync(require.resolve("../static/css/nav.css"), "utf8");
+  assert.match(css, /\.app-shell\s*\{/);
+  assert.match(css, /\.nav-rail\s*\{/);
+  assert.match(css, /\.nav-item\.active\s*\{/);
+});

@@ -1,0 +1,25 @@
+/* static/css/nav.css */
+.app-shell { display: flex; min-height: 100vh; }
+.nav-rail {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  flex-shrink: 0;
+  border-right: 1px solid #ccc;
+}
+.nav-item {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  background: none;
+  border: none;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+}
+.nav-item.active { border-left-color: #2563eb; background: #eef2ff; font-weight: 600; }
+.app-main { flex: 1; padding: 1rem; overflow: auto; }
+.view[hidden] { display: none; }
+
+#escalations-table, #users-table, #assignment-groups-table { width: 100%; border-collapse: collapse; }
+#escalations-table td, #users-table td, #assignment-groups-table td { padding: 0.4rem 0.6rem; border-bottom: 1px solid #eee; }
+.owner-unassigned { color: #666; font-style: italic; }
+[role="alert"] { background: #fee2e2; color: #991b1b; padding: 0.5rem 0.75rem; margin-bottom: 0.75rem; }
