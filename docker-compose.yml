@@ -1,0 +1,36 @@
+services:
+  itsm-api:
+    build:
+      context: .
+      dockerfile: docker/itsm-api/Dockerfile
+    ports:
+      - "127.0.0.1:${PORT:-8030}:${PORT:-8030}"
+    environment:
+      PORT: ${PORT:-8030}
+      DATABASE_PATH: /data/mock_servicenow.db
+    volumes:
+      - mock_servicenow_db:/data
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import os, urllib.request; urllib.request.urlopen('http://localhost:' + os.environ.get('PORT', '8030') + '/', timeout=2)"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+  mcp-server:
+    build:
+      context: .
+      dockerfile: docker/mcp-server/Dockerfile
+    ports:
+      - "127.0.0.1:${MCP_PORT:-8031}:${MCP_PORT:-8031}"
+    environment:
+      # Same PORT convention as itsm-api, but a separate host-level override variable
+      # (MCP_PORT) so remapping one service's published port never collides with the other's.
+      PORT: ${MCP_PORT:-8031}
+      API_BASE_URL: http://itsm-api:${PORT:-8030}
+    depends_on:
+      itsm-api:
+        condition: service_healthy
+
+volumes:
+  mock_servicenow_db:
