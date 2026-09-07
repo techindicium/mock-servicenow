@@ -69,6 +69,10 @@ modules:
     name: MCP Server
     paths:
       - mcp_server/
+  - slug: agent-ui
+    name: Agent UI
+    paths:
+      - static/
 
 # ============================================================================
 # External Contexts
