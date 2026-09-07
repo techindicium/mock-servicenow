@@ -6,3 +6,4 @@
 {"event":"lifecycle_step","step":"plan","status":"started","ts":"2026-09-07T22:38:58.133Z"}
 {"event":"lifecycle_step","step":"plan","status":"started","ts":"2026-09-07T22:39:43.177Z"}
 {"event":"step_completed","step":"implement","verdict":"PASS","ts":"2026-09-07T23:07:31.018Z"}
+{"event":"code_drift_detected","drift_source":"static/index.html","drift_at":"2026-09-07T23:13:42.858Z","ts":"2026-09-07T23:13:42.859Z"}

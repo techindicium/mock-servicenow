@@ -1,6 +1,6 @@
 ---
 charter: agent-ui
-status: review-passed
+status: implemented
 risk_level: low
 milestone: mvp
 revision: 2
@@ -8,6 +8,27 @@ charter-revision: 1
 created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
+source-manifest:
+  sha: "7b97f05"
+  files:
+    - static/css/nav.css
+    - static/index.html
+    - static/js/directory-logic.js
+    - static/js/directory.js
+    - static/js/escalations-logic.js
+    - static/js/escalations.js
+    - static/js/nav-logic.js
+    - static/js/nav.js
+    - static/js/ui-errors.js
+    - tests/test_nav_static_assets.py
+    - tests_js/beh-5-error-formatting.test.js
+    - tests_js/directory-beh-4-render-logic.test.js
+    - tests_js/escalations-beh-2-render-logic.test.js
+    - tests_js/escalations-beh-3-patch-payload.test.js
+    - tests_js/nav-beh-1-markup.test.js
+    - tests_js/nav-beh-1-view-switch-logic.test.js
+    - tests_js/nav-beh-1-wiring.test.js
+  computed-at: "2026-09-07T23:20:10.770Z"
 ---
 
 # Live Spec: Escalations screen, directory screen, and navigation shell
