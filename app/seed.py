@@ -220,3 +220,27 @@ def _add_minutes(iso_timestamp: str, minutes: int) -> str:
     dt = datetime.fromisoformat(iso_timestamp.replace("Z", "+00:00"))
     dt += timedelta(minutes=minutes)
     return dt.isoformat().replace("+00:00", "Z")
+
+
+def load_escalations(conn) -> None:
+    existing = conn.execute("SELECT COUNT(*) AS n FROM escalations").fetchone()["n"]
+    if existing == 5:
+        return  # BEH-2: already seeded
+    if existing not in (0, 5):
+        raise SeedError(
+            "SEED_STATE_INCONSISTENT",
+            f"escalations table has {existing} rows; expected 0 or 5",
+        )
+
+    data = json.loads((_FIXTURES / "escalations_seed.json").read_text())
+    for e in data["escalations"]:
+        conn.execute(
+            """
+            INSERT INTO escalations
+                (number, incident_number, account_id, summary, opened_at, closed_at, owner)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (e["number"], e["incident_number"], e["account_id"], e["summary"],
+             e["opened_at"], e["closed_at"], e["owner"]),
+        )
+    conn.commit()

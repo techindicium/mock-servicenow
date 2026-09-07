@@ -100,3 +100,20 @@ def test_incident_and_work_note_loading_is_idempotent(conn):
     assert conn.execute("SELECT COUNT(*) AS n FROM incidents").fetchone()["n"] == 1307
     assert conn.execute("SELECT COUNT(*) AS n FROM work_notes").fetchone()["n"] == 2614
     assert [r["number"] for r in first_pass] == [r["number"] for r in second_pass]
+
+
+def test_escalations_load_five_rows_two_ownerless(conn):
+    from app.seed import load_escalations
+
+    load_escalations(conn)
+    rows = conn.execute("SELECT * FROM escalations").fetchall()
+    assert len(rows) == 5
+    assert sum(1 for r in rows if r["owner"] is None) == 2
+
+
+def test_escalation_loading_is_idempotent(conn):
+    from app.seed import load_escalations
+
+    load_escalations(conn)
+    load_escalations(conn)
+    assert conn.execute("SELECT COUNT(*) AS n FROM escalations").fetchone()["n"] == 5
