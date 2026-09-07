@@ -97,3 +97,15 @@ def list_incidents(
     return IncidentPage(
         items=[_row_to_incident(r) for r in rows], page=page, page_size=page_size, total=total
     )
+
+
+@router.get("/incidents/{number}", response_model=IncidentRead)
+def get_incident(number: str, request: Request):
+    conn = request.app.state.db_conn
+    row = conn.execute("SELECT * FROM incidents WHERE number = ?", (number,)).fetchone()
+    if row is None:
+        raise HTTPException(
+            status_code=404,
+            detail={"message": f"Incident {number} not found", "code": "INCIDENT_NOT_FOUND"},
+        )
+    return _row_to_incident(row)

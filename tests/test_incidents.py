@@ -75,3 +75,19 @@ def test_list_incidents_invalid_opened_after_returns_422(client):
     body = resp.json()
     assert body["code"] == "VALIDATION_ERROR"
     assert "opened_after" in body["message"]
+
+
+def test_get_incident_by_number_returns_200(client):
+    conn = client.app.state.db_conn
+    _create(conn, "TICKET-000042")
+    resp = client.get("/incidents/TICKET-000042")
+    assert resp.status_code == 200
+    assert resp.json()["number"] == "TICKET-000042"
+
+
+def test_get_incident_unknown_number_returns_404(client):
+    resp = client.get("/incidents/TICKET-999999")
+    assert resp.status_code == 404
+    body = resp.json()
+    assert body["code"] == "INCIDENT_NOT_FOUND"
+    assert "TICKET-999999" in body["message"]
