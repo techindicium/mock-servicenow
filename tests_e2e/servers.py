@@ -126,3 +126,74 @@ def start_itsm_api(tmp_path: Path) -> Iterator[str]:
             except subprocess.TimeoutExpired:
                 proc.kill()
                 proc.wait(timeout=5)
+
+
+@contextlib.contextmanager
+def start_mcp_server(api_base_url: str) -> Iterator[str]:
+    """Start the real mcp-server process as a subprocess; yield its base_url.
+
+    Args:
+        api_base_url: value to set API_BASE_URL to — a live itsm-api's base_url in the normal
+            (dual-server) topology, or a deliberately unreachable URL for mcp-e2e.spec.md's
+            BEH-7 scenario (a dedicated caller uses this same helper for that; see
+            mcp_server_unreachable in tests_e2e/conftest.py).
+
+    Yields:
+        mcp-server's own base URL (e.g. "http://127.0.0.1:54232"). This is NOT the MCP endpoint
+        URL — callers append the SDK's default streamable-http path themselves (see
+        tests_e2e/mcp_client.py::connect).
+
+    Raises:
+        E2EServerStartTimeout: the process's port never accepted a TCP connection within the
+            startup timeout (E2E_SERVER_START_TIMEOUT in mcp-e2e.spec.md). This is a coarse
+            "is anything listening" check, not a full MCP handshake, so this fixture stays
+            agnostic of BEH-7's own scenario (a dead API_BASE_URL) — mcp-server itself must
+            still start up cleanly even when its upstream is unreachable; only its tool calls
+            fail in that case.
+    """
+    port = _free_port()
+    base_url = f"http://127.0.0.1:{port}"
+    env = {**os.environ, "PORT": str(port), "API_BASE_URL": api_base_url}
+    proc = subprocess.Popen(
+        [sys.executable, "-m", "mcp_server.server"],
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+    )
+    try:
+        deadline = time.monotonic() + _STARTUP_TIMEOUT_SECONDS
+        while time.monotonic() < deadline:
+            if proc.poll() is not None:
+                last_output = proc.stdout.read() if proc.stdout else ""
+                raise E2EServerStartTimeout(
+                    f"mcp-server process exited early (code {proc.returncode}) before "
+                    f"accepting connections on {base_url} within the "
+                    f"{_STARTUP_TIMEOUT_SECONDS}s startup timeout. Last output:\n{last_output}"
+                )
+            try:
+                with socket.create_connection(("127.0.0.1", port), timeout=1):
+                    break
+            except OSError:
+                pass
+            time.sleep(_POLL_INTERVAL_SECONDS)
+        else:
+            proc.kill()
+            try:
+                proc.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                pass
+            last_output = proc.stdout.read() if proc.stdout else ""
+            raise E2EServerStartTimeout(
+                f"mcp-server did not accept connections on {base_url} within the "
+                f"{_STARTUP_TIMEOUT_SECONDS}s startup timeout. Last output:\n{last_output}"
+            )
+        yield base_url
+    finally:
+        if proc.poll() is None:
+            proc.terminate()
+            try:
+                proc.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                proc.wait(timeout=5)
