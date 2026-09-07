@@ -367,3 +367,60 @@ def load_roster(conn) -> None:
             (user["name"], user["role"], user["assignment_group"]),
         )
     conn.commit()
+
+
+_EXPECTED_COUNTS = {
+    "incidents": 1307, "work_notes": 2614, "escalations": 5,
+    "sys_user": 11, "assignment_group": 3,
+}
+
+
+def _table_counts(conn) -> dict:
+    return {
+        table: conn.execute(f"SELECT COUNT(*) AS n FROM {table}").fetchone()["n"]
+        for table in (*_EXPECTED_COUNTS, "task_sla")
+    }
+
+
+def seed_all(conn) -> None:
+    """Idempotent, whole-database seed entry point. Empty database -> full seed. Already fully
+    seeded (every fixed-count table matches, task_sla non-empty) -> no-op. Anything else (a
+    partial prior run, a mid-migration state) -> SEED_STATE_INCONSISTENT, per this spec's Error
+    Cases; this command never guesses."""
+    counts = _table_counts(conn)
+    if all(counts[t] == 0 for t in _EXPECTED_COUNTS) and counts["task_sla"] == 0:
+        pass  # fresh database — fall through to full seed
+    elif all(counts[t] == n for t, n in _EXPECTED_COUNTS.items()) and counts["task_sla"] > 0:
+        return  # already fully seeded — BEH-2 no-op
+    else:
+        raise SeedError(
+            "SEED_STATE_INCONSISTENT",
+            f"seed state is neither empty nor fully seeded: {counts}",
+        )
+
+    load_incidents_and_work_notes(conn)
+    load_escalations(conn)
+    load_roster(conn)
+    derive_task_sla(conn)  # last: reads the incidents/work_notes just loaded
+
+
+def main() -> None:
+    """`python -m app.seed` — the documented, explicitly-invoked seed command. Never called from
+    app startup (see this plan's Architecture section)."""
+    import os
+    import sys
+
+    from app.db import create_schema, get_connection
+
+    db_path = os.environ.get("ITSM_DB_PATH", "itsm.db")
+    conn = get_connection(db_path)
+    try:
+        create_schema(conn)
+        seed_all(conn)
+    except SeedError as exc:
+        print(f"{exc.code}: {exc}", file=sys.stderr)
+        raise SystemExit(1) from exc
+
+
+if __name__ == "__main__":
+    main()

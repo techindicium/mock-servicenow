@@ -222,3 +222,35 @@ def test_roster_loading_is_idempotent(conn):
     load_roster(conn)
     assert conn.execute("SELECT COUNT(*) AS n FROM sys_user").fetchone()["n"] == 11
     assert conn.execute("SELECT COUNT(*) AS n FROM assignment_group").fetchone()["n"] == 3
+
+
+def test_seed_all_is_idempotent_across_many_repeated_runs(conn):
+    from app.seed import seed_all
+
+    counts_after = []
+    for _ in range(4):  # "any number of repeated runs, not just a second one" (BEH-2)
+        seed_all(conn)
+        counts_after.append({
+            "incidents": conn.execute("SELECT COUNT(*) AS n FROM incidents").fetchone()["n"],
+            "work_notes": conn.execute("SELECT COUNT(*) AS n FROM work_notes").fetchone()["n"],
+            "escalations": conn.execute("SELECT COUNT(*) AS n FROM escalations").fetchone()["n"],
+            "task_sla": conn.execute("SELECT COUNT(*) AS n FROM task_sla").fetchone()["n"],
+            "sys_user": conn.execute("SELECT COUNT(*) AS n FROM sys_user").fetchone()["n"],
+            "assignment_group": conn.execute("SELECT COUNT(*) AS n FROM assignment_group").fetchone()["n"],
+        })
+    fixed_counts = {k: v for k, v in counts_after[0].items() if k != "task_sla"}
+    assert fixed_counts == {
+        "incidents": 1307, "work_notes": 2614, "escalations": 5,
+        "sys_user": 11, "assignment_group": 3,
+    }
+    assert counts_after[0]["task_sla"] > 0
+    assert all(c == counts_after[0] for c in counts_after[1:])  # stable across all 4 runs
+
+
+def test_seed_all_on_partial_database_raises_seed_state_inconsistent(conn):
+    from app.seed import SeedError, load_incidents_and_work_notes, seed_all
+
+    load_incidents_and_work_notes(conn)  # incidents seeded, everything else still empty
+    with pytest.raises(SeedError) as exc_info:
+        seed_all(conn)
+    assert exc_info.value.code == "SEED_STATE_INCONSISTENT"
