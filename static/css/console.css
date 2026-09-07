@@ -125,4 +125,8 @@ dl#record-fields dd {
   margin: 0;
 }
 
-.sla-breached { /* visibly distinct, not alarming — filled in by Task 5 */ }
+.sla-breached {
+  /* Visibly distinct, never alarming or apologetic — a breach is a fact (Principle 6). */
+  background: #fff3e0;
+  font-weight: 600;
+}

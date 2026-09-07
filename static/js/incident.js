@@ -138,6 +138,28 @@
     }
   }
 
+  function renderSlaRow(row) {
+    const tr = document.createElement("tr");
+    if (row.breachClass) tr.className = row.breachClass;
+    const cells = [
+      row.sla_definition, String(row.target_minutes),
+      row.actual_minutes === null ? "—" : String(row.actual_minutes),
+      row.has_breached ? "Yes" : "No", row.business_time_only ? "Yes" : "No",
+    ];
+    for (const value of cells) {
+      const td = document.createElement("td");
+      td.textContent = value;
+      tr.appendChild(td);
+    }
+    return tr;
+  }
+
+  function renderSlaPanel(rows) {
+    const body = document.getElementById("sla-table-body");
+    body.innerHTML = "";
+    for (const row of IncidentLogic.shapeSlaRows(rows)) body.appendChild(renderSlaRow(row));
+  }
+
   async function loadIncidentRecord(number) {
     try {
       const incident = await fetchJson(`/incidents/${number}`);
@@ -156,6 +178,12 @@
       renderWorkNoteTimeline(notePage.items);
     } catch (err) {
       showError(IncidentLogic.formatFetchError("Loading work notes", err));
+    }
+    try {
+      const slaPage = await fetchJson(`/sla?incident_number=${encodeURIComponent(number)}`);
+      renderSlaPanel(slaPage.items);
+    } catch (err) {
+      showError(IncidentLogic.formatFetchError("Loading SLA records", err));
     }
   }
 

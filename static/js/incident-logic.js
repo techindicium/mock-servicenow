@@ -74,10 +74,19 @@
     return { valid: Object.keys(errors).length === 0, errors };
   }
 
+  function shapeSlaRows(rows) {
+    // A breach is a fact this function surfaces, never a condition it filters, hides, or
+    // annotates as an error — constitution Principle 6 / spec BEH-6.
+    return (Array.isArray(rows) ? rows : []).map((r) => ({
+      ...r,
+      breachClass: r.has_breached ? "sla-breached" : "",
+    }));
+  }
+
   return {
     INCIDENT_STATES, PRIORITIES, NOTE_TYPES, formatFetchError,
     buildIncidentQueryParams, shapePaginationInfo,
     formatNullableField, shapeIncidentRecordFields, sortWorkNotesChronological,
-    validateWorkNoteForm,
+    validateWorkNoteForm, shapeSlaRows,
   };
 });
