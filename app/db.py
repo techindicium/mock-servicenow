@@ -104,3 +104,25 @@ def next_incident_number(conn: sqlite3.Connection) -> str:
         if match:
             max_seq = max(max_seq, int(match.group(1)))
     return f"TICKET-{max_seq + 1:06d}"
+
+
+def allocate_work_note_sys_id(conn: sqlite3.Connection) -> str:
+    """Collision-proof INTERACTION-NNNNNNN allocation (SA-1 fix), mirroring the Incident
+    `number` scheme's "guaranteed not to collide with any seeded or previously created
+    number" guarantee.
+
+    Derives the next sequence number from MAX(existing sys_id sequence) across both seeded
+    and previously created rows (seed data uses the identical scheme), so it always continues
+    past the highest number on disk rather than restarting at a count-based value. The
+    `sys_id` PRIMARY KEY constraint is a second, independent backstop: if a concurrent insert
+    claims the derived candidate between this read and the caller's write, the caller's
+    INSERT raises sqlite3.IntegrityError and must re-call this function for a fresh candidate
+    (see the create_work_note insert-with-retry loop) rather than ever overwriting or
+    duplicating a row.
+    """
+    row = conn.execute(
+        "SELECT COALESCE(MAX(CAST(SUBSTR(sys_id, 13) AS INTEGER)), 0) AS max_seq "
+        "FROM work_notes"
+    ).fetchone()
+    next_seq = row["max_seq"] + 1
+    return f"INTERACTION-{next_seq:07d}"

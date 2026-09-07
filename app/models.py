@@ -2,11 +2,12 @@
 # below. Each sibling itsm-api plan's own Task 1 (work-notes, escalations, sla-records,
 # user-directory) appends its own entity's models to this same file — extending it, never
 # recreating it.
-from typing import Literal
+from typing import List, Literal
 
 from pydantic import BaseModel
 
 INCIDENT_STATES = ("new", "in_progress", "on_hold", "resolved", "closed")
+NOTE_TYPES = ("comment", "work_note", "state_change", "proposal_sent")
 
 
 class IncidentCreate(BaseModel):
@@ -49,6 +50,28 @@ class IncidentPatch(BaseModel):
 
 class IncidentPage(BaseModel):
     items: list[IncidentRead]
+    page: int
+    page_size: int
+    total: int
+
+
+class WorkNoteCreate(BaseModel):
+    created_by: str
+    note_type: Literal["comment", "work_note", "state_change", "proposal_sent"]
+    body: str
+
+
+class WorkNoteRead(BaseModel):
+    sys_id: str
+    incident_number: str
+    created_at: str
+    created_by: str
+    note_type: str
+    body: str
+
+
+class WorkNoteListResponse(BaseModel):
+    items: List[WorkNoteRead]
     page: int
     page_size: int
     total: int
