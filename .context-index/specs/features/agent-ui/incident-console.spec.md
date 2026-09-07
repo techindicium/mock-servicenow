@@ -9,7 +9,7 @@ created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
 source-manifest:
-  sha: "56c8d6e"
+  sha: "6261530"
   files:
     - .context-index/governance/gates.yaml
     - app/main.py
@@ -27,7 +27,7 @@ source-manifest:
     - tests_js/beh-7-edit-incident.test.js
     - tests_js/beh-8-create-incident.test.js
     - tests_js/beh-9-error-formatting.test.js
-  computed-at: "2026-09-07T23:20:16.909Z"
+  computed-at: "2026-09-07T23:39:07.140Z"
 ---
 
 # Live Spec: Incident console (list, record view, work notes, SLA, editing, create)

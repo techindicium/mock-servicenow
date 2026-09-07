@@ -9,7 +9,7 @@ created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
 source-manifest:
-  sha: "cdc8dca"
+  sha: "8c7838c"
   files:
     - .context-index/governance/gates.yaml
     - tests/test_gates_config.py
@@ -27,7 +27,7 @@ source-manifest:
     - tests_e2e/test_server_fixture.py
     - tests_e2e/test_sla_e2e.py
     - tests_e2e/test_work_notes_e2e.py
-  computed-at: "2026-09-07T23:35:27.951Z"
+  computed-at: "2026-09-07T23:39:07.228Z"
 ---
 
 # Live Spec: End-to-end API test suite (real HTTP)

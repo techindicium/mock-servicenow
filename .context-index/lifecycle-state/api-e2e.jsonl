@@ -31,3 +31,4 @@
 {"event":"step_completed","step":"validate","verdict":"PASS_WITH_NOTES","ts":"2026-09-07T19:50:41.506Z"}
 {"event":"code_drift_detected","drift_source":"tests_e2e/servers.py","drift_at":"2026-09-07T20:03:18.166Z","ts":"2026-09-07T20:03:18.167Z"}
 {"event":"code_drift_detected","drift_source":"tests_e2e/conftest.py","drift_at":"2026-09-07T23:25:37.173Z","ts":"2026-09-07T23:25:37.174Z"}
+{"event":"code_drift_detected","drift_source":".context-index/governance/gates.yaml","drift_at":"2026-09-07T23:38:15.758Z","ts":"2026-09-07T23:38:15.758Z"}
