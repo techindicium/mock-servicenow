@@ -265,11 +265,11 @@ rationale `board-view.plan.md` documents applies here identically.
 |---|-------|-----------|----------|------------|-------|
 | 1 | Static shell + shared fetch/render helpers | medium | unit | — | 4 create, 2 modify |
 | 2 | Incident list view | medium | unit | Task 1 | 1 create, 2 modify |
-| 3 | Incident record view (fields + work-note timeline render) | medium | unit | Task 2 | 2 create, 2 modify |
+| 3 | Incident record view (fields + work-note timeline render) | medium | unit | Task 2 | 2 create, 3 modify |
 | 4 | Add work note | small | unit | Task 3 | 1 create, 2 modify |
-| 5 | SLA panel | small | unit | Task 3 | 1 create, 2 modify |
-| 6 | Edit incident fields [Confirm no guard exists] | medium | unit | Task 3 | 1 create, 2 modify |
-| 7 | Create incident | small | unit | Task 2, Task 6 | 1 create, 2 modify |
+| 5 | SLA panel | small | unit | Task 3 | 1 create, 3 modify |
+| 6 | Edit incident fields [Confirm no guard exists] | medium | unit | Task 3 | 1 create, 3 modify |
+| 7 | Create incident | small | unit | Task 2, Task 6 | 1 create, 3 modify |
 
 All tasks resolve to the `unit` strategy (source: fallback — no `test_strategy` in spec
 frontmatter, no `test_strategies` entries in `manifest.yaml` matching `static/**`/`tests_js/**`

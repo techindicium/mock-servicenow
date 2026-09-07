@@ -1,6 +1,6 @@
 ---
 charter: agent-ui
-status: review-passed
+status: implemented
 risk_level: medium
 milestone: mvp
 revision: 2
@@ -8,6 +8,26 @@ charter-revision: 1
 created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
+source-manifest:
+  sha: "cbd6215"
+  files:
+    - .context-index/governance/gates.yaml
+    - app/main.py
+    - static/css/console.css
+    - static/index.html
+    - static/js/incident-logic.js
+    - static/js/incident.js
+    - tests/test_static_assets.py
+    - tests_js/beh-1-list-load.test.js
+    - tests_js/beh-2-list-filters.test.js
+    - tests_js/beh-3-record-view.test.js
+    - tests_js/beh-4-work-note-timeline.test.js
+    - tests_js/beh-5-add-work-note.test.js
+    - tests_js/beh-6-sla-panel.test.js
+    - tests_js/beh-7-edit-incident.test.js
+    - tests_js/beh-8-create-incident.test.js
+    - tests_js/beh-9-error-formatting.test.js
+  computed-at: "2026-09-07T23:07:31.102Z"
 ---
 
 # Live Spec: Incident console (list, record view, work notes, SLA, editing, create)
