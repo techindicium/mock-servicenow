@@ -157,3 +157,65 @@ def test_create_incident_malformed_json_returns_400(client):
     )
     assert resp.status_code == 400
     assert resp.json()["code"] == "MALFORMED_JSON"
+
+
+def test_patch_incident_updates_given_fields_and_returns_200(client):
+    created = client.post("/incidents", json=_REQUIRED).json()
+    resp = client.patch(
+        f"/incidents/{created['number']}",
+        json={"state": "resolved", "priority": 1, "assigned_to": "dana", "assignment_group": "Support Tier 1"},
+    )
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["state"] == "resolved"
+    assert body["priority"] == 1
+    assert body["assigned_to"] == "dana"
+    assert body["assignment_group"] == "Support Tier 1"
+
+
+def test_patch_incident_ignores_number_and_account_id_and_opened_at_in_body(client):
+    created = client.post("/incidents", json=_REQUIRED).json()
+    resp = client.patch(
+        f"/incidents/{created['number']}",
+        json={"number": "TICKET-999999", "account_id": "ACC-OTHER",
+              "opened_at": "2000-01-01T00:00:00Z", "priority": 3},
+    )
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["number"] == created["number"]
+    assert body["account_id"] == created["account_id"]
+    assert body["opened_at"] == created["opened_at"]
+    assert body["priority"] == 3
+
+
+def test_patch_incident_allows_resolving_with_no_business_rule_guard(client):
+    # Preconditions: any actor may resolve any Incident regardless of open SLA breach or
+    # unanswered customer — this HTTP layer adds no such guard (constitution Principle 5).
+    created = client.post("/incidents", json=dict(_REQUIRED, state="new")).json()
+    resp = client.patch(f"/incidents/{created['number']}", json={"state": "closed"})
+    assert resp.status_code == 200
+    assert resp.json()["state"] == "closed"
+
+
+def test_patch_incident_invalid_state_returns_422_and_persists_no_change(client):
+    created = client.post("/incidents", json=_REQUIRED).json()
+    resp = client.patch(f"/incidents/{created['number']}", json={"state": "bogus"})
+    assert resp.status_code == 422
+    body = resp.json()
+    assert body["code"] == "VALIDATION_ERROR"
+    assert "state" in body["message"]
+    unchanged = client.get(f"/incidents/{created['number']}").json()
+    assert unchanged["state"] == _REQUIRED["state"]
+
+
+def test_patch_incident_invalid_priority_returns_422(client):
+    created = client.post("/incidents", json=_REQUIRED).json()
+    resp = client.patch(f"/incidents/{created['number']}", json={"priority": 9})
+    assert resp.status_code == 422
+    assert resp.json()["code"] == "VALIDATION_ERROR"
+
+
+def test_patch_incident_unknown_number_returns_404(client):
+    resp = client.patch("/incidents/TICKET-999999", json={"priority": 2})
+    assert resp.status_code == 404
+    assert resp.json()["code"] == "INCIDENT_NOT_FOUND"

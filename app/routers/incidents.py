@@ -3,9 +3,17 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, HTTPException, Request
 
 from app.db import next_incident_number
-from app.models import INCIDENT_STATES, IncidentCreate, IncidentPage, IncidentRead
+from app.models import (
+    INCIDENT_STATES,
+    IncidentCreate,
+    IncidentPage,
+    IncidentPatch,
+    IncidentRead,
+)
 
 router = APIRouter()
+
+_PATCHABLE_FIELDS = ("state", "priority", "assigned_to", "assignment_group")
 
 
 def _row_to_incident(row) -> IncidentRead:
@@ -133,5 +141,29 @@ def create_incident(payload: IncidentCreate, request: Request):
         ),
     )
     conn.commit()
+    row = conn.execute("SELECT * FROM incidents WHERE number = ?", (number,)).fetchone()
+    return _row_to_incident(row)
+
+
+@router.patch("/incidents/{number}", response_model=IncidentRead)
+def patch_incident(number: str, payload: IncidentPatch, request: Request):
+    conn = request.app.state.db_conn
+    row = conn.execute("SELECT * FROM incidents WHERE number = ?", (number,)).fetchone()
+    if row is None:
+        raise HTTPException(
+            status_code=404,
+            detail={"message": f"Incident {number} not found", "code": "INCIDENT_NOT_FOUND"},
+        )
+
+    updates = payload.model_dump(exclude_unset=True)
+    set_clauses = [f"{field} = ?" for field in _PATCHABLE_FIELDS if field in updates]
+    values = [updates[field] for field in _PATCHABLE_FIELDS if field in updates]
+    if set_clauses:
+        conn.execute(
+            f"UPDATE incidents SET {', '.join(set_clauses)} WHERE number = ?",
+            (*values, number),
+        )
+        conn.commit()
+
     row = conn.execute("SELECT * FROM incidents WHERE number = ?", (number,)).fetchone()
     return _row_to_incident(row)
