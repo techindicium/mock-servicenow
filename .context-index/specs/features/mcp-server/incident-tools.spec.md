@@ -1,6 +1,6 @@
 ---
 charter: mcp-server
-status: review-passed
+status: implemented
 risk_level: medium
 milestone: mvp
 revision: 2
@@ -8,6 +8,19 @@ charter-revision: 1
 created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
+source-manifest:
+  sha: "2deb7ee"
+  files:
+    - mcp_server/client.py
+    - mcp_server/config.py
+    - mcp_server/errors.py
+    - mcp_server/server.py
+    - mcp_server/tools/incidents.py
+    - requirements.txt
+    - tests/mcp_server/conftest.py
+    - tests/mcp_server/test_client.py
+    - tests/mcp_server/test_incident_tools.py
+  computed-at: "2026-09-07T18:49:50.508Z"
 ---
 
 # Live Spec: Incident MCP tools (list/get/create/update)

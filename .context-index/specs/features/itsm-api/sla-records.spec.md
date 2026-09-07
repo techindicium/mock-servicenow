@@ -1,6 +1,6 @@
 ---
 charter: itsm-api
-status: review-passed
+status: implemented
 risk_level: low
 milestone: mvp
 revision: 1
@@ -8,6 +8,16 @@ charter-revision: 1
 created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
+source-manifest:
+  sha: "13d7446"
+  files:
+    - app/db.py
+    - app/main.py
+    - app/models.py
+    - app/routers/sla.py
+    - tests/conftest.py
+    - tests/test_sla.py
+  computed-at: "2026-09-07T18:49:50.276Z"
 ---
 
 # Live Spec: Task SLA record listing

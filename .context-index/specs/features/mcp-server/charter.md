@@ -1,7 +1,7 @@
 ---
 status: approved
 kind: feature
-revision: 1
+revision: 5
 updated: 2026-09-07
 ---
 
@@ -86,10 +86,10 @@ behaviour around these tools. A guarded MCP here would remove the exercise.
 
 | Capability | Description | Priority | Milestone | Status |
 |-----------|-------------|----------|-------|--------|
-| list_incidents tool | Wraps `GET /incidents`, all filter/pagination parameters | must-have | mvp | planned |
-| get_incident tool | Wraps `GET /incidents/{number}` | must-have | mvp | planned |
-| create_incident tool | Wraps `POST /incidents` | must-have | mvp | planned |
-| update_incident tool | Wraps `PATCH /incidents/{number}`, unguarded | must-have | mvp | planned |
+| list_incidents tool | Wraps `GET /incidents`, all filter/pagination parameters | must-have | mvp | implemented |
+| get_incident tool | Wraps `GET /incidents/{number}` | must-have | mvp | implemented |
+| create_incident tool | Wraps `POST /incidents` | must-have | mvp | implemented |
+| update_incident tool | Wraps `PATCH /incidents/{number}`, unguarded | must-have | mvp | implemented |
 | list_work_notes tool | Wraps `GET /incidents/{number}/work_notes` | must-have | mvp | planned |
 | add_work_note tool | Wraps `POST /incidents/{number}/work_notes`, unguarded author | must-have | mvp | planned |
 | list_escalations tool | Wraps `GET /escalations`, filter parameters | must-have | mvp | planned |

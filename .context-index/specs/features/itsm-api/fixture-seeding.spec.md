@@ -1,6 +1,6 @@
 ---
 charter: itsm-api
-status: review-passed
+status: implemented
 risk_level: medium
 milestone: mvp
 revision: 1
@@ -8,6 +8,19 @@ charter-revision: 1
 created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
+source-manifest:
+  sha: "fd3cdc7"
+  files:
+    - app/fixtures/seed/accounts_tiers.json
+    - app/fixtures/seed/escalations_seed.json
+    - app/fixtures/seed/interactions.csv
+    - app/fixtures/seed/narrative_tickets.json
+    - app/fixtures/seed/roster_seed.json
+    - app/fixtures/seed/tickets.csv
+    - app/fixtures/seed/tier_commitments.json
+    - app/seed.py
+    - tests/test_seed.py
+  computed-at: "2026-09-07T18:49:50.393Z"
 ---
 
 # Live Spec: Fixture seed data

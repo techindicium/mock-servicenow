@@ -9,15 +9,14 @@ created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
 source-manifest:
-  sha: "f4beef0"
+  sha: "0c4b346"
   files:
     - app/main.py
     - app/models.py
     - app/routers/escalations.py
     - tests/conftest.py
     - tests/test_escalations.py
-  computed-at: "2026-09-07T18:33:26.171Z"
-drift_detected: true
+  computed-at: "2026-09-07T18:49:50.623Z"
 ---
 
 # Live Spec: Escalation list, get, and update

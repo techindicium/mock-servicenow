@@ -1,6 +1,6 @@
 ---
 charter: itsm-api
-status: review-passed
+status: implemented
 risk_level: medium
 milestone: mvp
 revision: 1
@@ -8,6 +8,17 @@ charter-revision: 1
 created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
+source-manifest:
+  sha: "c4c2174"
+  files:
+    - app/db.py
+    - app/main.py
+    - app/models.py
+    - app/routers/work_notes.py
+    - tests/conftest.py
+    - tests/test_db.py
+    - tests/test_work_notes.py
+  computed-at: "2026-09-07T18:49:50.162Z"
 ---
 
 # Live Spec: Work notes list and add

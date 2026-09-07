@@ -1,6 +1,6 @@
 ---
 charter: itsm-api
-status: review-passed
+status: implemented
 risk_level: low
 milestone: mvp
 revision: 2
@@ -8,6 +8,15 @@ charter-revision: 1
 created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
+source-manifest:
+  sha: "ce7c750"
+  files:
+    - app/main.py
+    - app/models.py
+    - app/routers/directory.py
+    - pytest.ini
+    - tests/test_directory.py
+  computed-at: "2026-09-07T18:49:50.859Z"
 ---
 
 # Live Spec: User and assignment group directory

@@ -9,7 +9,7 @@ created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
 source-manifest:
-  sha: "a33fa68"
+  sha: "0f80155"
   files:
     - app/db.py
     - app/errors.py
@@ -21,8 +21,7 @@ source-manifest:
     - tests/conftest.py
     - tests/test_db.py
     - tests/test_incidents.py
-  computed-at: "2026-09-07T18:26:07.486Z"
-drift_detected: true
+  computed-at: "2026-09-07T18:49:50.740Z"
 ---
 
 # Live Spec: Incident lifecycle CRUD
