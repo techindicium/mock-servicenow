@@ -297,3 +297,155 @@ async def test_list_sla_records_5xx_raises_upstream_error_with_body_verbatim():
         await _client(handler).list_sla_records()
     assert exc_info.value.status_code == 500
     assert exc_info.value.message == "internal error"
+
+
+@pytest.mark.anyio
+async def test_list_work_notes_returns_api_response_unmodified():
+    def handler(request):
+        assert request.method == "GET"
+        assert request.url.path == "/incidents/INC0010001/work_notes"
+        return httpx.Response(
+            200,
+            json=[{
+                "sys_id": "INTERACTION-0000001", "incident_number": "INC0010001",
+                "created_by": "customer", "note_type": "comment", "body": "Still broken",
+                "created_at": "2026-09-05 00:00:00",
+            }],
+        )
+
+    result = await _client(handler).list_work_notes("INC0010001")
+    assert result[0]["sys_id"] == "INTERACTION-0000001"
+
+
+@pytest.mark.anyio
+async def test_list_work_notes_passes_pagination_params_as_query():
+    def handler(request):
+        assert request.url.params["page"] == "2"
+        assert request.url.params["page_size"] == "50"
+        return httpx.Response(200, json=[])
+
+    await _client(handler).list_work_notes("INC0010001", page=2, page_size=50)
+
+
+@pytest.mark.anyio
+async def test_list_work_notes_unknown_incident_number_raises_upstream_error_verbatim():
+    def handler(request):
+        return httpx.Response(
+            404, json={"message": "Incident INC9999999 not found", "code": "INCIDENT_NOT_FOUND"}
+        )
+
+    with pytest.raises(UpstreamError) as exc_info:
+        await _client(handler).list_work_notes("INC9999999")
+    assert exc_info.value.status_code == 404
+    assert exc_info.value.message == "Incident INC9999999 not found"
+
+
+@pytest.mark.anyio
+async def test_add_work_note_returns_created_work_note_with_sys_id():
+    def handler(request):
+        assert request.method == "POST"
+        assert request.url.path == "/incidents/INC0010001/work_notes"
+        import json as _json
+        body = _json.loads(request.content)
+        assert body == {
+            "created_by": "assist", "note_type": "comment", "body": "Auto-triaged",
+        }
+        return httpx.Response(
+            201,
+            json={
+                "sys_id": "INTERACTION-0000002", "incident_number": "INC0010001",
+                "created_by": "assist", "note_type": "comment", "body": "Auto-triaged",
+                "created_at": "2026-09-05 00:00:01",
+            },
+        )
+
+    result = await _client(handler).add_work_note("INC0010001", "assist", "comment", "Auto-triaged")
+    assert result["sys_id"] == "INTERACTION-0000002"
+    assert result["created_by"] == "assist"
+
+
+@pytest.mark.anyio
+async def test_add_work_note_unknown_incident_number_raises_upstream_error_verbatim():
+    def handler(request):
+        return httpx.Response(
+            404, json={"message": "Incident INC9999999 not found", "code": "INCIDENT_NOT_FOUND"}
+        )
+
+    with pytest.raises(UpstreamError) as exc_info:
+        await _client(handler).add_work_note("INC9999999", "assist", "comment", "x")
+    assert exc_info.value.status_code == 404
+
+
+@pytest.mark.anyio
+async def test_add_work_note_invalid_note_type_raises_upstream_error_for_422():
+    def handler(request):
+        return httpx.Response(
+            422,
+            json={
+                "message": "note_type must be one of: comment, work_note, state_change, "
+                           "proposal_sent",
+                "code": "VALIDATION_ERROR",
+            },
+        )
+
+    with pytest.raises(UpstreamError) as exc_info:
+        await _client(handler).add_work_note("INC0010001", "assist", "bogus", "x")
+    assert exc_info.value.status_code == 422
+
+
+@pytest.mark.anyio
+async def test_request_maps_connection_failure_to_unreachable_error():
+    def handler(request):
+        raise httpx.ConnectError("connection refused")
+
+    with pytest.raises(UpstreamUnreachableError):
+        await _client(handler).list_work_notes("INC0010001")
+
+
+@pytest.mark.anyio
+async def test_request_maps_5xx_to_upstream_error():
+    def handler(request):
+        return httpx.Response(500, json={"message": "Internal Server Error", "code": "INTERNAL"})
+
+    with pytest.raises(UpstreamError) as exc_info:
+        await _client(handler).list_work_notes("INC0010001")
+    assert exc_info.value.status_code == 500
+
+
+@pytest.mark.anyio
+async def test_list_users_returns_api_response_unmodified():
+    def handler(request):
+        assert request.method == "GET"
+        assert request.url.path == "/users"
+        return httpx.Response(
+            200,
+            json={
+                "items": [{"name": "Rui Bastos", "role": "Support Manager", "assignment_group": None}],
+                "page": 1,
+                "page_size": 20,
+                "total": 1,
+            },
+        )
+
+    result = await _client(handler).list_users()
+    assert result["items"][0]["name"] == "Rui Bastos"
+
+
+@pytest.mark.anyio
+async def test_list_users_5xx_raises_upstream_error_verbatim():
+    def handler(request):
+        return httpx.Response(500, json={"message": "internal error", "code": "INTERNAL_ERROR"})
+
+    with pytest.raises(UpstreamError) as exc_info:
+        await _client(handler).list_users()
+    assert exc_info.value.status_code == 500
+    assert exc_info.value.message == "internal error"
+
+
+@pytest.mark.anyio
+async def test_list_users_unreachable_api_raises_upstream_unreachable_error():
+    def handler(request):
+        raise httpx.ConnectError("Connection refused", request=request)
+
+    with pytest.raises(UpstreamUnreachableError):
+        await _client(handler).list_users()
