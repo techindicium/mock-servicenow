@@ -26,3 +26,11 @@ test("BEH-9: a 422 message surfaces the API's own field-naming text verbatim", (
   });
   assert.match(msg, /state must be one of/);
 });
+
+test("BEH-9/UI_NOT_FOUND: a 404 on GET /incidents/{number} surfaces a not-found message", () => {
+  const msg = formatFetchError("Loading incident TICKET-999999", {
+    status: 404, message: "Incident TICKET-999999 not found",
+  });
+  assert.match(msg, /TICKET-999999/);
+  assert.match(msg, /not found/);
+});

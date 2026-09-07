@@ -32,8 +32,37 @@
     return { page, pageSize, total, totalPages, hasPrev: page > 1, hasNext: page < totalPages };
   }
 
+  function formatNullableField(value, placeholder) {
+    return value === null || value === undefined || value === "" ? placeholder : value;
+  }
+
+  function shapeIncidentRecordFields(incident) {
+    return [
+      { label: "Number", value: incident.number },
+      { label: "Account", value: incident.account_id },
+      { label: "Category", value: incident.category },
+      { label: "Short description", value: incident.short_description },
+      { label: "Description", value: incident.description },
+      { label: "State", value: incident.state },
+      { label: "Priority", value: String(incident.priority) },
+      { label: "Opened at", value: incident.opened_at },
+      { label: "Resolved at", value: formatNullableField(incident.resolved_at, "Not resolved") },
+      { label: "Assigned to", value: formatNullableField(incident.assigned_to, "Unassigned") },
+      { label: "Assignment group",
+        value: formatNullableField(incident.assignment_group, "Unassigned") },
+      { label: "Escalated", value: incident.escalated ? "Yes" : "No" },
+    ];
+  }
+
+  function sortWorkNotesChronological(notes) {
+    return [...(Array.isArray(notes) ? notes : [])].sort((a, b) =>
+      a.created_at < b.created_at ? -1 : a.created_at > b.created_at ? 1 : 0
+    );
+  }
+
   return {
     INCIDENT_STATES, PRIORITIES, NOTE_TYPES, formatFetchError,
     buildIncidentQueryParams, shapePaginationInfo,
+    formatNullableField, shapeIncidentRecordFields, sortWorkNotesChronological,
   };
 });

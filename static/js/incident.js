@@ -102,7 +102,79 @@
   }
   populateStateOptions(document.getElementById("filter-state"), true);
 
+  let currentIncident = null;
+
+  function renderRecordFields(incident) {
+    const dl = document.getElementById("record-fields");
+    dl.innerHTML = ""; // full replace — Postconditions: no stale field survives a new load
+    for (const { label, value } of IncidentLogic.shapeIncidentRecordFields(incident)) {
+      const dt = document.createElement("dt");
+      dt.textContent = label;
+      const dd = document.createElement("dd");
+      dd.textContent = value; // safe DOM insertion for user-supplied text fields too
+      dl.appendChild(dt);
+      dl.appendChild(dd);
+    }
+    document.getElementById("record-number").textContent = incident.number;
+  }
+
+  function renderWorkNoteRow(note) {
+    const li = document.createElement("li");
+    const meta = document.createElement("p");
+    meta.className = "work-note-meta";
+    meta.textContent = `${note.created_by} · ${note.note_type} · ${note.created_at}`;
+    const body = document.createElement("p");
+    body.textContent = note.body; // safe DOM insertion — created_by/body are unguarded free text
+    li.appendChild(meta);
+    li.appendChild(body);
+    return li;
+  }
+
+  function renderWorkNoteTimeline(notes) {
+    const ol = document.getElementById("work-notes-timeline");
+    ol.innerHTML = "";
+    for (const note of IncidentLogic.sortWorkNotesChronological(notes)) {
+      ol.appendChild(renderWorkNoteRow(note));
+    }
+  }
+
+  async function loadIncidentRecord(number) {
+    try {
+      const incident = await fetchJson(`/incidents/${number}`);
+      currentIncident = incident;
+      clearError();
+      renderRecordFields(incident);
+      document.getElementById("incident-list-view").hidden = true;
+      document.getElementById("create-incident").hidden = true;
+      document.getElementById("incident-record-view").hidden = false;
+    } catch (err) {
+      showError(IncidentLogic.formatFetchError(`Loading incident ${number}`, err));
+      return;
+    }
+    try {
+      const notePage = await fetchJson(`/incidents/${number}/work_notes`);
+      renderWorkNoteTimeline(notePage.items);
+    } catch (err) {
+      showError(IncidentLogic.formatFetchError("Loading work notes", err));
+    }
+  }
+
+  function onIncidentRowClick(event) {
+    const row = event.target.closest("tr[data-number]");
+    if (row) loadIncidentRecord(row.dataset.number);
+  }
+
+  function onBackToList() {
+    document.getElementById("incident-record-view").hidden = true;
+    document.getElementById("incident-list-view").hidden = false;
+    currentIncident = null;
+  }
+
+  document.getElementById("incidents-table-body").addEventListener("click", onIncidentRowClick);
+  document.getElementById("back-to-list").addEventListener("click", onBackToList);
+
   window.IncidentApp = {
     fetchJson, showError, clearError, loadIncidentList, renderIncidentList, renderIncidentRow,
+    loadIncidentRecord, renderRecordFields, renderWorkNoteTimeline,
   };
 })();
