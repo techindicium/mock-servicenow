@@ -18,12 +18,24 @@ def _row_to_task_sla_read(row) -> TaskSlaRead:
 
 
 @router.get("/sla", response_model=PaginatedTaskSla)
-def list_sla_records(request: Request, page: int = 1, page_size: int = 50):
+def list_sla_records(
+    request: Request,
+    incident_number: str | None = None,
+    page: int = 1,
+    page_size: int = 50,
+):
     conn = request.app.state.db_conn
-    total = conn.execute("SELECT COUNT(*) AS c FROM task_sla").fetchone()["c"]
-    rows = conn.execute(
-        "SELECT * FROM task_sla ORDER BY sys_id ASC LIMIT ? OFFSET ?",
-        (page_size, (page - 1) * page_size),
-    ).fetchall()
+    query = "SELECT * FROM task_sla WHERE 1=1"
+    params: list = []
+    if incident_number is not None:
+        query += " AND incident_number = ?"
+        params.append(incident_number)
+
+    total = conn.execute(
+        f"SELECT COUNT(*) AS c FROM ({query})", params
+    ).fetchone()["c"]
+
+    query += " ORDER BY sys_id ASC LIMIT ? OFFSET ?"
+    rows = conn.execute(query, [*params, page_size, (page - 1) * page_size]).fetchall()
     items = [_row_to_task_sla_read(r) for r in rows]
     return PaginatedTaskSla(items=items, page=page, page_size=page_size, total=total)
