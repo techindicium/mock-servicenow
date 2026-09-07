@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>mock-servicenow Incident Console</title>
+  <link rel="stylesheet" href="/static/css/console.css" />
+  <script src="/static/js/incident-logic.js"></script>
+  <script src="/static/js/incident.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Intentionally empty. escalations-directory-nav.plan.md (sibling spec's plan)
+         populates this with Incidents/Escalations/Directory navigation buttons and the
+         top-level view-switching logic. This plan owns only #view-incidents below. -->
+    <nav id="nav-rail" class="sidebar" aria-label="Main navigation"></nav>
+
+    <div class="app-main">
+      <section id="view-incidents" class="view">
+        <h1>Incidents</h1>
+        <div id="incidents-error" role="alert" hidden></div>
+
+        <section id="incident-list-view">
+          <form id="incident-filter-form">
+            <label>State
+              <select id="filter-state" name="state"><option value="">All</option></select>
+            </label>
+            <label>Category <input id="filter-category" name="category" /></label>
+            <label>Account <input id="filter-account_id" name="account_id" /></label>
+            <label>Escalated
+              <select id="filter-escalated" name="escalated">
+                <option value="">All</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+            </label>
+            <button type="submit">Apply filters</button>
+          </form>
+
+          <button id="open-create-incident" type="button">New Incident</button>
+
+          <table id="incidents-table">
+            <thead>
+              <tr>
+                <th>Number</th><th>Short description</th><th>State</th><th>Priority</th>
+                <th>Category</th><th>Account</th><th>Escalated</th>
+              </tr>
+            </thead>
+            <tbody id="incidents-table-body"></tbody>
+          </table>
+
+          <div id="incidents-pagination">
+            <button id="incidents-prev-page" type="button">Previous</button>
+            <span id="incidents-page-info"></span>
+            <button id="incidents-next-page" type="button">Next</button>
+          </div>
+        </section>
+
+        <section id="create-incident" hidden>
+          <h2>New Incident</h2>
+          <form id="create-incident-form">
+            <label>Account ID <input id="create-account_id" name="account_id" required /></label>
+            <label>Category <input id="create-category" name="category" required /></label>
+            <label>Short description
+              <input id="create-short_description" name="short_description" required />
+            </label>
+            <label>Description
+              <textarea id="create-description" name="description" required></textarea>
+            </label>
+            <label>State <select id="create-state" name="state" required></select></label>
+            <label>Priority <select id="create-priority" name="priority" required></select></label>
+            <button type="submit">Create Incident</button>
+            <button id="cancel-create-incident" type="button">Cancel</button>
+            <p id="create-incident-error" role="alert" hidden></p>
+          </form>
+        </section>
+
+        <section id="incident-record-view" hidden>
+          <button id="back-to-list" type="button">Back to list</button>
+          <h2 id="record-number"></h2>
+          <dl id="record-fields"></dl>
+
+          <form id="edit-incident-form">
+            <label>State <select id="edit-state" name="state"></select></label>
+            <label>Priority <select id="edit-priority" name="priority"></select></label>
+            <label>Assigned to <input id="edit-assigned_to" name="assigned_to" /></label>
+            <label>Assignment group <input id="edit-assignment_group" name="assignment_group" /></label>
+            <button type="submit">Save changes</button>
+            <p id="edit-incident-error" role="alert" hidden></p>
+          </form>
+
+          <section id="sla-panel">
+            <h3>SLA</h3>
+            <table id="sla-table">
+              <thead>
+                <tr>
+                  <th>Definition</th><th>Target (min)</th><th>Actual (min)</th>
+                  <th>Breached</th><th>Business hours only</th>
+                </tr>
+              </thead>
+              <tbody id="sla-table-body"></tbody>
+            </table>
+          </section>
+
+          <section id="work-notes-panel">
+            <h3>Work notes</h3>
+            <ol id="work-notes-timeline"></ol>
+
+            <form id="add-work-note-form">
+              <label>Created by <input id="note-created_by" name="created_by" required /></label>
+              <label>Type <select id="note-note_type" name="note_type" required></select></label>
+              <label>Body <textarea id="note-body" name="body" required></textarea></label>
+              <button type="submit">Add work note</button>
+              <p id="add-work-note-error" role="alert" hidden></p>
+            </form>
+          </section>
+        </section>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

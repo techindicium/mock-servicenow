@@ -1,0 +1,128 @@
+[hidden] {
+  display: none !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, "Segoe UI", "Inter", system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #1a1a1a;
+  background: #f6f6f4;
+}
+
+/* ── App shell: sidebar + view containers ─────────────────────────────── */
+
+.app-shell {
+  display: flex;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+.sidebar {
+  flex: 0 0 168px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  background: #20293a;
+  border-right: 1px solid #10141d;
+}
+
+.app-main {
+  flex: 1;
+  min-width: 0;
+  padding: 1rem 1.5rem;
+}
+
+.view h1 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 1rem 0;
+}
+
+/* ── Errors ────────────────────────────────────────────────────────────── */
+
+#incidents-error,
+#create-incident-error,
+#edit-incident-error,
+#add-work-note-error {
+  background: #fff;
+  color: #a3402f;
+  border: 1px solid #a3402f;
+  border-left: 4px solid #a3402f;
+  border-radius: 2px;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+/* ── Forms/tables basics ───────────────────────────────────────────────── */
+
+form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+}
+
+form input,
+form select,
+form textarea {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  box-sizing: border-box;
+  margin-top: 0.25rem;
+  padding: 0.4rem 0.5rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  border: 1px solid #b8b8b0;
+  border-radius: 2px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid #ddd;
+  font-size: 0.85rem;
+}
+
+button {
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 2px;
+  border: 1px solid #b8b8b0;
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+  background: #fff;
+}
+
+button:hover {
+  background: #eee;
+}
+
+dl#record-fields {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.25rem 1rem;
+}
+
+dl#record-fields dt {
+  font-weight: 600;
+}
+
+dl#record-fields dd {
+  margin: 0;
+}
+
+.sla-breached { /* visibly distinct, not alarming — filled in by Task 5 */ }

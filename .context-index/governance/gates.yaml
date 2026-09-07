@@ -26,6 +26,18 @@ gates:
       - post-task
       - post-implement
 
+  - id: test-js
+    name: JS Unit Tests
+    kind: deterministic
+    tier: fast
+    command: [node, --test, tests_js/]
+    scope: project
+    required: true
+    severity: error
+    triggers:
+      - post-task
+      - post-implement
+
   - id: lint
     name: Linter
     kind: deterministic
