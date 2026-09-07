@@ -27,6 +27,18 @@ def list_work_notes(
     page_size: int = Query(default=50, ge=1, le=200),
 ):
     conn = request.app.state.db_conn
+    incident = conn.execute(
+        "SELECT 1 FROM incidents WHERE number = ?", (number,)
+    ).fetchone()
+    if incident is None:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "message": f"Incident {number} not found",
+                "code": "INCIDENT_NOT_FOUND",
+            },
+        )
+
     rows = conn.execute(
         "SELECT * FROM work_notes WHERE incident_number = ? "
         "ORDER BY created_at ASC, sys_id ASC "

@@ -37,3 +37,11 @@ def test_list_work_notes_returns_paginated_chronological_items(client, conn):
     assert body["page_size"] == 50
     assert body["total"] == 2
     assert [item["body"] for item in body["items"]] == ["First", "Second"]
+
+
+def test_list_work_notes_unknown_incident_returns_404(client):
+    resp = client.get("/incidents/TICKET-999999/work_notes")
+    assert resp.status_code == 404
+    body = resp.json()
+    assert body["code"] == "INCIDENT_NOT_FOUND"
+    assert "TICKET-999999" in body["message"]
