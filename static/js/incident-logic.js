@@ -60,9 +60,24 @@
     );
   }
 
+  function validateWorkNoteForm(fields) {
+    const errors = {};
+    if (!fields.created_by || !fields.created_by.trim()) {
+      errors.created_by = "Created by is required";
+    }
+    if (!fields.note_type || !NOTE_TYPES.includes(fields.note_type)) {
+      errors.note_type = `Note type must be one of: ${NOTE_TYPES.join(", ")}`;
+    }
+    if (!fields.body || !fields.body.trim()) {
+      errors.body = "Body is required";
+    }
+    return { valid: Object.keys(errors).length === 0, errors };
+  }
+
   return {
     INCIDENT_STATES, PRIORITIES, NOTE_TYPES, formatFetchError,
     buildIncidentQueryParams, shapePaginationInfo,
     formatNullableField, shapeIncidentRecordFields, sortWorkNotesChronological,
+    validateWorkNoteForm,
   };
 });

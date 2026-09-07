@@ -173,6 +173,49 @@
   document.getElementById("incidents-table-body").addEventListener("click", onIncidentRowClick);
   document.getElementById("back-to-list").addEventListener("click", onBackToList);
 
+  function populateNoteTypeOptions() {
+    const select = document.getElementById("note-note_type");
+    for (const type of IncidentLogic.NOTE_TYPES) select.appendChild(new Option(type, type));
+  }
+  populateNoteTypeOptions();
+
+  function showFormError(elementId, message) {
+    const el = document.getElementById(elementId);
+    el.textContent = message;
+    el.hidden = false;
+  }
+
+  function clearFormError(elementId) {
+    document.getElementById(elementId).hidden = true;
+  }
+
+  async function onAddWorkNoteSubmit(event) {
+    event.preventDefault();
+    const form = event.target;
+    const fields = {
+      created_by: form.created_by.value, note_type: form.note_type.value, body: form.body.value,
+    };
+    const { valid, errors } = IncidentLogic.validateWorkNoteForm(fields);
+    if (!valid) {
+      showFormError("add-work-note-error", Object.values(errors)[0]);
+      return; // client-side block: fields the API also requires, no request sent
+    }
+    clearFormError("add-work-note-error");
+    try {
+      const created = await fetchJson(`/incidents/${currentIncident.number}/work_notes`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(fields),
+      });
+      document.getElementById("work-notes-timeline").appendChild(renderWorkNoteRow(created));
+      form.reset();
+    } catch (err) {
+      showFormError("add-work-note-error", IncidentLogic.formatFetchError("Adding work note", err));
+    }
+  }
+
+  document.getElementById("add-work-note-form").addEventListener("submit", onAddWorkNoteSubmit);
+
   window.IncidentApp = {
     fetchJson, showError, clearError, loadIncidentList, renderIncidentList, renderIncidentRow,
     loadIncidentRecord, renderRecordFields, renderWorkNoteTimeline,
