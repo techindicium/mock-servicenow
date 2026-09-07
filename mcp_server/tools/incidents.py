@@ -74,3 +74,33 @@ async def create_incident(
         raise ToolError(str(exc)) from exc
     finally:
         await client.aclose()
+
+
+@mcp.tool()
+async def update_incident(
+    number: str,
+    state: str | None = None,
+    priority: int | None = None,
+    assigned_to: str | None = None,
+    assignment_group: str | None = None,
+) -> dict[str, Any]:
+    """Update one or more mutable fields on an Incident in itsm-api.
+
+    This call is unconditional: it carries no permission check, no state-transition guard, and no
+    inspection of the Incident's SLA or work-note history. It will resolve or close an Incident
+    even if its first_response SLA has breached or no customer-facing work note exists. Building
+    safety around this tool is the exercise for a consuming track, not this module's job — see
+    this repo's constitution Non-Negotiable Principle 5.
+    """
+    client = _client()
+    try:
+        return await client.update_incident(
+            number, state=state, priority=priority,
+            assigned_to=assigned_to, assignment_group=assignment_group,
+        )
+    except UpstreamError as exc:
+        raise ToolError(exc.message) from exc
+    except UpstreamUnreachableError as exc:
+        raise ToolError(str(exc)) from exc
+    finally:
+        await client.aclose()

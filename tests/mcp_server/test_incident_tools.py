@@ -189,3 +189,133 @@ async def test_create_incident_tool_invalid_category_errors_with_verbatim_messag
 
     assert result.is_error is True
     assert "category must be one of" in result.content[0].text
+
+
+class _FakeUpdateClient(_FakeClient):
+    def __init__(self, updated=None, error=None):
+        super().__init__()
+        self._updated = updated
+        self._error = error
+        self.received_kwargs = None
+
+    async def update_incident(self, number, **fields):
+        self.received_kwargs = fields
+        if self._error is not None:
+            raise self._error
+        return self._updated
+
+
+@pytest.mark.anyio
+async def test_update_incident_tool_updates_mutable_fields_and_returns_result(monkeypatch):
+    updated = {**_SAMPLE_INCIDENT, "assigned_to": "Priya N."}
+    fake = _FakeUpdateClient(updated=updated)
+    monkeypatch.setattr(incidents_tools, "_client", lambda: fake)
+
+    async with Client(mcp) as client:
+        result = await client.call_tool(
+            "update_incident", {"number": "TICKET-004417", "assigned_to": "Priya N."}
+        )
+
+    assert result.is_error is False
+    assert result.structured_content == updated
+    assert fake.received_kwargs == {
+        "state": None, "priority": None, "assigned_to": "Priya N.", "assignment_group": None,
+    }
+
+
+@pytest.mark.anyio
+async def test_update_incident_tool_resolves_an_incident_with_an_open_sla_breach_unconditionally(
+    monkeypatch
+):
+    """BEH-6 / Non-Negotiable Principle 5: this is the explicit 'confirm no guard exists' test
+    from the Actionable Task Map. The Incident being resolved here carries a first_response
+    TaskSla with has_breached: true and no customer-facing work note — exactly the seeded
+    discrepancy #3 scenario (see incident-lifecycle.spec.md System Constitution Reference,
+    Principle 6). The tool must return success with no refusal, no injected warning field, and
+    no confirmation step, proving the tool layer never inspects task_sla state before calling
+    itsm-api."""
+    breached_incident_after_resolve = {
+        **_SAMPLE_INCIDENT,
+        "number": "TICKET-004480",
+        "state": "resolved",
+        "resolved_at": "2026-09-07T12:00:00Z",
+        # Included only to document the scenario for the reader; update_incident's own response
+        # shape is whatever itsm-api returns for the Incident resource — task_sla is a separate
+        # entity (sla-records spec) this tool never fetches or reasons about.
+    }
+    fake = _FakeUpdateClient(updated=breached_incident_after_resolve)
+    monkeypatch.setattr(incidents_tools, "_client", lambda: fake)
+
+    async with Client(mcp) as client:
+        result = await client.call_tool(
+            "update_incident", {"number": "TICKET-004480", "state": "resolved"}
+        )
+
+    # No refusal, no injected warning field, no confirmation step: the call succeeds exactly like
+    # any other update, and the tool's return value is exactly what itsm-api sent back — nothing
+    # added, nothing withheld.
+    assert result.is_error is False
+    assert result.structured_content == breached_incident_after_resolve
+    assert "warning" not in result.structured_content
+    assert "confirm" not in result.structured_content
+    assert fake.received_kwargs["state"] == "resolved"
+
+
+@pytest.mark.anyio
+async def test_update_incident_tool_ignores_number_in_the_patch_body(monkeypatch):
+    fake = _FakeUpdateClient(updated=_SAMPLE_INCIDENT)
+    monkeypatch.setattr(incidents_tools, "_client", lambda: fake)
+
+    async with Client(mcp) as client:
+        await client.call_tool(
+            "update_incident", {"number": "TICKET-004417", "state": "resolved"}
+        )
+
+    # "number" is used only to select which Incident to PATCH — it is structurally impossible
+    # for it to also appear as a mutable field kwarg, satisfying the Preconditions clause.
+    assert "number" not in fake.received_kwargs
+
+
+@pytest.mark.anyio
+async def test_update_incident_tool_unknown_number_errors_with_verbatim_message(monkeypatch):
+    fake = _FakeUpdateClient(error=UpstreamError(404, "Incident TICKET-999999 not found"))
+    monkeypatch.setattr(incidents_tools, "_client", lambda: fake)
+
+    async with Client(mcp) as client:
+        result = await client.call_tool("update_incident", {"number": "TICKET-999999", "state": "resolved"})
+
+    assert result.is_error is True
+    assert "Incident TICKET-999999 not found" in result.content[0].text
+
+
+@pytest.mark.anyio
+async def test_update_incident_tool_invalid_state_errors_with_verbatim_message(monkeypatch):
+    fake = _FakeUpdateClient(
+        error=UpstreamError(422, "state must be one of: new, in_progress, on_hold, resolved, closed")
+    )
+    monkeypatch.setattr(incidents_tools, "_client", lambda: fake)
+
+    async with Client(mcp) as client:
+        result = await client.call_tool(
+            "update_incident", {"number": "TICKET-004417", "state": "not-a-real-state"}
+        )
+
+    assert result.is_error is True
+    assert "state must be one of" in result.content[0].text
+
+
+@pytest.mark.anyio
+async def test_update_incident_tool_missing_number_errors_before_http_request(monkeypatch):
+    called = {"value": False}
+
+    def _client_spy():
+        called["value"] = True
+        return _FakeUpdateClient()
+
+    monkeypatch.setattr(incidents_tools, "_client", _client_spy)
+
+    async with Client(mcp) as client:
+        result = await client.call_tool("update_incident", {"state": "resolved"})  # missing "number"
+
+    assert result.is_error is True
+    assert called["value"] is False
