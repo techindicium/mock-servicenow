@@ -1,8 +1,10 @@
 from fastapi import APIRouter, HTTPException, Request
 
-from app.models import EscalationPage, EscalationRead
+from app.models import EscalationPage, EscalationPatch, EscalationRead
 
 router = APIRouter()
+
+_PATCHABLE_FIELDS = ("summary", "owner", "closed_at")
 
 
 def _row_to_escalation_read(row) -> EscalationRead:
@@ -60,4 +62,28 @@ def get_escalation(number: str, request: Request):
             status_code=404,
             detail={"message": f"Escalation {number} not found", "code": "ESCALATION_NOT_FOUND"},
         )
+    return _row_to_escalation_read(row)
+
+
+@router.patch("/escalations/{number}", response_model=EscalationRead)
+def patch_escalation(number: str, payload: EscalationPatch, request: Request):
+    conn = request.app.state.db_conn
+    row = conn.execute("SELECT * FROM escalations WHERE number = ?", (number,)).fetchone()
+    if row is None:
+        raise HTTPException(
+            status_code=404,
+            detail={"message": f"Escalation {number} not found", "code": "ESCALATION_NOT_FOUND"},
+        )
+
+    updates = payload.model_dump(exclude_unset=True)
+    set_clauses = [f"{field} = ?" for field in _PATCHABLE_FIELDS if field in updates]
+    values = [updates[field] for field in _PATCHABLE_FIELDS if field in updates]
+    if set_clauses:
+        conn.execute(
+            f"UPDATE escalations SET {', '.join(set_clauses)} WHERE number = ?",
+            (*values, number),
+        )
+        conn.commit()
+
+    row = conn.execute("SELECT * FROM escalations WHERE number = ?", (number,)).fetchone()
     return _row_to_escalation_read(row)
