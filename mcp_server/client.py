@@ -85,6 +85,28 @@ class ItsmApiClient:
         response = await self._request("PATCH", f"/incidents/{number}", json=payload)
         return response.json()
 
+    async def list_work_notes(
+        self, incident_number: str, page: int | None = None, page_size: int | None = None
+    ) -> list[dict]:
+        params: dict = {}
+        if page is not None:
+            params["page"] = page
+        if page_size is not None:
+            params["page_size"] = page_size
+        response = await self._request(
+            "GET", f"/incidents/{incident_number}/work_notes", params=params
+        )
+        return response.json()
+
+    async def add_work_note(
+        self, incident_number: str, created_by: str, note_type: str, body: str
+    ) -> dict:
+        payload = {"created_by": created_by, "note_type": note_type, "body": body}
+        response = await self._request(
+            "POST", f"/incidents/{incident_number}/work_notes", json=payload
+        )
+        return response.json()
+
     async def _request(self, method: str, path: str, **kwargs) -> httpx.Response:
         try:
             response = await self._http.request(method, path, **kwargs)
