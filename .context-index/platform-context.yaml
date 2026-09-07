@@ -1,0 +1,21 @@
+# platform-context.yaml — Tech stack and deployment targets
+
+framework: none          # not yet chosen — /adev:brainstorm should decide (e.g. FastAPI) before implementation
+version: "3.11"
+language: python
+database: sqlite
+orm: none
+auth: none
+deployment: none         # runs locally only; no deployment target for a course fixture server
+
+commands:
+  test: "python3 -m pytest -q"
+  lint: "ruff check ."
+  run: ""                # unset — no entrypoint exists yet
+  install: "pip install -r requirements.txt"
+
+# Model tiers control which Claude model each adev skill dispatches to.
+model_tiers:
+  fast: claude-haiku-4-5-20251001   # diffs, pattern matching, gaming detection
+  capable: claude-sonnet-5          # code generation, test authoring
+  reasoning: claude-opus-5          # architecture review, cross-cutting analysis

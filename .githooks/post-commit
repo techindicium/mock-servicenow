@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# Git post-commit hook
+# Writes an enriched session summary using the commit message,
+# changed files, and session tracking JSONL.
+# Always exits 0 — never blocks.
+
+set -uo pipefail
+
+# Guard: require node
+command -v node >/dev/null 2>&1 || exit 0
+
+# Read commit info
+COMMIT_HASH=$(git rev-parse HEAD 2>/dev/null) || exit 0
+COMMIT_DATE=$(git log -1 --format='%aI' "$COMMIT_HASH" 2>/dev/null) || exit 0
+
+# Extract Spec: trailers from the commit message.
+#
+# `separator=%x1F` (ASCII Unit Separator) + `unfold` guarantee exactly one
+# field per trailer. The previous `tr '\n' ','` join split on a character that
+# is perfectly legal *inside* a trailer value, so a single trailer reading
+# `Spec: a,b` silently fabricated TWO `specs-touched` entries — a measurement
+# integrity bug (issue-564). US is not producible by git's own trailer parser
+# and any candidate containing a control character is rejected downstream by
+# `deriveSpecsTouched`, so the delimiter cannot be smuggled through a value.
+SPECS_TOUCHED=$(git log -1 --format='%(trailers:key=Spec,valueonly,unfold,separator=%x1F)' "$COMMIT_HASH" 2>/dev/null || echo "")
+
+# Get commit subject and body
+COMMIT_SUBJECT=$(git log -1 --format='%s' "$COMMIT_HASH" 2>/dev/null || echo "")
+COMMIT_BODY=$(git log -1 --format='%b' "$COMMIT_HASH" 2>/dev/null || echo "")
+
+# Get files changed in this commit
+CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r "$COMMIT_HASH" 2>/dev/null || echo "")
+
+# Self-skip guard: when every changed file is inside `.context-index/sessions/`,
+# exit without writing a capture. Prevents the "1 commit -> 1 capture -> 1 commit"
+# amplification when agents commit in-session.
+# Spec: .context-index/specs/features/session-awareness/post-commit-self-skip.spec.md
+if [ -n "$CHANGED_FILES" ]; then
+  SESSIONS_ONLY=1
+  while IFS= read -r CHANGED_PATH; do
+    [ -z "$CHANGED_PATH" ] && continue
+    case "$CHANGED_PATH" in
+      .context-index/sessions/*) ;;
+      *) SESSIONS_ONLY=0; break ;;
+    esac
+  done <<< "$CHANGED_FILES"
+
+  if [ "$SESSIONS_ONLY" = "1" ]; then
+    echo "session-capture skipped: sessions-only commit" >&2
+    exit 0
+  fi
+fi
+
+# Determine output directory
+OUTPUT_DIR=".context-index/sessions"
+TRACKING_FILE=".context-index/.session-tracking.jsonl"
+
+# SEC: none of the values below are interpolated into the inline JS source —
+# every git-derived value (commit hash/date/subject/body, Spec: trailers,
+# changed files) is untrusted (it can originate from a fetched, attacker-
+# authored commit) and is passed via environment variables instead, read
+# back inside the script through `process.env`. This closes a command-
+# injection hole where a crafted `Spec:` trailer or commit message could
+# break out of the JS string literal it was previously spliced into.
+export ADEV_PC_COMMIT_HASH="$COMMIT_HASH"
+export ADEV_PC_COMMIT_DATE="$COMMIT_DATE"
+export ADEV_PC_COMMIT_SUBJECT="$COMMIT_SUBJECT"
+export ADEV_PC_COMMIT_BODY="$COMMIT_BODY"
+export ADEV_PC_SPECS_TOUCHED="$SPECS_TOUCHED"
+export ADEV_PC_CHANGED_FILES="$CHANGED_FILES"
+export ADEV_PC_OUTPUT_DIR="$OUTPUT_DIR"
+export ADEV_PC_TRACKING_FILE="$TRACKING_FILE"
+
+exit 0

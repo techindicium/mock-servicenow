@@ -1,0 +1,137 @@
+# Software domain validate starter — generated from adev defaults.
+# Scaffolded into a project's .context-index/governance/validate.yaml at
+# `/adev:init` time. Project-owned thereafter.
+#
+# See: .context-index/specs/features/validation/validate-config-single-source.spec.md
+# See: .context-index/specs/features/validation/configurable-checks.spec.md rev 3.
+#
+# Every check is a registry entry; each check's prompt body lives in
+# skills/validate/checks/<id>.md in the plugin tree, referenced via the
+# `plugin:validate/checks/<id>.md` URI scheme. Check 1's *gate set* is still
+# sourced from governance/gates.yaml — the row below registers the check
+# itself, not its gates.
+
+checks:
+  # Check 1 (explicit-governance-registries.spec.md). The gate set it runs
+  # comes from governance/gates.yaml via `adev domain load-gates`; this row
+  # exists so the check has a declared severity. Without it, every
+  # `validator_report` carrying this id resolved to UNKNOWN_VALIDATOR_DEFAULTED
+  # and was stamped `warning` — a failing build aggregating to PASS_WITH_NOTES.
+  # `error` because a failed quality gate must not aggregate to
+  # PASS_WITH_NOTES.
+  #
+  # `fail_fast: true` is DECLARATIVE ONLY on this row. The dispatcher's
+  # `shouldSkipDueToFailFast` skips a check only when that check names a FAILED
+  # fail-fast check in its own `after:` list, and nothing declares
+  # `after: [validate.check-1-quality-gates]`. Adding one edge would not
+  # reproduce the real semantics either: a check skipped that way records SKIP,
+  # not FAIL, so the stop does not propagate down the chain. What actually stops
+  # validation after a failed gate is `/adev:validate` § Check 1's own prose
+  # ("skip Checks 1b, 1c, and 2-10"), which the skill orchestrates itself.
+  # The field stays so the row states the check's intended semantics.
+  #
+  # It is also the SOLE sanctioned writer of `gate_outcomes` on a
+  # `validator_report`; see the prompt body.
+  - id: validate.check-1-quality-gates
+    name: "Quality Gates"
+    kind: deterministic-check
+    severity: error
+    fail_fast: true
+    prompt: plugin:validate/checks/validate.check-1-quality-gates.md
+    description: "Run the resolved gate set and record per-gate outcomes."
+
+  - id: validate.check-1.5-source-manifest
+    name: "Source Manifest Verification"
+    kind: deterministic-check
+    severity: warning
+    prompt: plugin:validate/checks/validate.check-1.5-source-manifest.md
+    description: "Verify spec source-manifest SHAs match current files."
+
+  - id: validate.check-2-spec-compliance
+    name: "Spec Compliance"
+    kind: subagent-review
+    profile: reviewer-capable
+    context_pack: base
+    severity: error
+    prompt: plugin:validate/checks/validate.check-2-spec-compliance.md
+    after: [validate.check-1.5-source-manifest]
+    enabled: false   # subagent-review — dropped for lightweight validation
+
+  # check-3-charter-consistency removed by check-set-restructure.spec.md.
+  # Its substantive concern (implementation respects charter scope) is now
+  # covered by Check 2's scope-expansion sub-finding (which pins to
+  # source-manifest.files) + /adev:review-specs structural-architect prompt
+  # (which checks spec-vs-charter consistency at review time).
+
+  - id: validate.check-4-constitution
+    name: "Constitutional Compliance"
+    kind: subagent-review
+    profile: reviewer-capable
+    context_pack: base
+    severity: error
+    prompt: plugin:validate/checks/validate.check-4-constitution.md
+    after: [validate.check-2-spec-compliance]
+    enabled: false   # subagent-review — dropped for lightweight validation
+
+  # check-5-adrs removed by check-set-restructure.spec.md
+  # (migrated to /adev:review-specs structural-architect ADR-compliance scope).
+  #
+  # check-6-cross-cutting removed by check-set-restructure.spec.md
+  # (migrated to /adev:review-specs consistency-analyzer cross-cutting scope).
+  #
+  # check-7-specialist-review removed by check-set-restructure.spec.md
+  # (duplicate dispatch path; /adev:review-specs already runs the same
+  # specialist registry).
+
+  # Checks 8 and 9 are deterministic (explicit-governance-registries.spec.md,
+  # Migration Step 2): each body is a thin wrapper over a CLI verb —
+  # `adev boundaries check --json` and `adev gate transitions --json` — whose
+  # evaluator owns the algorithm. No subagent judgment, so no `profile` and no
+  # `context_pack`: those fields only mean something on the subagent-review
+  # dispatch path.
+  - id: validate.check-8-boundaries
+    name: "Governance Boundaries"
+    kind: deterministic-check
+    severity: error
+    prompt: plugin:validate/checks/validate.check-8-boundaries.md
+    after: [validate.check-2-spec-compliance]
+
+  - id: validate.check-9-transition-gates
+    name: "Transition Gate Compliance"
+    kind: deterministic-check
+    severity: warning
+    prompt: plugin:validate/checks/validate.check-9-transition-gates.md
+    after: [validate.check-2-spec-compliance]
+
+  # check-10-platform-drift removed by check-set-restructure.spec.md
+  # (migrated to /adev:hygiene Audit Pass 20). Project references to this ID
+  # are tolerated as RESURRECTED_CHECK_ID warnings by the loader (project-side
+  # only — see lib/governance/validate-config.mjs REMOVED_CHECK_IDS).
+
+  - id: validate.check-11-visual-verification
+    name: "Visual Verification"
+    kind: subagent-review
+    profile: browser-review
+    context_pack: base
+    severity: warning
+    prompt: plugin:validate/checks/validate.check-11-visual-verification.md
+    enabled: false   # no UI — mock-servicenow is a headless HTTP API
+
+  # check-12-heuristic-extraction removed by check-set-restructure.spec.md
+  # (now runs as a Stop-event post-validate hook —
+  # hooks/post-validate-extract-heuristics.{sh,mjs} — with SEC-1 input
+  # scoping that consumes only structured verdict metadata).
+
+  # Gate Doctor (unified-gates/gate-doctor.spec.md). Deterministic wrapper over
+  # `adev gate doctor --json`: verifies that the gates declared in
+  # governance/gates.yaml can actually execute and that declared test suites
+  # actually get collected. Severity is `warning` — a project may legitimately
+  # have a gate that is not wired into CI — but every error-severity FINDING it
+  # reports describes a gate the project believes protects it and which cannot run.
+  - id: validate.check-14-gate-executability
+    name: "Gate Executability and Test Collection"
+    kind: deterministic-check
+    severity: warning
+    prompt: plugin:validate/checks/validate.check-14-gate-executability.md
+    description: "Verify declared gates can run and declared tests get collected."
+    after: [validate.check-1.5-source-manifest]

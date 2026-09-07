@@ -1,0 +1,28 @@
+# governance/review.yaml — project overlay for /adev:review-specs
+#
+# Trimmed for a training-course fixture repo: this is a small, low-risk mock
+# API with no real auth, no real data, and no cross-cutting architecture to
+# speak of. Full production-weight review is disproportionate here.
+#
+# Entries match bundled reviewers by `id` and override field-by-field.
+
+reviewers:
+  - id: structural-architect
+    enabled: false   # overkill for a small standalone mock API
+
+  - id: security-reviewer
+    enabled: false   # no real auth, no real data — nothing security-sensitive to review
+
+  - id: consistency-analyzer
+    enabled: false   # all three bundled reviewers off — as lightweight as review gets
+
+context_packs:
+  base:
+    include: []
+
+# ── Materialization marker ────────────────────────────────────────────────
+# See templates/governance/review.example.yaml for what this line means.
+# Copied here so this project is born materialized.
+materialized_at: 2026-08-15T00:00:00Z
+
+# See templates/governance/review.example.yaml for more examples.
