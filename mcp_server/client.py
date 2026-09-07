@@ -85,6 +85,10 @@ class ItsmApiClient:
         response = await self._request("PATCH", f"/incidents/{number}", json=payload)
         return response.json()
 
+    async def list_users(self) -> dict:
+        response = await self._request("GET", "/users")
+        return response.json()
+
     async def _request(self, method: str, path: str, **kwargs) -> httpx.Response:
         try:
             response = await self._http.request(method, path, **kwargs)
