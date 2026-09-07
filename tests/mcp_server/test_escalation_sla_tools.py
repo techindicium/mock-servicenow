@@ -3,6 +3,7 @@ from mcp import Client
 
 import mcp_server.tools.escalations as escalations_tools
 import mcp_server.tools.sla as sla_tools
+from mcp_server.errors import UpstreamError, UpstreamUnreachableError
 from mcp_server.server import mcp
 
 
@@ -177,3 +178,48 @@ async def test_list_sla_records_tool_non_boolean_breached_errors_before_http_cal
 
     assert result.is_error is True
     assert fake.last_sla_call is None
+
+
+_UNREACHABLE_MESSAGE = "Could not reach itsm-api at http://itsm-api: connection refused"
+
+
+@pytest.mark.anyio
+async def test_list_escalations_tool_unreachable_api_errors_with_clear_message(monkeypatch):
+    fake = _FakeClient(error=UpstreamUnreachableError(_UNREACHABLE_MESSAGE))
+    monkeypatch.setattr(escalations_tools, "_client", lambda: fake)
+
+    async with Client(mcp) as client:
+        result = await client.call_tool("list_escalations", {})
+
+    assert result.is_error is True
+    assert "itsm-api" in result.content[0].text
+
+
+@pytest.mark.anyio
+async def test_list_sla_records_tool_5xx_errors_with_body_verbatim(monkeypatch):
+    fake = _FakeClient(error=UpstreamError(500, "internal error"))
+    monkeypatch.setattr(sla_tools, "_client", lambda: fake)
+
+    async with Client(mcp) as client:
+        result = await client.call_tool("list_sla_records", {})
+
+    assert result.is_error is True
+    assert "internal error" in result.content[0].text
+
+
+@pytest.mark.anyio
+async def test_list_sla_records_tool_invalid_sla_definition_errors_with_422_message_verbatim(
+    monkeypatch,
+):
+    fake = _FakeClient(
+        error=UpstreamError(422, "sla_definition must be one of: first_response, resolution")
+    )
+    monkeypatch.setattr(sla_tools, "_client", lambda: fake)
+
+    async with Client(mcp) as client:
+        # Note: "bogus" is a syntactically valid str, so this reaches the (faked) HTTP call rather
+        # than failing schema validation — see SA-2 in the plan header.
+        result = await client.call_tool("list_sla_records", {"sla_definition": "bogus"})
+
+    assert result.is_error is True
+    assert "first_response, resolution" in result.content[0].text
