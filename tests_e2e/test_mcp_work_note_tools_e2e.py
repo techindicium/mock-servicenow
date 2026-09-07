@@ -59,7 +59,7 @@ async def test_add_work_note_matches_real_http_state(mcp_dual_server):
     strict=True,
 )
 async def test_list_work_notes_over_real_mcp_protocol(mcp_dual_server):
-    api_base_url, mcp_base_url = mcp_dual_server
+    _, mcp_base_url = mcp_dual_server
     tag = uuid.uuid4().hex[:8]
 
     async with connect(mcp_base_url) as session:

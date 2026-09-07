@@ -28,6 +28,7 @@ source-manifest:
     - tests_e2e/test_sla_e2e.py
     - tests_e2e/test_work_notes_e2e.py
   computed-at: "2026-09-07T19:11:43.475Z"
+drift_detected: true
 ---
 
 # Live Spec: End-to-end API test suite (real HTTP)

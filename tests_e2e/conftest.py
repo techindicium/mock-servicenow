@@ -36,9 +36,11 @@ def mcp_dual_server(tmp_path_factory) -> tuple[str, str]:
     Yields: (api_base_url, mcp_base_url)
     """
     tmp_path = tmp_path_factory.mktemp("mcp-e2e-dual-server")
-    with start_itsm_api(tmp_path) as api_base_url:
-        with start_mcp_server(api_base_url) as mcp_base_url:
-            yield api_base_url, mcp_base_url
+    with (
+        start_itsm_api(tmp_path) as api_base_url,
+        start_mcp_server(api_base_url) as mcp_base_url,
+    ):
+        yield api_base_url, mcp_base_url
 
 
 @pytest.fixture

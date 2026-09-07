@@ -6,11 +6,13 @@ from tests_e2e.servers import E2EServerStartTimeout, start_itsm_api, start_mcp_s
 
 
 def test_start_mcp_server_yields_reachable_base_url(tmp_path):
-    with start_itsm_api(tmp_path) as api_base_url:
-        with start_mcp_server(api_base_url) as mcp_base_url:
-            host, port = mcp_base_url.replace("http://", "").split(":")
-            with socket.create_connection((host, int(port)), timeout=2):
-                pass  # connection accepted — process is up
+    with (
+        start_itsm_api(tmp_path) as api_base_url,
+        start_mcp_server(api_base_url) as mcp_base_url,
+    ):
+        host, port = mcp_base_url.replace("http://", "").split(":")
+        with socket.create_connection((host, int(port)), timeout=2):
+            pass  # connection accepted — process is up
 
 
 def test_start_mcp_server_tears_down_process_on_exit(tmp_path):
@@ -18,9 +20,8 @@ def test_start_mcp_server_tears_down_process_on_exit(tmp_path):
         with start_mcp_server(api_base_url) as mcp_base_url:
             pass
         host, port = mcp_base_url.replace("http://", "").split(":")
-        with pytest.raises(OSError):
-            with socket.create_connection((host, int(port)), timeout=1):
-                pass  # pragma: no cover - should never be reached
+        with pytest.raises(OSError), socket.create_connection((host, int(port)), timeout=1):
+            pass  # pragma: no cover - should never be reached
 
 
 def test_start_mcp_server_raises_e2e_server_start_timeout_on_bad_command(monkeypatch, tmp_path):
