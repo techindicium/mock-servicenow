@@ -41,3 +41,39 @@ def test_get_sla_unknown_incident_number_returns_200_with_empty_paginated_envelo
     # SA-1: the full paginated envelope, never a bare [] — "empty array" in the spec refers only
     # to the items field's value.
     assert body == {"items": [], "page": 1, "page_size": 50, "total": 0}
+
+
+def test_get_sla_filtered_by_breached_true(client, conn):
+    seed_task_sla(conn, sys_id="SLA-0001", has_breached=1)
+    seed_task_sla(conn, sys_id="SLA-0002", has_breached=0)
+
+    resp = client.get("/sla?breached=true")
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["total"] == 1
+    assert body["items"][0]["sys_id"] == "SLA-0001"
+    assert body["items"][0]["has_breached"] is True
+
+
+def test_get_sla_filtered_by_breached_false(client, conn):
+    seed_task_sla(conn, sys_id="SLA-0001", has_breached=1)
+    seed_task_sla(conn, sys_id="SLA-0002", has_breached=0)
+
+    resp = client.get("/sla?breached=false")
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["total"] == 1
+    assert body["items"][0]["sys_id"] == "SLA-0002"
+
+
+def test_get_sla_invalid_breached_value_returns_422(client, conn):
+    seed_task_sla(conn, sys_id="SLA-0001")
+
+    resp = client.get("/sla?breached=maybe")
+
+    assert resp.status_code == 422
+    body = resp.json()
+    assert body["code"] == "VALIDATION_ERROR"
+    assert "breached" in body["message"]

@@ -21,6 +21,7 @@ def _row_to_task_sla_read(row) -> TaskSlaRead:
 def list_sla_records(
     request: Request,
     incident_number: str | None = None,
+    breached: bool | None = None,
     page: int = 1,
     page_size: int = 50,
 ):
@@ -30,6 +31,9 @@ def list_sla_records(
     if incident_number is not None:
         query += " AND incident_number = ?"
         params.append(incident_number)
+    if breached is not None:
+        query += " AND has_breached = ?"
+        params.append(1 if breached else 0)
 
     total = conn.execute(
         f"SELECT COUNT(*) AS c FROM ({query})", params
