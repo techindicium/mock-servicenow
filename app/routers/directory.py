@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, Request
 
 from app.models import (
@@ -12,7 +14,9 @@ router = APIRouter()
 
 
 @router.get("/assignment_groups", response_model=PaginatedAssignmentGroups)
-def list_assignment_groups(request: Request, page_params: PageParams = Depends()):
+def list_assignment_groups(
+    request: Request, page_params: Annotated[PageParams, Depends()]
+):
     conn = request.app.state.db_conn
     rows = conn.execute("SELECT * FROM assignment_group ORDER BY name ASC").fetchall()
     items, total = paginate_rows(rows, page_params.page, page_params.page_size)
@@ -25,7 +29,7 @@ def list_assignment_groups(request: Request, page_params: PageParams = Depends()
 
 
 @router.get("/users", response_model=PaginatedUsers)
-def list_users(request: Request, page_params: PageParams = Depends()):
+def list_users(request: Request, page_params: Annotated[PageParams, Depends()]):
     conn = request.app.state.db_conn
     rows = conn.execute("SELECT * FROM sys_user ORDER BY name ASC").fetchall()
     items, total = paginate_rows(rows, page_params.page, page_params.page_size)
