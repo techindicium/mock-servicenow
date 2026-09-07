@@ -172,9 +172,9 @@ def test_resolved_or_closed_incident_with_open_first_response_breach_exists(conn
 
 def test_business_hours_resolution_disagrees_with_wall_clock_for_a_weekend_ticket(conn):
     from app.seed import (
+        _wall_clock_minutes_between,
         derive_task_sla,
         load_incidents_and_work_notes,
-        _wall_clock_minutes_between,
     )
 
     load_incidents_and_work_notes(conn)
@@ -254,3 +254,53 @@ def test_seed_all_on_partial_database_raises_seed_state_inconsistent(conn):
     with pytest.raises(SeedError) as exc_info:
         seed_all(conn)
     assert exc_info.value.code == "SEED_STATE_INCONSISTENT"
+
+
+def test_all_three_seeded_discrepancies_are_present_after_seeding(conn):
+    from app.seed import seed_all
+
+    seed_all(conn)
+
+    # Discrepancy 1: at least one resolution record whose business-hours actual_minutes
+    # disagrees with a wall-clock computation over the same interval.
+    resolutions = conn.execute(
+        """SELECT i.opened_at, i.resolved_at, t.actual_minutes FROM incidents i
+           JOIN task_sla t ON t.incident_number = i.number
+           WHERE t.sla_definition = 'resolution' AND i.resolved_at IS NOT NULL"""
+    ).fetchall()
+    from app.seed import _wall_clock_minutes_between
+    assert any(
+        _wall_clock_minutes_between(r["opened_at"], r["resolved_at"]) != r["actual_minutes"]
+        for r in resolutions
+    )
+
+    # Discrepancy 2: exactly two ownerless escalations, out of exactly five.
+    escalations = conn.execute("SELECT * FROM escalations").fetchall()
+    assert len(escalations) == 5
+    assert sum(1 for e in escalations if e["owner"] is None) == 2
+
+    # Discrepancy 3: at least one resolved/closed incidents with an open first_response breach.
+    breached = conn.execute(
+        """SELECT COUNT(*) AS n FROM incidents i
+           JOIN task_sla t ON t.incident_number = i.number
+           WHERE i.state IN ('resolved', 'closed')
+             AND t.sla_definition = 'first_response' AND t.has_breached = 1"""
+    ).fetchone()["n"]
+    assert breached >= 1
+
+
+def test_reseeding_never_corrects_any_of_the_three_discrepancies(conn):
+    from app.seed import seed_all
+
+    seed_all(conn)
+    before = conn.execute(
+        "SELECT number, owner FROM escalations WHERE owner IS NULL ORDER BY number"
+    ).fetchall()
+
+    seed_all(conn)  # idempotent re-run
+    after = conn.execute(
+        "SELECT number, owner FROM escalations WHERE owner IS NULL ORDER BY number"
+    ).fetchall()
+
+    assert [r["number"] for r in before] == [r["number"] for r in after]
+    assert len(after) == 2
