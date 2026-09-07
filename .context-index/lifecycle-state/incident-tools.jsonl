@@ -13,3 +13,4 @@
 {"event":"step_completed","step":"plan","verdict":"PASS","ts":"2026-09-07T17:22:00.794Z"}
 {"event":"lifecycle_step","step":"implement","status":"started","ts":"2026-09-07T18:27:14.741Z"}
 {"event":"step_completed","step":"implement","verdict":"PASS","ts":"2026-09-07T18:49:39.618Z"}
+{"event":"code_drift_detected","drift_source":"tests/mcp_server/test_client.py","drift_at":"2026-09-07T18:59:08.610Z","ts":"2026-09-07T18:59:08.611Z"}

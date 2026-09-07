@@ -21,6 +21,7 @@ source-manifest:
     - tests/mcp_server/test_client.py
     - tests/mcp_server/test_incident_tools.py
   computed-at: "2026-09-07T18:49:50.508Z"
+drift_detected: true
 ---
 
 # Live Spec: Incident MCP tools (list/get/create/update)

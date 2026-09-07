@@ -85,6 +85,67 @@ class ItsmApiClient:
         response = await self._request("PATCH", f"/incidents/{number}", json=payload)
         return response.json()
 
+    async def list_escalations(
+        self,
+        account_id: str | None = None,
+        open_only: bool | None = None,
+        page: int | None = None,
+        page_size: int | None = None,
+    ) -> dict:
+        params = self._filtered_params(
+            account_id=account_id, open_only=open_only, page=page, page_size=page_size
+        )
+        response = await self._request("GET", "/escalations", params=params)
+        return response.json()
+
+    async def list_sla_records(
+        self,
+        incident_number: str | None = None,
+        breached: bool | None = None,
+        sla_definition: str | None = None,
+        page: int | None = None,
+        page_size: int | None = None,
+    ) -> dict:
+        params = self._filtered_params(
+            incident_number=incident_number,
+            breached=breached,
+            sla_definition=sla_definition,
+            page=page,
+            page_size=page_size,
+        )
+        response = await self._request("GET", "/sla", params=params)
+        return response.json()
+
+    async def list_work_notes(
+        self, incident_number: str, page: int | None = None, page_size: int | None = None
+    ) -> list[dict]:
+        params: dict = {}
+        if page is not None:
+            params["page"] = page
+        if page_size is not None:
+            params["page_size"] = page_size
+        response = await self._request(
+            "GET", f"/incidents/{incident_number}/work_notes", params=params
+        )
+        return response.json()
+
+    async def add_work_note(
+        self, incident_number: str, created_by: str, note_type: str, body: str
+    ) -> dict:
+        payload = {"created_by": created_by, "note_type": note_type, "body": body}
+        response = await self._request(
+            "POST", f"/incidents/{incident_number}/work_notes", json=payload
+        )
+        return response.json()
+
+    async def list_users(self) -> dict:
+        response = await self._request("GET", "/users")
+        return response.json()
+
+    @staticmethod
+    def _filtered_params(**kwargs) -> dict:
+        return {key: value for key, value in kwargs.items() if value is not None}
+
     async def _request(self, method: str, path: str, **kwargs) -> httpx.Response:
         try:
             response = await self._http.request(method, path, **kwargs)
