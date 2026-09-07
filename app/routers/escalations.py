@@ -1,0 +1,51 @@
+from fastapi import APIRouter, Request
+
+from app.models import EscalationPage, EscalationRead
+
+router = APIRouter()
+
+
+def _row_to_escalation_read(row) -> EscalationRead:
+    return EscalationRead(
+        number=row["number"],
+        incident_number=row["incident_number"],
+        account_id=row["account_id"],
+        summary=row["summary"],
+        opened_at=row["opened_at"],
+        closed_at=row["closed_at"],
+        owner=row["owner"],
+    )
+
+
+@router.get("/escalations", response_model=EscalationPage)
+def list_escalations(
+    request: Request,
+    account_id: str | None = None,
+    open_only: bool | None = None,
+    page: int = 1,
+    page_size: int = 50,
+):
+    conn = request.app.state.db_conn
+    where: list[str] = []
+    params: list = []
+    if account_id is not None:
+        where.append("account_id = ?")
+        params.append(account_id)
+    if open_only:
+        where.append("closed_at IS NULL")
+    clause = f"WHERE {' AND '.join(where)}" if where else ""
+
+    total = conn.execute(
+        f"SELECT COUNT(*) AS c FROM escalations {clause}", params
+    ).fetchone()["c"]
+    offset = (page - 1) * page_size
+    rows = conn.execute(
+        f"SELECT * FROM escalations {clause} ORDER BY number ASC LIMIT ? OFFSET ?",
+        (*params, page_size, offset),
+    ).fetchall()
+    return EscalationPage(
+        items=[_row_to_escalation_read(r) for r in rows],
+        page=page,
+        page_size=page_size,
+        total=total,
+    )
