@@ -1,6 +1,7 @@
 import csv
 import hashlib
 import json
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 _FIXTURES = Path(__file__).parent / "fixtures" / "seed"
@@ -215,8 +216,6 @@ def load_incidents_and_work_notes(conn) -> None:
 
 
 def _add_minutes(iso_timestamp: str, minutes: int) -> str:
-    from datetime import datetime, timedelta
-
     dt = datetime.fromisoformat(iso_timestamp.replace("Z", "+00:00"))
     dt += timedelta(minutes=minutes)
     return dt.isoformat().replace("+00:00", "Z")
@@ -243,4 +242,108 @@ def load_escalations(conn) -> None:
             (e["number"], e["incident_number"], e["account_id"], e["summary"],
              e["opened_at"], e["closed_at"], e["owner"]),
         )
+    conn.commit()
+
+
+_BUSINESS_HOUR_START = 9
+_BUSINESS_HOUR_END = 17  # 8-hour business day, Mon-Fri, matching company.md's support hours
+
+
+def _parse_ts(s: str) -> datetime:
+    return datetime.fromisoformat(s.replace("Z", "+00:00"))
+
+
+def _wall_clock_minutes_between(start: str, end: str) -> int:
+    return int((_parse_ts(end) - _parse_ts(start)).total_seconds() // 60)
+
+
+def _business_minutes_between(start: str, end: str) -> int:
+    """Elapsed minutes counting only Mon-Fri, 09:00-17:00 UTC: sum, day by day, the overlap of
+    that day's business window with [start, end). Deterministic, pure function of its two
+    timestamp arguments — the mechanism behind BEH-4's determinism requirement and the
+    business-hours/wall-clock discrepancy (this value is never reconciled against
+    `_wall_clock_minutes_between` anywhere in this codebase; a downstream consumer's own
+    wall-clock computation over the same interval is expected to disagree for weekend-touching
+    tickets — that disagreement is the seeded discrepancy, not a bug to fix here)."""
+    start_dt, end_dt = _parse_ts(start), _parse_ts(end)
+    if end_dt <= start_dt:
+        return 0
+    total_minutes = 0
+    day = start_dt.date()
+    while day <= end_dt.date():
+        if day.weekday() < 5:  # Monday=0 .. Sunday=6
+            day_start = datetime(day.year, day.month, day.day, _BUSINESS_HOUR_START, tzinfo=timezone.utc)
+            day_end = datetime(day.year, day.month, day.day, _BUSINESS_HOUR_END, tzinfo=timezone.utc)
+            overlap_start = max(start_dt, day_start)
+            overlap_end = min(end_dt, day_end)
+            if overlap_end > overlap_start:
+                total_minutes += int((overlap_end - overlap_start).total_seconds() // 60)
+        day += timedelta(days=1)
+    return total_minutes
+
+
+def _target_minutes(tier: str, sla_definition: str, tier_commitments: dict) -> int:
+    commitment = tier_commitments[tier]
+    if sla_definition == "first_response":
+        return commitment["first_response_minutes"]
+    if "resolution_business_hours" in commitment:
+        return commitment["resolution_business_hours"] * 60
+    return commitment["resolution_business_days"] * 8 * 60  # 8-hour business day
+
+
+def derive_task_sla(conn) -> None:
+    tier_commitments = json.loads((_FIXTURES / "tier_commitments.json").read_text())
+    tiers_by_account = {
+        a["account_id"]: a["tier"]
+        for a in json.loads((_FIXTURES / "accounts_tiers.json").read_text())
+    }
+
+    incidents = conn.execute("SELECT * FROM incidents").fetchall()
+    expected_max = len(incidents) * 2
+    existing = conn.execute("SELECT COUNT(*) AS n FROM task_sla").fetchone()["n"]
+    if existing > 0:
+        return  # BEH-2: already derived once; never regenerate (BEH-4 stability)
+    if existing > expected_max:
+        raise SeedError(
+            "SEED_STATE_INCONSISTENT",
+            f"task_sla has {existing} rows, more than {expected_max} possible for {len(incidents)} incidents",
+        )
+
+    for incident in incidents:
+        tier = tiers_by_account[incident["account_id"]]
+        notes = conn.execute(
+            "SELECT * FROM work_notes WHERE incident_number = ? ORDER BY created_at",
+            (incident["number"],),
+        ).fetchall()
+        first_response_note = next(
+            (n for n in notes if n["created_by"] != "customer"), None
+        )
+
+        # first_response: wall-clock, business_time_only = false
+        fr_target = _target_minutes(tier, "first_response", tier_commitments)
+        fr_actual = (
+            _wall_clock_minutes_between(incident["opened_at"], first_response_note["created_at"])
+            if first_response_note else None
+        )
+        fr_breached = fr_actual is not None and fr_actual > fr_target
+        conn.execute(
+            """INSERT INTO task_sla
+               (sys_id, incident_number, sla_definition, target_minutes, actual_minutes,
+                has_breached, business_time_only)
+               VALUES (?, ?, 'first_response', ?, ?, ?, 0)""",
+            (f"SLA-{incident['number']}-FR", incident["number"], fr_target, fr_actual, fr_breached),
+        )
+
+        # resolution: business-hours only, business_time_only = true (Domain Model invariant)
+        if incident["state"] in ("resolved", "closed") and incident["resolved_at"]:
+            res_target = _target_minutes(tier, "resolution", tier_commitments)
+            res_actual = _business_minutes_between(incident["opened_at"], incident["resolved_at"])
+            res_breached = res_actual > res_target
+            conn.execute(
+                """INSERT INTO task_sla
+                   (sys_id, incident_number, sla_definition, target_minutes, actual_minutes,
+                    has_breached, business_time_only)
+                   VALUES (?, ?, 'resolution', ?, ?, ?, 1)""",
+                (f"SLA-{incident['number']}-RES", incident["number"], res_target, res_actual, res_breached),
+            )
     conn.commit()

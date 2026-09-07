@@ -117,3 +117,83 @@ def test_escalation_loading_is_idempotent(conn):
     load_escalations(conn)
     load_escalations(conn)
     assert conn.execute("SELECT COUNT(*) AS n FROM escalations").fetchone()["n"] == 5
+
+
+def test_task_sla_derivation_is_deterministic_across_runs(conn):
+    from app.seed import derive_task_sla, load_incidents_and_work_notes
+
+    load_incidents_and_work_notes(conn)
+    derive_task_sla(conn)
+    first_pass = {
+        r["sys_id"]: (r["target_minutes"], r["actual_minutes"], r["has_breached"])
+        for r in conn.execute("SELECT * FROM task_sla").fetchall()
+    }
+
+    derive_task_sla(conn)  # re-run against the same data
+    second_pass = {
+        r["sys_id"]: (r["target_minutes"], r["actual_minutes"], r["has_breached"])
+        for r in conn.execute("SELECT * FROM task_sla").fetchall()
+    }
+    assert first_pass == second_pass
+
+
+def test_every_resolution_record_is_business_time_only(conn):
+    from app.seed import derive_task_sla, load_incidents_and_work_notes
+
+    load_incidents_and_work_notes(conn)
+    derive_task_sla(conn)
+    resolution_rows = conn.execute(
+        "SELECT * FROM task_sla WHERE sla_definition = 'resolution'"
+    ).fetchall()
+    assert len(resolution_rows) > 0
+    assert all(r["business_time_only"] for r in resolution_rows)
+    first_response_rows = conn.execute(
+        "SELECT * FROM task_sla WHERE sla_definition = 'first_response'"
+    ).fetchall()
+    assert all(not r["business_time_only"] for r in first_response_rows)
+
+
+def test_resolved_or_closed_incident_with_open_first_response_breach_exists(conn):
+    from app.seed import derive_task_sla, load_incidents_and_work_notes
+
+    load_incidents_and_work_notes(conn)
+    derive_task_sla(conn)
+    rows = conn.execute(
+        """
+        SELECT i.number FROM incidents i
+        JOIN task_sla t ON t.incident_number = i.number
+        WHERE i.state IN ('resolved', 'closed')
+          AND t.sla_definition = 'first_response'
+          AND t.has_breached = 1
+        """
+    ).fetchall()
+    assert len(rows) >= 1  # existence, not an upper bound — see plan Architecture section
+
+
+def test_business_hours_resolution_disagrees_with_wall_clock_for_a_weekend_ticket(conn):
+    from app.seed import (
+        derive_task_sla,
+        load_incidents_and_work_notes,
+        _wall_clock_minutes_between,
+    )
+
+    load_incidents_and_work_notes(conn)
+    derive_task_sla(conn)
+    # At least one resolution record's business-hours actual_minutes differs from what a
+    # wall-clock computation over the same [opened_at, resolved_at) interval would give —
+    # this is discrepancy #1. 390 of the 1,297 historical tickets open on a weekend
+    # (verified empirically against the vendored tickets.csv at plan-authoring time), so
+    # material for this always exists.
+    rows = conn.execute(
+        """
+        SELECT i.opened_at, i.resolved_at, t.actual_minutes FROM incidents i
+        JOIN task_sla t ON t.incident_number = i.number
+        WHERE t.sla_definition = 'resolution' AND i.resolved_at IS NOT NULL
+        """
+    ).fetchall()
+    disagreements = 0
+    for r in rows:
+        wall_clock_minutes = _wall_clock_minutes_between(r["opened_at"], r["resolved_at"])
+        if wall_clock_minutes != r["actual_minutes"]:
+            disagreements += 1
+    assert disagreements >= 1
