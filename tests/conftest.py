@@ -42,3 +42,24 @@ def seed_task_sla(conn, **overrides):
     )
     conn.commit()
     return row
+
+
+def seed_escalation(conn, **overrides):
+    defaults = {
+        "number": "ESCALATION-0001",
+        "incident_number": None,
+        "account_id": "ACC-1",
+        "summary": "Test escalation",
+        "opened_at": "2026-01-01T00:00:00Z",
+        "closed_at": None,
+        "owner": None,
+    }
+    defaults.update(overrides)
+    conn.execute(
+        "INSERT INTO escalations "
+        "(number, incident_number, account_id, summary, opened_at, closed_at, owner) "
+        "VALUES (:number, :incident_number, :account_id, :summary, :opened_at, :closed_at, :owner)",
+        defaults,
+    )
+    conn.commit()
+    return defaults

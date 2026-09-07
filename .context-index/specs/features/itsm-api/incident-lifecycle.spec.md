@@ -22,6 +22,7 @@ source-manifest:
     - tests/test_db.py
     - tests/test_incidents.py
   computed-at: "2026-09-07T18:26:07.486Z"
+drift_detected: true
 ---
 
 # Live Spec: Incident lifecycle CRUD
