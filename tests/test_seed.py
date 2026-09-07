@@ -60,3 +60,43 @@ def test_vendored_roster_has_eleven_named_people_and_three_groups():
     names = {u["name"] for u in roster["sys_users"]}
     assert canon_named.issubset(names)
     assert len(names) == 11  # no accidental duplicate/collision
+
+
+def test_fresh_seed_loads_exact_incident_and_work_note_counts(conn):
+    from app.seed import load_incidents_and_work_notes
+
+    load_incidents_and_work_notes(conn)
+    assert conn.execute("SELECT COUNT(*) AS n FROM incidents").fetchone()["n"] == 1307
+    assert conn.execute("SELECT COUNT(*) AS n FROM work_notes").fetchone()["n"] == 2614
+
+
+def test_narrative_tickets_keep_exact_number_and_csv_sourced_content(conn):
+    from app.seed import load_incidents_and_work_notes
+
+    load_incidents_and_work_notes(conn)
+    row = conn.execute(
+        "SELECT * FROM incidents WHERE number = 'TICKET-004417'"
+    ).fetchone()
+    assert row is not None
+    assert row["account_id"] == "ACCOUNT-1001"
+    assert row["category"] == "billing"
+    assert row["short_description"] == "Refund window for over-billing"
+    assert "How long do we have to raise a correction" in row["description"]
+
+
+def test_incident_and_work_note_loading_is_idempotent(conn):
+    from app.seed import load_incidents_and_work_notes
+
+    load_incidents_and_work_notes(conn)
+    first_pass = conn.execute(
+        "SELECT number FROM incidents ORDER BY number"
+    ).fetchall()
+
+    load_incidents_and_work_notes(conn)  # second run, same connection
+    second_pass = conn.execute(
+        "SELECT number FROM incidents ORDER BY number"
+    ).fetchall()
+
+    assert conn.execute("SELECT COUNT(*) AS n FROM incidents").fetchone()["n"] == 1307
+    assert conn.execute("SELECT COUNT(*) AS n FROM work_notes").fetchone()["n"] == 2614
+    assert [r["number"] for r in first_pass] == [r["number"] for r in second_pass]
