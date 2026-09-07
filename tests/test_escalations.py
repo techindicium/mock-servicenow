@@ -59,3 +59,23 @@ def test_list_escalations_invalid_open_only_returns_422(client):
     body = resp.json()
     assert body["code"] == "VALIDATION_ERROR"
     assert "open_only" in body["message"]
+
+
+def test_get_escalation_by_number_returns_full_representation_with_null_fields(client):
+    conn = client.app.state.db_conn
+    seed_escalation(conn, number="ESCALATION-0001", incident_number=None, owner=None)
+
+    resp = client.get("/escalations/ESCALATION-0001")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["number"] == "ESCALATION-0001"
+    assert body["incident_number"] is None
+    assert body["owner"] is None
+
+
+def test_get_escalation_unknown_number_returns_404(client):
+    resp = client.get("/escalations/ESCALATION-9999")
+    assert resp.status_code == 404
+    body = resp.json()
+    assert body["code"] == "ESCALATION_NOT_FOUND"
+    assert "ESCALATION-9999" in body["message"]

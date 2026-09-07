@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, HTTPException, Request
 
 from app.models import EscalationPage, EscalationRead
 
@@ -49,3 +49,15 @@ def list_escalations(
         page_size=page_size,
         total=total,
     )
+
+
+@router.get("/escalations/{number}", response_model=EscalationRead)
+def get_escalation(number: str, request: Request):
+    conn = request.app.state.db_conn
+    row = conn.execute("SELECT * FROM escalations WHERE number = ?", (number,)).fetchone()
+    if row is None:
+        raise HTTPException(
+            status_code=404,
+            detail={"message": f"Escalation {number} not found", "code": "ESCALATION_NOT_FOUND"},
+        )
+    return _row_to_escalation_read(row)
