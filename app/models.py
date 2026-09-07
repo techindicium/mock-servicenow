@@ -52,3 +52,24 @@ class IncidentPage(BaseModel):
     page: int
     page_size: int
     total: int
+
+
+# sla-records.plan.md Task 1 (extends this charter-wide foundation file): TaskSla models.
+SLA_DEFINITIONS = ("first_response", "resolution")
+
+
+class TaskSlaRead(BaseModel):
+    sys_id: str
+    incident_number: str
+    sla_definition: Literal["first_response", "resolution"]
+    target_minutes: int
+    actual_minutes: int | None
+    has_breached: bool
+    business_time_only: bool
+
+
+class PaginatedTaskSla(BaseModel):
+    items: list[TaskSlaRead]
+    page: int
+    page_size: int
+    total: int
