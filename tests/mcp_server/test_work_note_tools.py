@@ -14,7 +14,7 @@ class _FakeClient:
         self._created = created
 
     async def list_work_notes(self, incident_number, page=None, page_size=None):
-        return self._notes
+        return {"items": self._notes, "page": 1, "page_size": 50, "total": len(self._notes)}
 
     async def add_work_note(self, incident_number, created_by, note_type, body):
         return self._created
@@ -39,7 +39,9 @@ async def test_list_work_notes_tool_returns_api_result_unmodified(monkeypatch):
         result = await client.call_tool("list_work_notes", {"incident_number": "INC0010001"})
 
     assert result.is_error is False
-    assert result.structured_content == {"result": [_SAMPLE_NOTE]}
+    assert result.structured_content == {
+        "items": [_SAMPLE_NOTE], "page": 1, "page_size": 50, "total": 1,
+    }
 
 
 @pytest.mark.anyio
@@ -50,7 +52,7 @@ async def test_list_work_notes_tool_passes_pagination_params(monkeypatch):
         async def list_work_notes(self, incident_number, page=None, page_size=None):
             captured["page"] = page
             captured["page_size"] = page_size
-            return []
+            return {"items": [], "page": page or 1, "page_size": page_size or 50, "total": 0}
 
     monkeypatch.setattr(work_notes_tools, "_client", lambda: _CapturingClient())
 

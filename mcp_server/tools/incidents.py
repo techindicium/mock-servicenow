@@ -21,7 +21,7 @@ async def list_incidents(
     opened_before: str | None = None,
     escalated: bool | None = None,
     page: int | None = None,
-    per_page: int | None = None,
+    page_size: int | None = None,
 ) -> dict[str, Any]:
     """List Incidents known to itsm-api, filtered and paginated per the given arguments."""
     client = _client()
@@ -29,7 +29,7 @@ async def list_incidents(
         return await client.list_incidents(
             account_id=account_id, state=state, category=category,
             opened_after=opened_after, opened_before=opened_before, escalated=escalated,
-            page=page, per_page=per_page,
+            page=page, page_size=page_size,
         )
     except UpstreamError as exc:
         raise ToolError(exc.message) from exc

@@ -15,7 +15,7 @@ def _client() -> ItsmApiClient:
 @mcp.tool()
 async def list_work_notes(
     incident_number: str, page: int | None = None, page_size: int | None = None
-) -> list[dict]:
+) -> dict[str, Any]:
     """List every WorkNote attached to an Incident in itsm-api, unmodified, in chronological
     order. Supports the same page/page_size pagination itsm-api's list endpoints accept."""
     client = _client()

@@ -39,13 +39,13 @@ async def test_list_incidents_passes_filters_and_pagination_as_query_params():
         assert params["opened_before"] == "2026-09-01"
         assert params["escalated"] == "true"
         assert params["page"] == "2"
-        assert params["per_page"] == "50"
+        assert params["page_size"] == "50"
         return httpx.Response(200, json={"items": [], "page": 2})
 
     await _client(handler).list_incidents(
         account_id="ACCOUNT-1001", state="new", category="billing",
         opened_after="2026-08-01", opened_before="2026-09-01", escalated=True,
-        page=2, per_page=50,
+        page=2, page_size=50,
     )
 
 

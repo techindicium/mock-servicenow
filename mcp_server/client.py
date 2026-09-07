@@ -19,7 +19,7 @@ class ItsmApiClient:
         opened_before: str | None = None,
         escalated: bool | None = None,
         page: int | None = None,
-        per_page: int | None = None,
+        page_size: int | None = None,
     ) -> dict:
         params: dict = {}
         if account_id is not None:
@@ -36,8 +36,8 @@ class ItsmApiClient:
             params["escalated"] = escalated
         if page is not None:
             params["page"] = page
-        if per_page is not None:
-            params["per_page"] = per_page
+        if page_size is not None:
+            params["page_size"] = page_size
         response = await self._request("GET", "/incidents", params=params)
         return response.json()
 

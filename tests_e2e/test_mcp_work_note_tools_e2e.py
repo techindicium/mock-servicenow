@@ -40,24 +40,6 @@ async def test_add_work_note_matches_real_http_state(mcp_dual_server):
 
 
 @pytest.mark.anyio
-@pytest.mark.xfail(
-    reason=(
-        "Genuine bug in the existing (not-to-be-modified) mcp_server/tools/work_notes.py: "
-        "list_work_notes is annotated `-> list[dict]`, but itsm-api's real GET "
-        ".../work_notes response is a paginated dict ({'items': [...], 'page': ..., "
-        "'page_size': ..., 'total': ...}), not a bare list. The mcp SDK validates the tool's "
-        "return value against its declared output type before it ever reaches the client, so "
-        "every real call to list_work_notes raises a pydantic ValidationError inside "
-        "mcp/server/mcpserver/tools/base.py::Tool.run, which the SDK reports to the client as "
-        "a generic CallToolResult(isError=True, content=[TextContent(text='Error executing "
-        "tool list_work_notes')]) — confirmed by direct reproduction against the real "
-        "streamable-http transport. This is a production defect in mcp_server, out of scope "
-        "for this test-only suite to fix (see mcp-e2e's own constraints); tracked here as a "
-        "strict xfail so it surfaces loudly (XPASS) the moment mcp_server's return annotation "
-        "is corrected upstream."
-    ),
-    strict=True,
-)
 async def test_list_work_notes_over_real_mcp_protocol(mcp_dual_server):
     _, mcp_base_url = mcp_dual_server
     tag = uuid.uuid4().hex[:8]
