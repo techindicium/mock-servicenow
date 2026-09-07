@@ -245,3 +245,72 @@ async def test_add_work_note_tool_invalid_note_type_errors_with_verbatim_message
 
     assert result.is_error is True
     assert "note_type must be one of" in result.content[0].text
+
+
+_UNREACHABLE_MESSAGE = "Could not reach itsm-api at http://itsm-api: connection refused"
+
+
+class _UnreachableClient(_FakeClient):
+    async def list_work_notes(self, incident_number, page=None, page_size=None):
+        raise UpstreamUnreachableError(_UNREACHABLE_MESSAGE)
+
+    async def add_work_note(self, incident_number, created_by, note_type, body):
+        raise UpstreamUnreachableError(_UNREACHABLE_MESSAGE)
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize(
+    "tool_name, arguments",
+    [
+        ("list_work_notes", {"incident_number": "INC0010001"}),
+        (
+            "add_work_note",
+            {
+                "incident_number": "INC0010001", "created_by": "assist",
+                "note_type": "comment", "body": "x",
+            },
+        ),
+    ],
+)
+async def test_work_note_tool_unreachable_api_errors_with_clear_message(
+    monkeypatch, tool_name, arguments
+):
+    monkeypatch.setattr(work_notes_tools, "_client", lambda: _UnreachableClient())
+
+    async with Client(mcp) as client:
+        result = await client.call_tool(tool_name, arguments)
+
+    assert result.is_error is True
+    assert "itsm-api" in result.content[0].text
+
+
+class _FiveHundredClient(_FakeClient):
+    async def list_work_notes(self, incident_number, page=None, page_size=None):
+        raise UpstreamError(500, "Internal Server Error")
+
+    async def add_work_note(self, incident_number, created_by, note_type, body):
+        raise UpstreamError(500, "Internal Server Error")
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize(
+    "tool_name, arguments",
+    [
+        ("list_work_notes", {"incident_number": "INC0010001"}),
+        (
+            "add_work_note",
+            {
+                "incident_number": "INC0010001", "created_by": "assist",
+                "note_type": "comment", "body": "x",
+            },
+        ),
+    ],
+)
+async def test_work_note_tool_5xx_errors_with_verbatim_message(monkeypatch, tool_name, arguments):
+    monkeypatch.setattr(work_notes_tools, "_client", lambda: _FiveHundredClient())
+
+    async with Client(mcp) as client:
+        result = await client.call_tool(tool_name, arguments)
+
+    assert result.is_error is True
+    assert "Internal Server Error" in result.content[0].text
