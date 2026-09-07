@@ -1,6 +1,6 @@
 ---
 charter: agent-ui
-status: draft
+status: review-passed
 risk_level: low
 milestone: v1.1
 revision: 1

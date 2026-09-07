@@ -1,9 +1,9 @@
 ---
 charter: agent-ui
-status: draft
+status: review-passed
 risk_level: low
 milestone: mvp
-revision: 1
+revision: 2
 charter-revision: 1
 created: 2026-09-07
 updated: 2026-09-07
@@ -22,8 +22,16 @@ kind: behavioral
 
 - `itsm-api`'s `escalations` and `user-directory` specs are implemented and reachable — this UI
   is served by that same process, so its API calls are same-origin relative requests.
-- `incident-console.spec.md`'s static shell and shared fetch/render helpers exist — this spec
-  extends the same navigation shell and page, it does not create a second one.
+- `incident-console.spec.md`'s static shell and shared fetch/render helpers exist — that spec
+  builds only the page skeleton (a single "Incidents" view container) and shared JS/CSS
+  utilities, with no nav-item markup or view-switching logic of its own. This spec is the one
+  that adds the nav rail itself — its Escalations/Directory items, the Incidents item pointing at
+  the existing skeleton, and the view-switching logic — on top of that skeleton, not a second one.
+- Escalation `summary` and directory `name`/`role` are free-text fields with no auth boundary
+  restricting who can set them (per constitution: no real auth anywhere in this system). This
+  spec's rendering must insert them via `textContent`/safe DOM APIs, never raw HTML
+  interpolation, to avoid a stored-XSS shape — a documentation nudge for how the UI renders
+  API-returned strings, not a new guard on the API/MCP surface itself, which stays unguarded.
 
 ### Behaviors
 
@@ -36,7 +44,11 @@ kind: behavioral
 - **BEH-2** — **When** the Escalations view loads, **then** it fetches `GET /escalations` and
   renders every returned Escalation's `number`, `account_id`, `summary`, `opened_at`, `closed_at`,
   and `owner` — an `owner: null` row renders as an explicit "unassigned" state, never hidden or
-  defaulted to a placeholder name.
+  defaulted to a placeholder name. `incident_number` is deliberately not rendered in this list
+  (matching the charter's escalations-screen scope); this view relies on the API's default page
+  size covering the seeded five-row fixture set in a single page — this milestone adds no
+  pagination controls here, unlike `incident-console.spec.md`'s BEH-1, since Escalation volume
+  is fixed and small by design (see `itsm-api`'s escalations charter Preconditions).
 - **BEH-3** — **When** the viewer submits the escalation edit form (`summary`/`owner`/`closed_at`)
   for one Escalation, **then** the UI calls `PATCH /escalations/{number}` with exactly the changed
   fields, including explicitly clearing `owner` to null when the viewer blanks that field out —
@@ -45,7 +57,8 @@ kind: behavioral
 - **BEH-4** — **When** the Directory view loads, **then** it fetches `GET /users` and
   `GET /assignment_groups` and renders both lists (name/role/assignment_group for each SysUser;
   name for each AssignmentGroup) — read-only, no edit or create controls, since the API does not
-  support them.
+  support them. As with BEH-2, this view relies on the default page size covering the seeded
+  ~12-row directory in a single page; no pagination controls this milestone.
 - **BEH-5** — **When** any API request in this spec fails (network error or non-2xx response),
   **then** the UI shows a visible message naming what failed — it never fails silently or shows a
   blank screen.

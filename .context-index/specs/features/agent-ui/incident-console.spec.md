@@ -1,9 +1,9 @@
 ---
 charter: agent-ui
-status: draft
+status: review-passed
 risk_level: medium
 milestone: mvp
-revision: 1
+revision: 2
 charter-revision: 1
 created: 2026-09-07
 updated: 2026-09-07
@@ -75,6 +75,12 @@ kind: behavioral
 
 ### Postconditions
 
+- Every user-supplied free-text field this spec renders (`short_description`, `description`,
+  work-note `created_by` and `body`) is inserted as text (via `textContent`/safe DOM APIs), never
+  interpreted as HTML or script, in the list, record view, or work-note timeline — these fields
+  are unvalidated content at the API layer (per `work-notes.spec.md` BEH-4's unguarded
+  `created_by`), so this UI is the only place safe rendering can be enforced. This is a rendering
+  discipline, not a new guard on the API/MCP write surface, which stays unguarded per Principle 5.
 - The record view's visible state always matches the Incident's current server state after any
   successful edit or work-note addition — no stale render survives a successful save.
 - No client-side validation in this spec rejects an input the API itself would accept, and no
@@ -108,7 +114,7 @@ kind: behavioral
 
 | Task | Description | Estimated Complexity |
 |------|-------------|---------------------|
-| Static shell + shared fetch/render helpers | HTML page shell, shared JS fetch wrapper (error handling per BEH-9), shared CSS | medium |
+| Static shell + shared fetch/render helpers | HTML page skeleton (a single "Incidents" view container — no nav-item markup or view-switching logic; `escalations-directory-nav.spec.md` owns the nav rail and adds the Escalations/Directory items and switching behavior on top of this skeleton), shared JS fetch wrapper (error handling per BEH-9, rendering via `textContent`/safe DOM APIs, never raw HTML interpolation of API-returned strings), shared CSS | medium |
 | Incident list view | Filter controls, paginated fetch/render, list-to-record navigation | medium |
 | Incident record view | Field rendering including null-handling, work-note timeline render | medium |
 | Add work note | Form + `POST` wiring, optimistic timeline append | small |
