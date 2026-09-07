@@ -1,3 +1,10 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+itsm.db
+servicenow.db
+
 # adev context index
 .context-index/hygiene/
 .context-index/.token-cursor.json
