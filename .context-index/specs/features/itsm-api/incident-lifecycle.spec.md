@@ -1,6 +1,6 @@
 ---
 charter: itsm-api
-status: review-passed
+status: implemented
 risk_level: medium
 milestone: mvp
 revision: 1
@@ -8,6 +8,20 @@ charter-revision: 1
 created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
+source-manifest:
+  sha: "a33fa68"
+  files:
+    - app/db.py
+    - app/errors.py
+    - app/main.py
+    - app/models.py
+    - app/pagination.py
+    - app/routers/incidents.py
+    - requirements.txt
+    - tests/conftest.py
+    - tests/test_db.py
+    - tests/test_incidents.py
+  computed-at: "2026-09-07T18:26:07.486Z"
 ---
 
 # Live Spec: Incident lifecycle CRUD
