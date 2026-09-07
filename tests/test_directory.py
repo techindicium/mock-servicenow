@@ -74,3 +74,44 @@ def test_every_user_group_membership_names_a_known_assignment_group(client, conn
     for user in resp.json()["items"]:
         if user["assignment_group"] is not None:
             assert user["assignment_group"] in valid_groups
+
+
+def test_users_page_shape_returns_all_rows_in_one_page_by_default(client, conn):
+    _seed_directory(conn)
+
+    resp = client.get("/users")
+
+    body = resp.json()
+    assert body["page"] == 1
+    assert body["page_size"] >= body["total"]
+    assert len(body["items"]) == body["total"]
+
+
+def test_assignment_groups_page_shape_returns_all_rows_in_one_page_by_default(client, conn):
+    for name in ("Support Tier 1", "Support Tier 2", "Solution Consultants"):
+        conn.execute("INSERT INTO assignment_group (name) VALUES (?)", (name,))
+    conn.commit()
+
+    resp = client.get("/assignment_groups")
+
+    body = resp.json()
+    assert body["page"] == 1
+    assert len(body["items"]) == body["total"] == 3
+
+
+def test_get_users_with_non_integer_page_returns_422_validation_error(client):
+    resp = client.get("/users", params={"page": "not-a-number"})
+
+    assert resp.status_code == 422
+    body = resp.json()
+    assert body["code"] == "VALIDATION_ERROR"
+    assert "page" in body["message"]
+
+
+def test_get_assignment_groups_with_non_integer_page_size_returns_422_validation_error(client):
+    resp = client.get("/assignment_groups", params={"page_size": "lots"})
+
+    assert resp.status_code == 422
+    body = resp.json()
+    assert body["code"] == "VALIDATION_ERROR"
+    assert "page_size" in body["message"]
