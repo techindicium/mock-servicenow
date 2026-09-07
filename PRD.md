@@ -201,9 +201,15 @@ anywhere participants can read.
 2. **Escalations with no owner.** Two of the five have `owner` null. The packs quote the count and
    the age; nothing asks who is chasing them.
 
-3. **Resolved with an open breach.** A small number of incidents are `resolved` while their
-   `first_response` SLA record shows `has_breached` true. The desk closed them; the SLA record was
-   never revisited.
+3. **Resolved with an open breach.** A large share of incidents — driven honestly by the account
+   mix (three Enterprise accounts, each with a 30-minute first-response commitment, account for
+   most historical volume) and the desk's own documented performance (`course-shared/canon
+   /company.md`: median first response is 94 minutes, already past the laxer Business-tier
+   60-minute commitment) — are `resolved` while their `first_response` SLA record shows
+   `has_breached` true. The desk closed them; the SLA record was never revisited. This is not a
+   rare edge case in the real data: computed honestly, it is closer to the norm than the
+   exception, which is itself the finding worth surfacing in Module 2-4 exercises rather than a
+   count to engineer down to something smaller.
 
 Record all three in `course-shared/heldout/seeded-defects.md` when seeding lands.
 
