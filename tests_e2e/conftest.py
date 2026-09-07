@@ -8,12 +8,45 @@ import socket
 
 import pytest
 
+from tests_e2e.browser import launch_chromium
 from tests_e2e.servers import start_itsm_api, start_mcp_server
 
 
 @pytest.fixture(scope="session")
 def server(tmp_path_factory):
     tmp_path = tmp_path_factory.mktemp("itsm-api-e2e")
+    with start_itsm_api(tmp_path) as base_url:
+        yield base_url
+
+
+@pytest.fixture(scope="session")
+def browser():
+    """Session-scoped real Chromium browser, shared across all ui-e2e tests."""
+    with launch_chromium() as browser:
+        yield browser
+
+
+@pytest.fixture
+def page(browser):
+    """Function-scoped browser context/tab — a fresh, isolated page per test."""
+    context = browser.new_context()
+    page = context.new_page()
+    yield page
+    context.close()
+
+
+@pytest.fixture
+def ui_app_server(tmp_path_factory) -> str:
+    """Function-scoped real server, isolated from the shared session-scoped `server` fixture.
+
+    Deliberately NOT `server` above: BEH-1's default-view assertion and BEH-6's ownerless-row
+    assertion need a starting state this suite controls, and BEH-3/BEH-4's reload-persistence
+    checks must not be confused by another suite's concurrent writes if tests ever run
+    interleaved. A fresh function-scoped server (matching mock-jira's `ui_board_server`
+    precedent) keeps each ui-e2e test's seeded starting state deterministic and independent of
+    api-e2e's/mcp-e2e's tests in the same run.
+    """
+    tmp_path = tmp_path_factory.mktemp("ui-e2e")
     with start_itsm_api(tmp_path) as base_url:
         yield base_url
 

@@ -118,7 +118,17 @@ python3 -m pytest -q
 ruff check .
 ```
 
-<!-- No integration-test or e2e command yet — seeded once this repo has one. -->
+<!-- One-time local setup for the agent-ui real-browser e2e suite (tests_e2e/), covered by the
+     e2e-smoke gate (governance/gates.yaml). Not part of the fast test/lint gates above. -->
+
+```bash
+# One-time setup for the real-browser UI e2e suite
+pip install -r requirements-e2e.txt
+playwright install chromium
+
+# Run the e2e suite (includes the UI e2e tests)
+python3 -m pytest -q tests_e2e/
+```
 
 ### Running with Docker
 
