@@ -2,7 +2,7 @@
 # below. Each sibling itsm-api plan's own Task 1 (work-notes, escalations, sla-records,
 # user-directory) appends its own entity's models to this same file — extending it, never
 # recreating it.
-from typing import List, Literal
+from typing import Literal
 
 from pydantic import BaseModel
 
@@ -71,7 +71,7 @@ class WorkNoteRead(BaseModel):
 
 
 class WorkNoteListResponse(BaseModel):
-    items: List[WorkNoteRead]
+    items: list[WorkNoteRead]
     page: int
     page_size: int
     total: int
