@@ -10,7 +10,9 @@ SLA records. It is the system of record for Portwell's support desk.
 
 Course infrastructure, not a course exercise. Students integrate against it; they do not build
 it. It follows the same shape as `mock-jira`: FastAPI over SQLite, a thin MCP server in front,
-two containers, no auth, no outbound network.
+two containers, no auth, no outbound network — plus a browser-facing agent workspace, same as
+`mock-jira`'s kanban board, so the mock reads and feels like a real support desk to anyone
+looking at it, not just to a program calling its API.
 
 ## Who consumes it
 
@@ -35,9 +37,15 @@ permission boundary real rather than theatrical.
 
 ## Non-goals
 
-Not a ServiceNow clone. Explicitly out of scope: the ServiceNow scripting engine, workflows,
-the Now UI, CMDB, change management, catalogue items, approvals as a subsystem, notifications,
-and anything requiring authentication.
+Not a ServiceNow clone, and not the real Now Platform's UI framework (UI Builder, Service Portal,
+the actual ServiceNow client codebase). Explicitly out of scope: the ServiceNow scripting engine,
+workflows-as-a-configurable-subsystem, CMDB, change management, catalogue items, approvals as a
+subsystem, notifications, and anything requiring authentication.
+
+A simplified agent workspace *is* in scope (see "Agent UI" below) — a real support desk has a UI
+agents work tickets from, and a headless API alone reads as a program's mock, not a support
+desk's. What stays out of scope is ServiceNow's actual UI *technology* and its configurability,
+not the presence of a UI at all.
 
 Out of scope for a different reason: the post-incident write-ups in each repo's
 `docs/incidents/`. Those are documents a person wrote after the fact and they stay documents. The
@@ -160,6 +168,37 @@ That is the point. Activity 2 asks groups to build safe tool definitions with ex
 boundaries and failure behaviour. The exercise is building a constrained wrapper over these, not
 connecting to them. A guarded MCP would remove the exercise.
 
+## Agent UI
+
+A browser-facing support-desk workspace, same shape as `mock-jira`'s kanban board: static
+HTML/CSS/JS served by `itsm-api`'s own FastAPI process (same origin, same container — no
+separate service, no CORS, no runtime base-URL config). It is a pure client of the REST API
+above; it owns no data of its own and never touches the database directly.
+
+- **Incident console.** A filterable, paginated incident list (by `state`, `category`,
+  `account_id`, `escalated`) and a record view per incident showing every field, its work-note
+  timeline (chronological, author and type visible), and a form to add a work note as any author.
+  The state/priority/assigned_to/assignment_group fields are editable inline or via a form that
+  calls `PATCH /incidents/{number}` — exactly as unguarded as the API and the MCP tools it sits
+  beside. The UI adds no confirmation step, no permission check, and no warning banner that the
+  API and MCP layers don't already have; it is a window onto the same unguarded surface, not a
+  new boundary.
+- **Escalations screen.** List all five, including the two ownerless ones exactly as `owner: null`
+  (never hidden or defaulted to a placeholder), with a simple form to edit `summary`/`owner`/
+  `closed_at` via `PATCH /escalations/{number}`.
+- **SLA panel.** On the incident record view, the incident's `task_sla` rows (first_response,
+  resolution) with target/actual minutes and breach status, shown factually — no annotation
+  claiming a breach is wrong, since `business_time_only` disagreements are a seeded discrepancy,
+  not a bug the UI should paper over.
+- **Directory screen.** Read-only list of `sys_user`/`assignment_group` (`GET /users`,
+  `GET /assignment_groups`) — no create/edit, since the API doesn't support them.
+
+Out of scope for this UI: login/auth (nothing to log into), real-time/websocket sync (reload or
+polling is enough), drag-and-drop kanban-style board (incidents don't have a small fixed status
+set the way `mock-jira`'s issues do — five states plus escalation flag reads better as a list/
+detail pair than a column board), and any write action the REST API doesn't already expose
+(no incident/escalation create-and-delete beyond what's listed above).
+
 ## Seed data
 
 Loaded from the existing fixtures so nothing has to be re-invented and the current defects carry
@@ -235,3 +274,6 @@ moving off 8000/8001 in the same change.
 - The MCP server lists nine tools over streamable-http at `/mcp`.
 - No endpoint requires auth and no code path reaches a real network endpoint.
 - The three seeded discrepancies are present and reproducible.
+- The agent UI, served from `itsm-api` at `/`, lets a person browse incidents, open one, read its
+  work-note timeline and SLA status, add a work note, change its state/priority/assignment, and
+  browse escalations and the support directory — entirely by clicking, no HTTP client needed.
