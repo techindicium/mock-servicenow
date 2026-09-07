@@ -83,10 +83,30 @@
     }));
   }
 
+  const PATCHABLE_INCIDENT_FIELDS = ["state", "priority", "assigned_to", "assignment_group"];
+
+  function diffIncidentFields(original, edited) {
+    // Pure change-detector only — no branch here inspects what the new state *means* (e.g.
+    // resolving with an open SLA breach). Adding such a branch would violate BEH-7 / the
+    // constitution's Principle 5, and is exactly the regression the test suite above guards
+    // against.
+    const patch = {};
+    for (const key of PATCHABLE_INCIDENT_FIELDS) {
+      let newValue = edited[key];
+      if (newValue === undefined) continue;
+      if (key === "priority" && newValue !== "") newValue = Number(newValue);
+      if ((key === "assigned_to" || key === "assignment_group") && newValue === "") {
+        newValue = null;
+      }
+      if (newValue !== original[key]) patch[key] = newValue;
+    }
+    return patch;
+  }
+
   return {
     INCIDENT_STATES, PRIORITIES, NOTE_TYPES, formatFetchError,
     buildIncidentQueryParams, shapePaginationInfo,
     formatNullableField, shapeIncidentRecordFields, sortWorkNotesChronological,
-    validateWorkNoteForm, shapeSlaRows,
+    validateWorkNoteForm, shapeSlaRows, diffIncidentFields,
   };
 });

@@ -104,6 +104,20 @@
 
   let currentIncident = null;
 
+  function populateSelectOptions(selectEl, values) {
+    selectEl.innerHTML = "";
+    for (const value of values) selectEl.appendChild(new Option(String(value), String(value)));
+  }
+  populateSelectOptions(document.getElementById("edit-state"), IncidentLogic.INCIDENT_STATES);
+  populateSelectOptions(document.getElementById("edit-priority"), IncidentLogic.PRIORITIES);
+
+  function populateEditForm(incident) {
+    document.getElementById("edit-state").value = incident.state;
+    document.getElementById("edit-priority").value = String(incident.priority);
+    document.getElementById("edit-assigned_to").value = incident.assigned_to || "";
+    document.getElementById("edit-assignment_group").value = incident.assignment_group || "";
+  }
+
   function renderRecordFields(incident) {
     const dl = document.getElementById("record-fields");
     dl.innerHTML = ""; // full replace — Postconditions: no stale field survives a new load
@@ -116,6 +130,7 @@
       dl.appendChild(dd);
     }
     document.getElementById("record-number").textContent = incident.number;
+    populateEditForm(incident);
   }
 
   function renderWorkNoteRow(note) {
@@ -243,6 +258,36 @@
   }
 
   document.getElementById("add-work-note-form").addEventListener("submit", onAddWorkNoteSubmit);
+
+  async function onEditIncidentSubmit(event) {
+    event.preventDefault();
+    const form = event.target;
+    const edited = {
+      state: form.state.value, priority: form.priority.value,
+      assigned_to: form.assigned_to.value, assignment_group: form.assignment_group.value,
+    };
+    const patch = IncidentLogic.diffIncidentFields(currentIncident, edited);
+    if (Object.keys(patch).length === 0) {
+      clearFormError("edit-incident-error");
+      return; // nothing changed — no network call, no third "nothing happened" state
+    }
+    // No confirmation dialog, no state-transition check — BEH-7 / constitution Principle 5.
+    // The save either succeeds (200) or fails with the API's own 422; there is no other outcome.
+    try {
+      const updated = await fetchJson(`/incidents/${currentIncident.number}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(patch),
+      });
+      currentIncident = updated;
+      clearFormError("edit-incident-error");
+      renderRecordFields(updated); // reflects the server's own post-save state (Postconditions)
+    } catch (err) {
+      showFormError("edit-incident-error", IncidentLogic.formatFetchError("Saving incident", err));
+    }
+  }
+
+  document.getElementById("edit-incident-form").addEventListener("submit", onEditIncidentSubmit);
 
   window.IncidentApp = {
     fetchJson, showError, clearError, loadIncidentList, renderIncidentList, renderIncidentRow,

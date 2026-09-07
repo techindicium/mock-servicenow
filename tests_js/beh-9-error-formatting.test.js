@@ -34,3 +34,10 @@ test("BEH-9/UI_NOT_FOUND: a 404 on GET /incidents/{number} surfaces a not-found 
   assert.match(msg, /TICKET-999999/);
   assert.match(msg, /not found/);
 });
+
+test("BEH-9/UI_VALIDATION_ERROR: a 422 on PATCH names the invalid field verbatim", () => {
+  const msg = formatFetchError("Saving incident", {
+    status: 422, message: "priority must be one of: 1, 2, 3, 4",
+  });
+  assert.match(msg, /priority must be one of/);
+});
