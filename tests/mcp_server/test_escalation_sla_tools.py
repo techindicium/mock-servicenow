@@ -2,6 +2,7 @@ import pytest
 from mcp import Client
 
 import mcp_server.tools.escalations as escalations_tools
+import mcp_server.tools.sla as sla_tools
 from mcp_server.server import mcp
 
 
@@ -77,3 +78,78 @@ async def test_list_escalations_tool_no_args_returns_full_result_including_owner
     )
     assert result.structured_content == fake._escalations
     assert result.structured_content["items"][0]["owner"] is None
+
+
+@pytest.mark.anyio
+async def test_list_escalations_tool_forwards_account_id_open_only_and_pagination(monkeypatch):
+    fake = _FakeClient(escalations={"items": []})
+    monkeypatch.setattr(escalations_tools, "_client", lambda: fake)
+
+    async with Client(mcp) as client:
+        await client.call_tool(
+            "list_escalations",
+            {"account_id": "ACCOUNT-1001", "open_only": True, "page": 2, "page_size": 50},
+        )
+
+    assert fake.last_escalation_call == dict(
+        account_id="ACCOUNT-1001", open_only=True, page=2, page_size=50
+    )
+
+
+@pytest.mark.anyio
+async def test_list_sla_records_tool_no_args_returns_full_result_including_breached(monkeypatch):
+    fake = _FakeClient(
+        sla_records={
+            "items": [
+                {
+                    "sys_id": "SLA-0001",
+                    "incident_number": "TICKET-000001",
+                    "sla_definition": "resolution",
+                    "target_minutes": 1440,
+                    "actual_minutes": 2000,
+                    "has_breached": True,
+                    "business_time_only": True,
+                }
+            ],
+            "page": 1,
+            "page_size": 50,
+            "total": 1,
+        }
+    )
+    monkeypatch.setattr(sla_tools, "_client", lambda: fake)
+
+    async with Client(mcp) as client:
+        result = await client.call_tool("list_sla_records", {})
+
+    assert result.is_error is False
+    assert fake.last_sla_call == dict(
+        incident_number=None, breached=None, sla_definition=None, page=None, page_size=None
+    )
+    assert result.structured_content == fake._sla_records
+    assert result.structured_content["items"][0]["has_breached"] is True
+
+
+@pytest.mark.anyio
+async def test_list_sla_records_tool_forwards_all_filters_and_pagination(monkeypatch):
+    fake = _FakeClient(sla_records={"items": []})
+    monkeypatch.setattr(sla_tools, "_client", lambda: fake)
+
+    async with Client(mcp) as client:
+        await client.call_tool(
+            "list_sla_records",
+            {
+                "incident_number": "TICKET-000001",
+                "breached": False,
+                "sla_definition": "first_response",
+                "page": 1,
+                "page_size": 25,
+            },
+        )
+
+    assert fake.last_sla_call == dict(
+        incident_number="TICKET-000001",
+        breached=False,
+        sla_definition="first_response",
+        page=1,
+        page_size=25,
+    )

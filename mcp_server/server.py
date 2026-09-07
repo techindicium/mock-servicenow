@@ -26,6 +26,7 @@ def main() -> None:
     # below is incident-tools' own contribution to the shared list.
     import mcp_server.tools.incidents  # noqa: F401  (import registers the tools as a side effect)
     import mcp_server.tools.escalations  # noqa: F401  (escalation-and-sla-tools' contribution)
+    import mcp_server.tools.sla  # noqa: F401  (escalation-and-sla-tools' contribution)
 
     # See mock-jira/mcp_server/server.py for why this re-import-by-qualified-name is required:
     # running this file as `python -m mcp_server.server` loads it into sys.modules as `__main__`,
