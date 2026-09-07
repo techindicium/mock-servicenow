@@ -1,8 +1,9 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException, Request
 
-from app.models import INCIDENT_STATES, IncidentPage, IncidentRead
+from app.db import next_incident_number
+from app.models import INCIDENT_STATES, IncidentCreate, IncidentPage, IncidentRead
 
 router = APIRouter()
 
@@ -108,4 +109,29 @@ def get_incident(number: str, request: Request):
             status_code=404,
             detail={"message": f"Incident {number} not found", "code": "INCIDENT_NOT_FOUND"},
         )
+    return _row_to_incident(row)
+
+
+@router.post("/incidents", response_model=IncidentRead, status_code=201)
+def create_incident(payload: IncidentCreate, request: Request):
+    conn = request.app.state.db_conn
+    number = next_incident_number(conn)
+    opened_at = datetime.now(timezone.utc).isoformat()
+
+    conn.execute(
+        """
+        INSERT INTO incidents
+            (number, account_id, category, short_description, description, state,
+             priority, opened_at, resolved_at, assigned_to, assignment_group, escalated)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            number, payload.account_id, payload.category, payload.short_description,
+            payload.description, payload.state, payload.priority, opened_at,
+            payload.resolved_at, payload.assigned_to, payload.assignment_group,
+            1 if payload.escalated else 0,
+        ),
+    )
+    conn.commit()
+    row = conn.execute("SELECT * FROM incidents WHERE number = ?", (number,)).fetchone()
     return _row_to_incident(row)

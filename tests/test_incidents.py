@@ -91,3 +91,69 @@ def test_get_incident_unknown_number_returns_404(client):
     body = resp.json()
     assert body["code"] == "INCIDENT_NOT_FOUND"
     assert "TICKET-999999" in body["message"]
+
+
+_REQUIRED = {
+    "account_id": "ACC-1", "category": "network", "short_description": "Router down",
+    "description": "Router down since 9am", "state": "new", "priority": 2,
+}
+
+
+def test_create_incident_returns_201_with_server_assigned_number_and_defaults(client):
+    resp = client.post("/incidents", json=_REQUIRED)
+    assert resp.status_code == 201
+    body = resp.json()
+    assert body["number"] == "TICKET-000001"
+    assert body["escalated"] is False
+    assert body["resolved_at"] is None
+    assert body["assigned_to"] is None
+    assert body["assignment_group"] is None
+    assert body["opened_at"] is not None
+
+
+def test_create_second_incident_number_never_collides(client):
+    client.post("/incidents", json=_REQUIRED)
+    resp = client.post("/incidents", json=_REQUIRED)
+    assert resp.json()["number"] == "TICKET-000002"
+
+
+def test_create_incident_retrievable_immediately_via_get_list_and_get_by_number(client):
+    created = client.post("/incidents", json=_REQUIRED).json()
+    assert client.get(f"/incidents/{created['number']}").status_code == 200
+    listed = client.get(f"/incidents?account_id={_REQUIRED['account_id']}").json()
+    assert created["number"] in [i["number"] for i in listed["items"]]
+
+
+def test_create_incident_missing_required_field_returns_422_and_creates_nothing(client):
+    payload = dict(_REQUIRED)
+    del payload["short_description"]
+    resp = client.post("/incidents", json=payload)
+    assert resp.status_code == 422
+    body = resp.json()
+    assert body["code"] == "VALIDATION_ERROR"
+    assert "short_description" in body["message"]
+    assert client.get("/incidents").json()["total"] == 0
+
+
+def test_create_incident_invalid_state_returns_422_naming_allowed_values(client):
+    payload = dict(_REQUIRED, state="bogus")
+    resp = client.post("/incidents", json=payload)
+    assert resp.status_code == 422
+    body = resp.json()
+    assert body["code"] == "VALIDATION_ERROR"
+    assert "state" in body["message"]
+
+
+def test_create_incident_invalid_priority_returns_422(client):
+    payload = dict(_REQUIRED, priority=9)
+    resp = client.post("/incidents", json=payload)
+    assert resp.status_code == 422
+    assert resp.json()["code"] == "VALIDATION_ERROR"
+
+
+def test_create_incident_malformed_json_returns_400(client):
+    resp = client.post(
+        "/incidents", content=b"{not json", headers={"Content-Type": "application/json"}
+    )
+    assert resp.status_code == 400
+    assert resp.json()["code"] == "MALFORMED_JSON"
