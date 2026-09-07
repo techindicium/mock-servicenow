@@ -1,7 +1,10 @@
 import httpx
 
 EXPECTED_PATHS = {
-    "/", "/incidents", "/incidents/{number}",
+    # "/" is deliberately excluded: incident-console.plan.md repurposed it to serve the
+    # agent-ui static shell (FileResponse, include_in_schema=False), not a documented JSON
+    # API route — see app/main.py's own comment on serve_incident_console().
+    "/incidents", "/incidents/{number}",
     "/incidents/{number}/work_notes",
     "/escalations", "/escalations/{number}",
     "/sla", "/users", "/assignment_groups",
