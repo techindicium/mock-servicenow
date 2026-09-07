@@ -7,6 +7,7 @@ from typing import Literal
 from pydantic import BaseModel
 
 INCIDENT_STATES = ("new", "in_progress", "on_hold", "resolved", "closed")
+NOTE_TYPES = ("comment", "work_note", "state_change", "proposal_sent")
 
 
 class IncidentCreate(BaseModel):
@@ -49,6 +50,100 @@ class IncidentPatch(BaseModel):
 
 class IncidentPage(BaseModel):
     items: list[IncidentRead]
+    page: int
+    page_size: int
+    total: int
+
+
+class WorkNoteCreate(BaseModel):
+    created_by: str
+    note_type: Literal["comment", "work_note", "state_change", "proposal_sent"]
+    body: str
+
+
+class WorkNoteRead(BaseModel):
+    sys_id: str
+    incident_number: str
+    created_at: str
+    created_by: str
+    note_type: str
+    body: str
+
+
+class WorkNoteListResponse(BaseModel):
+    items: list[WorkNoteRead]
+    page: int
+    page_size: int
+    total: int
+
+
+# sla-records.plan.md Task 1 (extends this charter-wide foundation file): TaskSla models.
+SLA_DEFINITIONS = ("first_response", "resolution")
+
+
+class TaskSlaRead(BaseModel):
+    sys_id: str
+    incident_number: str
+    sla_definition: Literal["first_response", "resolution"]
+    target_minutes: int
+    actual_minutes: int | None
+    has_breached: bool
+    business_time_only: bool
+
+
+class PaginatedTaskSla(BaseModel):
+    items: list[TaskSlaRead]
+    page: int
+    page_size: int
+    total: int
+
+
+class AssignmentGroupRead(BaseModel):
+    name: str
+
+
+class SysUserRead(BaseModel):
+    name: str
+    role: str
+    assignment_group: str | None = None
+
+
+class PaginatedAssignmentGroups(BaseModel):
+    items: list[AssignmentGroupRead]
+    page: int
+    page_size: int
+    total: int
+
+
+class PaginatedUsers(BaseModel):
+    items: list[SysUserRead]
+    page: int
+    page_size: int
+    total: int
+
+
+class EscalationRead(BaseModel):
+    number: str
+    incident_number: str | None
+    account_id: str
+    summary: str
+    opened_at: str
+    closed_at: str | None
+    owner: str | None
+
+
+class EscalationPatch(BaseModel):
+    # Deliberately no `number`, `account_id`, `opened_at`, or `incident_number` field — this is
+    # the structural enforcement of the immutable-fields list (see escalations router's PATCH):
+    # Pydantic drops unknown extra keys silently, so there is no path for them to reach the
+    # UPDATE statement.
+    summary: str | None = None
+    owner: str | None = None
+    closed_at: str | None = None
+
+
+class EscalationPage(BaseModel):
+    items: list[EscalationRead]
     page: int
     page_size: int
     total: int

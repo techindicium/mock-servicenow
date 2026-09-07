@@ -9,7 +9,11 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.db import create_schema, get_connection
 from app.errors import http_exception_handler, validation_exception_handler
+from app.routers.directory import router as directory_router
+from app.routers.escalations import router as escalations_router
 from app.routers.incidents import router as incidents_router
+from app.routers.sla import router as sla_router
+from app.routers.work_notes import router as work_notes_router
 
 
 def create_app(db_path: str) -> FastAPI:
@@ -21,6 +25,10 @@ def create_app(db_path: str) -> FastAPI:
     app.add_exception_handler(StarletteHTTPException, http_exception_handler)
     app.add_exception_handler(RequestValidationError, validation_exception_handler)
     app.include_router(incidents_router)
+    app.include_router(work_notes_router)
+    app.include_router(sla_router)
+    app.include_router(directory_router)
+    app.include_router(escalations_router)
 
     @app.get("/")
     def health():
