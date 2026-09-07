@@ -24,9 +24,8 @@ def test_start_itsm_api_raises_e2e_server_start_timeout_on_unhealthy_startup(tmp
     not_a_dir = tmp_path / "not_a_directory"
     not_a_dir.write_text("this is a file, not a directory, so app startup fails fast")
 
-    with pytest.raises(E2EServerStartTimeout) as exc_info:
-        with start_itsm_api(not_a_dir):
-            pass  # pragma: no cover - should never be reached
+    with pytest.raises(E2EServerStartTimeout) as exc_info, start_itsm_api(not_a_dir):
+        pass  # pragma: no cover - should never be reached
 
     message = str(exc_info.value)
     assert "startup timeout" in message  # names the timeout

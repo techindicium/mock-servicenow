@@ -69,6 +69,7 @@ def start_itsm_api(tmp_path: Path) -> Iterator[str]:
         env=env,
         capture_output=True,
         text=True,
+        check=False,
     )
     if seed_result.returncode != 0:
         raise E2EServerStartTimeout(

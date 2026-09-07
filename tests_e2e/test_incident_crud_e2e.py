@@ -6,13 +6,12 @@ from tests_e2e.servers import start_itsm_api
 def test_fresh_seed_incidents_visible_over_real_http(tmp_path):
     # BEH-1: isolated fresh server, not the shared session fixture — this asserts
     # seed-then-serve, not just that some incident happens to exist.
-    with start_itsm_api(tmp_path) as base_url:
-        with httpx.Client(base_url=base_url, timeout=5) as client:
-            resp = client.get("/incidents")
-            assert resp.status_code == 200
-            body = resp.json()
-            items = body.get("items", body)
-            assert len(items) > 0
+    with start_itsm_api(tmp_path) as base_url, httpx.Client(base_url=base_url, timeout=5) as client:
+        resp = client.get("/incidents")
+        assert resp.status_code == 200
+        body = resp.json()
+        items = body.get("items", body)
+        assert len(items) > 0
 
 
 def test_full_incident_lifecycle_over_real_http(server):
