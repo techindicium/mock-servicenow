@@ -1,6 +1,6 @@
 ---
 charter: itsm-api
-status: implemented
+status: validated
 risk_level: low
 milestone: mvp
 revision: 2

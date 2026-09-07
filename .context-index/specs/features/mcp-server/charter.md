@@ -1,7 +1,7 @@
 ---
 status: approved
 kind: feature
-revision: 11
+revision: 21
 updated: 2026-09-07
 ---
 
@@ -86,16 +86,16 @@ behaviour around these tools. A guarded MCP here would remove the exercise.
 
 | Capability | Description | Priority | Milestone | Status |
 |-----------|-------------|----------|-------|--------|
-| list_incidents tool | Wraps `GET /incidents`, all filter/pagination parameters | must-have | mvp | implemented |
-| get_incident tool | Wraps `GET /incidents/{number}` | must-have | mvp | implemented |
-| create_incident tool | Wraps `POST /incidents` | must-have | mvp | implemented |
-| update_incident tool | Wraps `PATCH /incidents/{number}`, unguarded | must-have | mvp | implemented |
-| list_work_notes tool | Wraps `GET /incidents/{number}/work_notes` | must-have | mvp | implemented |
-| add_work_note tool | Wraps `POST /incidents/{number}/work_notes`, unguarded author | must-have | mvp | implemented |
-| list_escalations tool | Wraps `GET /escalations`, filter parameters | must-have | mvp | implemented |
-| list_sla_records tool | Wraps `GET /sla`, filter parameters | must-have | mvp | implemented |
-| list_users tool | Wraps `GET /users` | must-have | mvp | implemented |
-| End-to-end MCP test suite | A real MCP client, over the real streamable-http transport, against a live server process | must-have | v1.1 | implemented |
+| list_incidents tool | Wraps `GET /incidents`, all filter/pagination parameters | must-have | mvp | validated |
+| get_incident tool | Wraps `GET /incidents/{number}` | must-have | mvp | validated |
+| create_incident tool | Wraps `POST /incidents` | must-have | mvp | validated |
+| update_incident tool | Wraps `PATCH /incidents/{number}`, unguarded | must-have | mvp | validated |
+| list_work_notes tool | Wraps `GET /incidents/{number}/work_notes` | must-have | mvp | validated |
+| add_work_note tool | Wraps `POST /incidents/{number}/work_notes`, unguarded author | must-have | mvp | validated |
+| list_escalations tool | Wraps `GET /escalations`, filter parameters | must-have | mvp | validated |
+| list_sla_records tool | Wraps `GET /sla`, filter parameters | must-have | mvp | validated |
+| list_users tool | Wraps `GET /users` | must-have | mvp | validated |
+| End-to-end MCP test suite | A real MCP client, over the real streamable-http transport, against a live server process | must-have | v1.1 | validated |
 
 ## Deferred Capabilities
 

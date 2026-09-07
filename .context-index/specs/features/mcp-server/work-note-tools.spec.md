@@ -1,6 +1,6 @@
 ---
 charter: mcp-server
-status: implemented
+status: validated
 risk_level: medium
 milestone: mvp
 revision: 1

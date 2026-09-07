@@ -1,7 +1,7 @@
 ---
 status: approved
 kind: feature
-revision: 9
+revision: 17
 updated: 2026-09-07
 ---
 
@@ -120,15 +120,15 @@ ticket) is the point of building this at all.
 
 | Capability | Description | Priority | Milestone | Status |
 |-----------|-------------|----------|-------|--------|
-| List/get Incident | List Incidents (filterable by `account_id`, `state`, `category`, `opened_after`, `opened_before`, `escalated`; paginated), fetch one by number | must-have | mvp | implemented |
-| Create/update Incident | Create an Incident; update `state`, `priority`, `assigned_to`, `assignment_group` — unguarded | must-have | mvp | implemented |
-| List/add Work Notes | List an Incident's work notes; post a new one as any author, any note_type — unguarded | must-have | mvp | implemented |
-| List/get/update Escalations | List (filterable by `account_id`, `open_only`), fetch, and update Escalations | must-have | mvp | implemented |
-| List SLA records | List Task SLA records (filterable by `incident_number`, `breached`, `sla_definition`) | must-have | mvp | implemented |
-| List users and assignment groups | List the support-team directory | must-have | mvp | implemented |
-| Seed fixture data | Idempotent seed command populating all six tables from the sources PRD.md names, preserving the ten narrative tickets and the three seeded discrepancies | must-have | mvp | implemented |
+| List/get Incident | List Incidents (filterable by `account_id`, `state`, `category`, `opened_after`, `opened_before`, `escalated`; paginated), fetch one by number | must-have | mvp | validated |
+| Create/update Incident | Create an Incident; update `state`, `priority`, `assigned_to`, `assignment_group` — unguarded | must-have | mvp | validated |
+| List/add Work Notes | List an Incident's work notes; post a new one as any author, any note_type — unguarded | must-have | mvp | validated |
+| List/get/update Escalations | List (filterable by `account_id`, `open_only`), fetch, and update Escalations | must-have | mvp | validated |
+| List SLA records | List Task SLA records (filterable by `incident_number`, `breached`, `sla_definition`) | must-have | mvp | validated |
+| List users and assignment groups | List the support-team directory | must-have | mvp | validated |
+| Seed fixture data | Idempotent seed command populating all six tables from the sources PRD.md names, preserving the ten narrative tickets and the three seeded discrepancies | must-have | mvp | validated |
 | OpenAPI contract | Auto-generated, browsable API documentation | should-have | mvp | planned |
-| End-to-end API test suite | Real HTTP calls over a real socket against a live server process | must-have | v1.1 | implemented |
+| End-to-end API test suite | Real HTTP calls over a real socket against a live server process | must-have | v1.1 | validated |
 
 ## Deferred Capabilities
 
