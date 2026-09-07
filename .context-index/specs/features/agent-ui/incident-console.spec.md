@@ -1,6 +1,6 @@
 ---
 charter: agent-ui
-status: implemented
+status: validated
 risk_level: medium
 milestone: mvp
 revision: 2

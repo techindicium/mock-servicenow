@@ -1,7 +1,7 @@
 ---
 status: approved
 kind: feature
-revision: 11
+revision: 17
 updated: 2026-09-07
 ---
 
@@ -106,12 +106,12 @@ presence of a UI at all — a real support desk has a UI agents work tickets fro
 
 | Capability | Description | Priority | Milestone | Status |
 |-----------|-------------|----------|-------|--------|
-| Incident list view | Filterable, paginated list of Incidents | must-have | mvp | implemented |
-| Incident record view | Full-detail view of one Incident | must-have | mvp | implemented |
-| Work-note timeline + add form | Chronological WorkNote list on the record view, plus an add-note form | must-have | mvp | implemented |
-| Edit incident fields | Inline/form editing of state/priority/assigned_to/assignment_group, unguarded | must-have | mvp | implemented |
-| Create incident | Form calling `POST /incidents` | must-have | mvp | implemented |
-| SLA panel | TaskSla rows shown on the incident record view | must-have | mvp | implemented |
+| Incident list view | Filterable, paginated list of Incidents | must-have | mvp | validated |
+| Incident record view | Full-detail view of one Incident | must-have | mvp | validated |
+| Work-note timeline + add form | Chronological WorkNote list on the record view, plus an add-note form | must-have | mvp | validated |
+| Edit incident fields | Inline/form editing of state/priority/assigned_to/assignment_group, unguarded | must-have | mvp | validated |
+| Create incident | Form calling `POST /incidents` | must-have | mvp | validated |
+| SLA panel | TaskSla rows shown on the incident record view | must-have | mvp | validated |
 | Escalations screen | List + edit form for Escalations, ownerless rows shown as-is | must-have | mvp | implemented |
 | Directory screen | Read-only Users/AssignmentGroups list | should-have | mvp | implemented |
 | App navigation shell | Persistent left-hand nav (Incidents / Escalations / Directory) | should-have | mvp | implemented |
