@@ -1,6 +1,6 @@
 ---
 charter: agent-ui
-status: review-passed
+status: implemented
 risk_level: low
 milestone: v1.1
 revision: 1
@@ -8,6 +8,20 @@ charter-revision: 1
 created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
+source-manifest:
+  sha: "49d12ea"
+  files:
+    - requirements-e2e.txt
+    - tests_e2e/browser.py
+    - tests_e2e/conftest.py
+    - tests_e2e/test_browser_fixture.py
+    - tests_e2e/test_ui_create_incident_e2e.py
+    - tests_e2e/test_ui_edit_incident_e2e.py
+    - tests_e2e/test_ui_error_path_e2e.py
+    - tests_e2e/test_ui_escalations_directory_e2e.py
+    - tests_e2e/test_ui_incident_render_e2e.py
+    - tests_e2e/test_ui_work_note_e2e.py
+  computed-at: "2026-09-07T23:35:28.134Z"
 infra_requirements:
   systems:
     - name: "Playwright browser binary (Chromium)"

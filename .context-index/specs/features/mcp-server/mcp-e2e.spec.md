@@ -9,7 +9,7 @@ created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
 source-manifest:
-  sha: "fa8675f"
+  sha: "e7d8043"
   files:
     - requirements-e2e.txt
     - tests/test_requirements_files.py
@@ -27,7 +27,7 @@ source-manifest:
     - tests_e2e/test_mcp_signature_round_trip_e2e.py
     - tests_e2e/test_mcp_tool_discovery_e2e.py
     - tests_e2e/test_mcp_work_note_tools_e2e.py
-  computed-at: "2026-09-07T20:08:23.327Z"
+  computed-at: "2026-09-07T23:35:28.051Z"
 ---
 
 # Live Spec: End-to-end MCP test suite (real client/transport)
