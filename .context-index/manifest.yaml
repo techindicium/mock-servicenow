@@ -60,18 +60,15 @@ sync:
 # at .context-index/specs/features/<module-slug>/charter.md
 # ============================================================================
 
-modules: []
-  # - slug: auth
-  #   name: Authentication
-  #   paths:
-  #     - src/auth/
-  #     - src/middleware/auth.ts
-
-  # - slug: api
-  #   name: API Layer
-  #   paths:
-  #     - src/api/
-  #     - src/routes/
+modules:
+  - slug: itsm-api
+    name: ITSM API
+    paths:
+      - app/
+  - slug: mcp-server
+    name: MCP Server
+    paths:
+      - mcp_server/
 
 # ============================================================================
 # External Contexts
