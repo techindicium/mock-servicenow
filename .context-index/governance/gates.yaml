@@ -48,17 +48,16 @@ gates:
     triggers:
       - post-implement
 
-  # - id: e2e-smoke
-  #   name: E2E API Smoke Suite
-  #   kind: deterministic
-  #   tier: e2e
-  #   group: smoke
-  #   command: [python3, -m, pytest, -q, tests_e2e/]
-  #   scope: project
-  #   required: false
-  #   severity: warning
-  #   triggers:
-  #     - post-implement
+  - id: e2e-smoke
+    name: E2E API Smoke Suite
+    kind: deterministic
+    tier: e2e
+    command: [python3, -m, pytest, -q, tests_e2e/]
+    scope: project
+    required: false
+    severity: warning
+    triggers:
+      - post-implement
 
 # Lifecycle transition requirements — left empty until this repo has real code,
 # per the unwired-sentinel guidance in the template this was scaffolded from.
