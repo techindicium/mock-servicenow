@@ -22,11 +22,13 @@ ArgModelBase.model_config = ConfigDict(extra="forbid")
 
 def main() -> None:
     # Each mcp-server tool plan (incident-tools, work-note-tools, escalation-and-sla-tools,
-    # user-tools) adds its own import line here as a side-effecting registration step; the line
-    # below is incident-tools' own contribution to the shared list.
-    import mcp_server.tools.incidents  # noqa: F401  (import registers the tools as a side effect)
-    import mcp_server.tools.escalations  # noqa: F401  (escalation-and-sla-tools' contribution)
-    import mcp_server.tools.sla  # noqa: F401  (escalation-and-sla-tools' contribution)
+    # user-tools) adds its own import line here as a side-effecting registration step —
+    # incidents.py from incident-tools, escalations.py/sla.py from escalation-and-sla-tools.
+    # ruff sorts these into one import block; since all three bind the same top-level
+    # `mcp_server` name, only the last one needs `noqa: F401` (F401 only fires on that binding).
+    import mcp_server.tools.escalations
+    import mcp_server.tools.incidents
+    import mcp_server.tools.sla  # noqa: F401  (import registers the tools as a side effect)
 
     # See mock-jira/mcp_server/server.py for why this re-import-by-qualified-name is required:
     # running this file as `python -m mcp_server.server` loads it into sys.modules as `__main__`,

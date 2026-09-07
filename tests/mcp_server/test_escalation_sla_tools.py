@@ -23,9 +23,12 @@ class _FakeClient:
         self.last_sla_call = None
 
     async def list_escalations(self, account_id=None, open_only=None, page=None, page_size=None):
-        self.last_escalation_call = dict(
-            account_id=account_id, open_only=open_only, page=page, page_size=page_size
-        )
+        self.last_escalation_call = {
+            "account_id": account_id,
+            "open_only": open_only,
+            "page": page,
+            "page_size": page_size,
+        }
         if self._error is not None:
             raise self._error
         return self._escalations
@@ -33,13 +36,13 @@ class _FakeClient:
     async def list_sla_records(
         self, incident_number=None, breached=None, sla_definition=None, page=None, page_size=None
     ):
-        self.last_sla_call = dict(
-            incident_number=incident_number,
-            breached=breached,
-            sla_definition=sla_definition,
-            page=page,
-            page_size=page_size,
-        )
+        self.last_sla_call = {
+            "incident_number": incident_number,
+            "breached": breached,
+            "sla_definition": sla_definition,
+            "page": page,
+            "page_size": page_size,
+        }
         if self._error is not None:
             raise self._error
         return self._sla_records
@@ -74,9 +77,12 @@ async def test_list_escalations_tool_no_args_returns_full_result_including_owner
         result = await client.call_tool("list_escalations", {})
 
     assert result.is_error is False
-    assert fake.last_escalation_call == dict(
-        account_id=None, open_only=None, page=None, page_size=None
-    )
+    assert fake.last_escalation_call == {
+        "account_id": None,
+        "open_only": None,
+        "page": None,
+        "page_size": None,
+    }
     assert result.structured_content == fake._escalations
     assert result.structured_content["items"][0]["owner"] is None
 
@@ -92,9 +98,12 @@ async def test_list_escalations_tool_forwards_account_id_open_only_and_paginatio
             {"account_id": "ACCOUNT-1001", "open_only": True, "page": 2, "page_size": 50},
         )
 
-    assert fake.last_escalation_call == dict(
-        account_id="ACCOUNT-1001", open_only=True, page=2, page_size=50
-    )
+    assert fake.last_escalation_call == {
+        "account_id": "ACCOUNT-1001",
+        "open_only": True,
+        "page": 2,
+        "page_size": 50,
+    }
 
 
 @pytest.mark.anyio
@@ -123,9 +132,13 @@ async def test_list_sla_records_tool_no_args_returns_full_result_including_breac
         result = await client.call_tool("list_sla_records", {})
 
     assert result.is_error is False
-    assert fake.last_sla_call == dict(
-        incident_number=None, breached=None, sla_definition=None, page=None, page_size=None
-    )
+    assert fake.last_sla_call == {
+        "incident_number": None,
+        "breached": None,
+        "sla_definition": None,
+        "page": None,
+        "page_size": None,
+    }
     assert result.structured_content == fake._sla_records
     assert result.structured_content["items"][0]["has_breached"] is True
 
@@ -147,13 +160,13 @@ async def test_list_sla_records_tool_forwards_all_filters_and_pagination(monkeyp
             },
         )
 
-    assert fake.last_sla_call == dict(
-        incident_number="TICKET-000001",
-        breached=False,
-        sla_definition="first_response",
-        page=1,
-        page_size=25,
-    )
+    assert fake.last_sla_call == {
+        "incident_number": "TICKET-000001",
+        "breached": False,
+        "sla_definition": "first_response",
+        "page": 1,
+        "page_size": 25,
+    }
 
 
 @pytest.mark.anyio
