@@ -94,3 +94,47 @@ def test_post_work_note_does_not_mutate_parent_incident(client):
     )
     after = client.get(f"/incidents/{number}").json()
     assert before == after
+
+
+def test_post_work_note_invalid_note_type_returns_422(client):
+    number = _create_incident(client)
+    resp = client.post(
+        f"/incidents/{number}/work_notes",
+        json={"created_by": "assist", "note_type": "not_a_real_type", "body": "x"},
+    )
+    assert resp.status_code == 422
+    body = resp.json()
+    assert body["code"] == "VALIDATION_ERROR"
+    assert "note_type" in body["message"]
+    # Error Cases table requires naming the allowed values, not just "field is required"
+    for allowed in ("comment", "work_note", "state_change", "proposal_sent"):
+        assert allowed in body["message"]
+
+    list_resp = client.get(f"/incidents/{number}/work_notes")
+    assert list_resp.json()["total"] == 0
+
+
+def test_post_work_note_unknown_incident_returns_404_and_creates_nothing(client):
+    resp = client.post(
+        "/incidents/TICKET-999999/work_notes",
+        json={"created_by": "assist", "note_type": "comment", "body": "x"},
+    )
+    assert resp.status_code == 404
+    body = resp.json()
+    assert body["code"] == "INCIDENT_NOT_FOUND"
+    assert "TICKET-999999" in body["message"]
+
+
+def test_post_work_note_missing_required_field_returns_422(client):
+    number = _create_incident(client)
+    resp = client.post(
+        f"/incidents/{number}/work_notes",
+        json={"created_by": "assist", "note_type": "comment"},  # body missing
+    )
+    assert resp.status_code == 422
+    body = resp.json()
+    assert body["code"] == "VALIDATION_ERROR"
+    assert "body" in body["message"]
+
+    list_resp = client.get(f"/incidents/{number}/work_notes")
+    assert list_resp.json()["total"] == 0
