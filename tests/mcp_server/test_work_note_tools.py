@@ -93,3 +93,94 @@ async def test_list_work_notes_tool_missing_incident_number_errors_before_http_r
 
     assert result.is_error is True
     assert called["value"] is False  # schema validation rejected the call before _client() ran
+
+
+_CREATED_NOTE = {
+    "sys_id": "INTERACTION-0000002", "incident_number": "INC0010001",
+    "created_by": "assist", "note_type": "comment", "body": "Auto-triaged",
+    "created_at": "2026-09-05 00:00:01",
+}
+
+
+class _FakeAddClient(_FakeClient):
+    def __init__(self, created=None, error=None):
+        super().__init__()
+        self._created = created
+        self._error = error
+        self.received = None
+
+    async def add_work_note(self, incident_number, created_by, note_type, body):
+        self.received = (incident_number, created_by, note_type, body)
+        if self._error is not None:
+            raise self._error
+        return self._created
+
+
+@pytest.mark.anyio
+async def test_add_work_note_tool_creates_and_returns_work_note_with_sys_id(monkeypatch):
+    fake = _FakeAddClient(created=_CREATED_NOTE)
+    monkeypatch.setattr(work_notes_tools, "_client", lambda: fake)
+
+    async with Client(mcp) as client:
+        result = await client.call_tool(
+            "add_work_note",
+            {
+                "incident_number": "INC0010001",
+                "created_by": "assist",
+                "note_type": "comment",
+                "body": "Auto-triaged",
+            },
+        )
+
+    assert result.is_error is False
+    assert result.structured_content == _CREATED_NOTE
+    assert fake.received == ("INC0010001", "assist", "comment", "Auto-triaged")
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize("missing_field", ["incident_number", "created_by", "note_type", "body"])
+async def test_add_work_note_tool_missing_required_field_errors_before_http_request(
+    monkeypatch, missing_field
+):
+    called = {"value": False}
+
+    def _client_spy():
+        called["value"] = True
+        return _FakeAddClient()
+
+    monkeypatch.setattr(work_notes_tools, "_client", _client_spy)
+
+    arguments = {
+        "incident_number": "INC0010001", "created_by": "assist",
+        "note_type": "comment", "body": "x",
+    }
+    del arguments[missing_field]
+
+    async with Client(mcp) as client:
+        result = await client.call_tool("add_work_note", arguments)
+
+    assert result.is_error is True
+    assert called["value"] is False  # schema validation rejected the call before _client() ran
+
+
+@pytest.mark.anyio
+async def test_add_work_note_tool_non_string_created_by_errors_before_http_request(monkeypatch):
+    called = {"value": False}
+
+    def _client_spy():
+        called["value"] = True
+        return _FakeAddClient()
+
+    monkeypatch.setattr(work_notes_tools, "_client", _client_spy)
+
+    async with Client(mcp) as client:
+        result = await client.call_tool(
+            "add_work_note",
+            {
+                "incident_number": "INC0010001", "created_by": 12345,  # non-string
+                "note_type": "comment", "body": "x",
+            },
+        )
+
+    assert result.is_error is True
+    assert called["value"] is False

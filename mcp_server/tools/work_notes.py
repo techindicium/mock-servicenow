@@ -27,3 +27,31 @@ async def list_work_notes(
         raise ToolError(str(exc)) from exc
     finally:
         await client.aclose()
+
+
+@mcp.tool()
+async def add_work_note(
+    incident_number: str,
+    created_by: str,
+    note_type: str,
+    body: str,
+) -> dict[str, Any]:
+    """Add a work note to an Incident in itsm-api.
+
+    `created_by` accepts any value — `customer`, any agent name, or `assist` — with no identity
+    check; this tool performs no authorship guard by design (see this repo's constitution,
+    "MCP tools stay unguarded"). `note_type` is validated for presence and type only here; its
+    domain-value membership (`comment`/`work_note`/`state_change`/`proposal_sent`) is validated
+    by itsm-api, which returns 422 for an invalid value. `incident_number`, `created_by`,
+    `note_type`, and `body` are all required — a call missing any of them fails schema validation
+    before any HTTP request is made.
+    """
+    client = _client()
+    try:
+        return await client.add_work_note(incident_number, created_by, note_type, body)
+    except UpstreamError as exc:
+        raise ToolError(exc.message) from exc
+    except UpstreamUnreachableError as exc:
+        raise ToolError(str(exc)) from exc
+    finally:
+        await client.aclose()
