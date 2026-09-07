@@ -1,0 +1,51 @@
+from typing import Literal
+
+from fastapi import APIRouter, Request
+
+from app.models import PaginatedTaskSla, TaskSlaRead
+
+router = APIRouter()
+
+
+def _row_to_task_sla_read(row) -> TaskSlaRead:
+    return TaskSlaRead(
+        sys_id=row["sys_id"],
+        incident_number=row["incident_number"],
+        sla_definition=row["sla_definition"],
+        target_minutes=row["target_minutes"],
+        actual_minutes=row["actual_minutes"],
+        has_breached=bool(row["has_breached"]),
+        business_time_only=bool(row["business_time_only"]),
+    )
+
+
+@router.get("/sla", response_model=PaginatedTaskSla)
+def list_sla_records(
+    request: Request,
+    incident_number: str | None = None,
+    breached: bool | None = None,
+    sla_definition: Literal["first_response", "resolution"] | None = None,
+    page: int = 1,
+    page_size: int = 50,
+):
+    conn = request.app.state.db_conn
+    query = "SELECT * FROM task_sla WHERE 1=1"
+    params: list = []
+    if incident_number is not None:
+        query += " AND incident_number = ?"
+        params.append(incident_number)
+    if breached is not None:
+        query += " AND has_breached = ?"
+        params.append(1 if breached else 0)
+    if sla_definition is not None:
+        query += " AND sla_definition = ?"
+        params.append(sla_definition)
+
+    total = conn.execute(
+        f"SELECT COUNT(*) AS c FROM ({query})", params
+    ).fetchone()["c"]
+
+    query += " ORDER BY sys_id ASC LIMIT ? OFFSET ?"
+    rows = conn.execute(query, [*params, page_size, (page - 1) * page_size]).fetchall()
+    items = [_row_to_task_sla_read(r) for r in rows]
+    return PaginatedTaskSla(items=items, page=page, page_size=page_size, total=total)
