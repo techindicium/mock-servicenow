@@ -8,9 +8,10 @@ def test_root_serves_incident_console_shell(client):
     assert 'id="incidents-table-body"' in body
     assert 'id="incident-record-view"' in body
     assert 'id="create-incident-form"' in body
-    # This plan explicitly does not build nav-item markup — the sibling
-    # escalations-directory-nav plan owns that (see incident-console.spec.md Task Map).
-    assert "nav-item" not in body
+    # nav-item markup is owned by the sibling escalations-directory-nav plan
+    # (see incident-console.spec.md Task Map), which has since landed and
+    # populated the nav rail this plan left empty.
+    assert "nav-item" in body
 
 
 def test_static_css_is_served(client):

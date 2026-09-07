@@ -4,15 +4,17 @@
   <meta charset="utf-8" />
   <title>mock-servicenow Incident Console</title>
   <link rel="stylesheet" href="/static/css/console.css" />
+  <link rel="stylesheet" href="/static/css/nav.css">
   <script src="/static/js/incident-logic.js"></script>
   <script src="/static/js/incident.js" defer></script>
 </head>
 <body>
   <div class="app-shell">
-    <!-- Intentionally empty. escalations-directory-nav.plan.md (sibling spec's plan)
-         populates this with Incidents/Escalations/Directory navigation buttons and the
-         top-level view-switching logic. This plan owns only #view-incidents below. -->
-    <nav id="nav-rail" class="sidebar" aria-label="Main navigation"></nav>
+    <nav class="nav-rail" id="nav-rail" aria-label="Main navigation">
+      <button type="button" class="nav-item active" id="nav-incidents" data-view="incidents">Incidents</button>
+      <button type="button" class="nav-item" id="nav-escalations" data-view="escalations">Escalations</button>
+      <button type="button" class="nav-item" id="nav-directory" data-view="directory">Directory</button>
+    </nav>
 
     <div class="app-main">
       <section id="view-incidents" class="view">
@@ -115,7 +117,31 @@
           </section>
         </section>
       </section>
+
+      <section id="view-escalations" class="view" hidden>
+        <div id="escalations-error" role="alert" hidden></div>
+        <table id="escalations-table"><tbody></tbody></table>
+        <form id="escalation-edit-form" hidden>
+          <input type="hidden" name="number">
+          <label>Summary <input type="text" name="summary"></label>
+          <label>Owner <input type="text" name="owner"></label>
+          <label>Closed at <input type="text" name="closed_at"></label>
+          <button type="submit">Save</button>
+        </form>
+      </section>
+      <section id="view-directory" class="view" hidden>
+        <div id="directory-error" role="alert" hidden></div>
+        <table id="users-table"><tbody></tbody></table>
+        <table id="assignment-groups-table"><tbody></tbody></table>
+      </section>
     </div>
   </div>
+  <script src="/static/js/ui-errors.js"></script>
+  <script src="/static/js/nav-logic.js"></script>
+  <script src="/static/js/nav.js"></script>
+  <script src="/static/js/escalations-logic.js"></script>
+  <script src="/static/js/escalations.js"></script>
+  <script src="/static/js/directory-logic.js"></script>
+  <script src="/static/js/directory.js"></script>
 </body>
 </html>
