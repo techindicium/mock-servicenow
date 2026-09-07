@@ -45,6 +45,46 @@ class ItsmApiClient:
         response = await self._request("GET", f"/incidents/{number}")
         return response.json()
 
+    async def create_incident(
+        self,
+        account_id: str,
+        category: str,
+        short_description: str,
+        description: str,
+        state: str,
+        priority: int,
+    ) -> dict:
+        payload = {
+            "account_id": account_id,
+            "category": category,
+            "short_description": short_description,
+            "description": description,
+            "state": state,
+            "priority": priority,
+        }
+        response = await self._request("POST", "/incidents", json=payload)
+        return response.json()
+
+    async def update_incident(
+        self,
+        number: str,
+        state: str | None = None,
+        priority: int | None = None,
+        assigned_to: str | None = None,
+        assignment_group: str | None = None,
+    ) -> dict:
+        payload = {}
+        if state is not None:
+            payload["state"] = state
+        if priority is not None:
+            payload["priority"] = priority
+        if assigned_to is not None:
+            payload["assigned_to"] = assigned_to
+        if assignment_group is not None:
+            payload["assignment_group"] = assignment_group
+        response = await self._request("PATCH", f"/incidents/{number}", json=payload)
+        return response.json()
+
     async def _request(self, method: str, path: str, **kwargs) -> httpx.Response:
         try:
             response = await self._http.request(method, path, **kwargs)

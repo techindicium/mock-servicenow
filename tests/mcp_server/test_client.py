@@ -72,3 +72,88 @@ async def test_get_incident_unknown_number_raises_upstream_error_verbatim():
         await _client(handler).get_incident("TICKET-999999")
     assert exc_info.value.status_code == 404
     assert exc_info.value.message == "Incident TICKET-999999 not found"
+
+
+@pytest.mark.anyio
+async def test_create_incident_sends_all_six_required_fields_and_returns_created_incident():
+    def handler(request):
+        assert request.method == "POST"
+        assert request.url.path == "/incidents"
+        import json as _json
+        body = _json.loads(request.content)
+        assert body == {
+            "account_id": "ACCOUNT-1001", "category": "billing",
+            "short_description": "Invoice mismatch", "description": "Customer reports a mismatch.",
+            "state": "new", "priority": 2,
+        }
+        return httpx.Response(201, json={**_SAMPLE_INCIDENT, "number": "TICKET-004500"})
+
+    result = await _client(handler).create_incident(
+        account_id="ACCOUNT-1001", category="billing",
+        short_description="Invoice mismatch", description="Customer reports a mismatch.",
+        state="new", priority=2,
+    )
+    assert result["number"] == "TICKET-004500"
+
+
+@pytest.mark.anyio
+async def test_create_incident_invalid_category_raises_upstream_error_for_422():
+    def handler(request):
+        return httpx.Response(
+            422,
+            json={
+                "message": "category must be one of: receiving, putaway, picking, cycle-count, "
+                           "billing, integrations, auth, reporting",
+                "code": "VALIDATION_ERROR",
+            },
+        )
+
+    with pytest.raises(UpstreamError) as exc_info:
+        await _client(handler).create_incident(
+            account_id="ACCOUNT-1001", category="not-a-real-category",
+            short_description="x", description="y", state="new", priority=2,
+        )
+    assert exc_info.value.status_code == 422
+
+
+@pytest.mark.anyio
+async def test_update_incident_sends_only_provided_mutable_fields_and_returns_result():
+    def handler(request):
+        assert request.method == "PATCH"
+        assert request.url.path == "/incidents/TICKET-004417"
+        import json as _json
+        body = _json.loads(request.content)
+        assert body == {"state": "resolved"}
+        assert "number" not in body
+        return httpx.Response(200, json={**_SAMPLE_INCIDENT, "state": "resolved"})
+
+    result = await _client(handler).update_incident("TICKET-004417", state="resolved")
+    assert result["state"] == "resolved"
+
+
+@pytest.mark.anyio
+async def test_update_incident_unknown_number_raises_upstream_error_verbatim():
+    def handler(request):
+        return httpx.Response(
+            404, json={"message": "Incident TICKET-999999 not found", "code": "INCIDENT_NOT_FOUND"}
+        )
+
+    with pytest.raises(UpstreamError) as exc_info:
+        await _client(handler).update_incident("TICKET-999999", state="resolved")
+    assert exc_info.value.status_code == 404
+
+
+@pytest.mark.anyio
+async def test_update_incident_invalid_state_raises_upstream_error_for_422():
+    def handler(request):
+        return httpx.Response(
+            422,
+            json={
+                "message": "state must be one of: new, in_progress, on_hold, resolved, closed",
+                "code": "VALIDATION_ERROR",
+            },
+        )
+
+    with pytest.raises(UpstreamError) as exc_info:
+        await _client(handler).update_incident("TICKET-004417", state="not-a-real-state")
+    assert exc_info.value.status_code == 422
