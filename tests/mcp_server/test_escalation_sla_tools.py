@@ -153,3 +153,27 @@ async def test_list_sla_records_tool_forwards_all_filters_and_pagination(monkeyp
         page=1,
         page_size=25,
     )
+
+
+@pytest.mark.anyio
+async def test_list_escalations_tool_non_boolean_open_only_errors_before_http_call(monkeypatch):
+    fake = _FakeClient()
+    monkeypatch.setattr(escalations_tools, "_client", lambda: fake)
+
+    async with Client(mcp) as client:
+        result = await client.call_tool("list_escalations", {"open_only": "not-a-bool"})
+
+    assert result.is_error is True
+    assert fake.last_escalation_call is None  # schema validation rejected the call before _client() ran
+
+
+@pytest.mark.anyio
+async def test_list_sla_records_tool_non_boolean_breached_errors_before_http_call(monkeypatch):
+    fake = _FakeClient()
+    monkeypatch.setattr(sla_tools, "_client", lambda: fake)
+
+    async with Client(mcp) as client:
+        result = await client.call_tool("list_sla_records", {"breached": "not-a-bool"})
+
+    assert result.is_error is True
+    assert fake.last_sla_call is None
