@@ -76,3 +76,30 @@ class PaginatedUsers(BaseModel):
     page: int
     page_size: int
     total: int
+
+
+class EscalationRead(BaseModel):
+    number: str
+    incident_number: str | None
+    account_id: str
+    summary: str
+    opened_at: str
+    closed_at: str | None
+    owner: str | None
+
+
+class EscalationPatch(BaseModel):
+    # Deliberately no `number`, `account_id`, `opened_at`, or `incident_number` field — this is
+    # the structural enforcement of the immutable-fields list (see escalations router's PATCH):
+    # Pydantic drops unknown extra keys silently, so there is no path for them to reach the
+    # UPDATE statement.
+    summary: str | None = None
+    owner: str | None = None
+    closed_at: str | None = None
+
+
+class EscalationPage(BaseModel):
+    items: list[EscalationRead]
+    page: int
+    page_size: int
+    total: int

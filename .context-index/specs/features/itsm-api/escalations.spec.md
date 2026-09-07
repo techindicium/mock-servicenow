@@ -1,6 +1,6 @@
 ---
 charter: itsm-api
-status: review-passed
+status: implemented
 risk_level: low
 milestone: mvp
 revision: 1
@@ -8,6 +8,16 @@ charter-revision: 1
 created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
+source-manifest:
+  sha: "f4beef0"
+  files:
+    - app/main.py
+    - app/models.py
+    - app/routers/escalations.py
+    - tests/conftest.py
+    - tests/test_escalations.py
+  computed-at: "2026-09-07T18:33:26.171Z"
+drift_detected: true
 ---
 
 # Live Spec: Escalation list, get, and update
