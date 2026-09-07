@@ -9,7 +9,7 @@ created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
 source-manifest:
-  sha: "fd3cdc7"
+  sha: "de476da"
   files:
     - app/fixtures/seed/accounts_tiers.json
     - app/fixtures/seed/escalations_seed.json
@@ -20,7 +20,7 @@ source-manifest:
     - app/fixtures/seed/tier_commitments.json
     - app/seed.py
     - tests/test_seed.py
-  computed-at: "2026-09-07T18:49:50.393Z"
+  computed-at: "2026-09-07T20:08:23.079Z"
 ---
 
 # Live Spec: Fixture seed data
