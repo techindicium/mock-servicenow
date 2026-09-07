@@ -52,3 +52,27 @@ class IncidentPage(BaseModel):
     page: int
     page_size: int
     total: int
+
+
+class AssignmentGroupRead(BaseModel):
+    name: str
+
+
+class SysUserRead(BaseModel):
+    name: str
+    role: str
+    assignment_group: str | None = None
+
+
+class PaginatedAssignmentGroups(BaseModel):
+    items: list[AssignmentGroupRead]
+    page: int
+    page_size: int
+    total: int
+
+
+class PaginatedUsers(BaseModel):
+    items: list[SysUserRead]
+    page: int
+    page_size: int
+    total: int
