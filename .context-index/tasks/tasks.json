@@ -1,0 +1,115 @@
+{
+  "version": 2,
+  "seq": 12,
+  "epics": [
+    {
+      "id": "epic-cjs4ac",
+      "title": "Work notes CRUD (itsm-api)",
+      "status": "open",
+      "planRef": ".context-index/specs/features/itsm-api/work-notes.plan.md",
+      "notes": "Implement GET/POST /incidents/{number}/work_notes with server-assigned collision-proof sys_id, unguarded authorship, and note_type validation.",
+      "created": "2026-09-07T17:16:07.429Z",
+      "updated": "2026-09-07T17:16:07.429Z"
+    },
+    {
+      "id": "epic-scpizi",
+      "title": "Incident lifecycle CRUD (itsm-api)",
+      "status": "open",
+      "planRef": ".context-index/specs/features/itsm-api/incident-lifecycle.plan.md",
+      "notes": "Stand up the Incident CRUD HTTP surface (GET /incidents, GET /incidents/{number}, POST /incidents, PATCH /incidents/{number}) as the first code this repo has ever shipped, scaffolding the FastAPI app itself alongside the Incident table and endpoints.",
+      "created": "2026-09-07T17:16:08.137Z",
+      "updated": "2026-09-07T17:16:08.137Z"
+    },
+    {
+      "id": "epic-3mrgeh",
+      "title": "User and assignment-group directory (itsm-api)",
+      "status": "open",
+      "planRef": ".context-index/specs/features/itsm-api/user-directory.plan.md",
+      "notes": "Serve a read-only, paginated GET /users and GET /assignment_groups directory over SysUser/AssignmentGroup SQLite tables",
+      "created": "2026-09-07T17:16:24.359Z",
+      "updated": "2026-09-07T17:16:24.359Z"
+    },
+    {
+      "id": "epic-aqyf05",
+      "title": "SLA records list (itsm-api)",
+      "status": "open",
+      "planRef": ".context-index/specs/features/itsm-api/sla-records.plan.md",
+      "notes": "Implement read-only GET /sla with incident_number/breached/sla_definition filters and pagination",
+      "created": "2026-09-07T17:17:40.250Z",
+      "updated": "2026-09-07T17:17:40.250Z"
+    },
+    {
+      "id": "epic-l6flan",
+      "title": "Escalations list/get/update (itsm-api)",
+      "status": "open",
+      "planRef": ".context-index/specs/features/itsm-api/escalations.plan.md",
+      "notes": "Implement read/update HTTP surface for Escalations (GET /escalations, GET /escalations/{number}, PATCH /escalations/{number}) with filtering, pagination, and null-safe ownerless-escalation handling",
+      "created": "2026-09-07T17:17:51.483Z",
+      "updated": "2026-09-07T17:17:51.483Z"
+    },
+    {
+      "id": "epic-t63gog",
+      "title": "API end-to-end test suite (itsm-api)",
+      "status": "open",
+      "planRef": ".context-index/specs/features/itsm-api/api-e2e.plan.md",
+      "notes": "Add a real-HTTP e2e suite (own OS process, real socket, never TestClient) covering the full Incident/WorkNote/Escalation/TaskSla/directory contract, the PRD analytics-parity filter, and all three seeded discrepancies.",
+      "created": "2026-09-07T17:18:04.516Z",
+      "updated": "2026-09-07T17:18:04.516Z"
+    },
+    {
+      "id": "epic-j638av",
+      "title": "Escalation and SLA MCP tools (mcp-server)",
+      "status": "open",
+      "planRef": ".context-index/specs/features/mcp-server/escalation-and-sla-tools.plan.md",
+      "notes": "Add read-only list_escalations and list_sla_records MCP tools wrapping itsm-api's GET /escalations and GET /sla, with verbatim error passthrough and pagination pass-through parity with list_incidents.",
+      "created": "2026-09-07T17:18:06.668Z",
+      "updated": "2026-09-07T17:18:06.668Z"
+    },
+    {
+      "id": "epic-xfw514",
+      "title": "User MCP tool (mcp-server)",
+      "status": "open",
+      "planRef": ".context-index/specs/features/mcp-server/user-tools.plan.md",
+      "notes": "Add list_users MCP tool wrapping itsm-api's GET /users with a strict empty input schema per BEH-2",
+      "created": "2026-09-07T17:20:03.290Z",
+      "updated": "2026-09-07T17:20:03.290Z"
+    },
+    {
+      "id": "epic-000zab",
+      "title": "Work-note MCP tools (mcp-server)",
+      "status": "open",
+      "planRef": ".context-index/specs/features/mcp-server/work-note-tools.plan.md",
+      "notes": "Stand up list_work_notes and add_work_note as MCP tools thinly wrapping itsm-api's WorkNote endpoints, with add_work_note remaining fully unguarded on created_by.",
+      "created": "2026-09-07T17:21:17.211Z",
+      "updated": "2026-09-07T17:21:17.211Z"
+    },
+    {
+      "id": "epic-8uniuo",
+      "title": "Incident MCP tools (mcp-server)",
+      "status": "open",
+      "planRef": ".context-index/specs/features/mcp-server/incident-tools.plan.md",
+      "notes": "Implement list_incidents, get_incident, create_incident, and update_incident MCP tools as thin wrappers over itsm-api's /incidents endpoints, with update_incident remaining unconditionally unguarded per Non-Negotiable Principle 5.",
+      "created": "2026-09-07T17:21:56.148Z",
+      "updated": "2026-09-07T17:21:56.148Z"
+    },
+    {
+      "id": "epic-kzxnf5",
+      "title": "Fixture seeding, all six tables (itsm-api)",
+      "status": "open",
+      "planRef": ".context-index/specs/features/itsm-api/fixture-seeding.plan.md",
+      "notes": "Vendor portwell-assist/portwell-knowledge/course-shared sources at authoring time; seed incident, work_note, escalation, task_sla, sys_user, assignment_group idempotently, preserving the ten narrative tickets and reproducing all three seeded discrepancies.",
+      "created": "2026-09-07T17:28:00.163Z",
+      "updated": "2026-09-07T17:28:00.163Z"
+    },
+    {
+      "id": "epic-2t8fqu",
+      "title": "MCP end-to-end test suite (mcp-server)",
+      "status": "open",
+      "planRef": ".context-index/specs/features/mcp-server/mcp-e2e.plan.md",
+      "notes": "Real MCP client over the real streamable-http transport against live itsm-api/mcp-server processes, including the unguarded create/add_work_note(assist)/resolve-with-open-breach round trip",
+      "created": "2026-09-07T17:28:17.602Z",
+      "updated": "2026-09-07T17:28:17.602Z"
+    }
+  ],
+  "issues": []
+}
