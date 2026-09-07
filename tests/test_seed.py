@@ -197,3 +197,28 @@ def test_business_hours_resolution_disagrees_with_wall_clock_for_a_weekend_ticke
         if wall_clock_minutes != r["actual_minutes"]:
             disagreements += 1
     assert disagreements >= 1
+
+
+def test_roster_loads_eleven_sys_users_and_three_assignment_groups(conn):
+    from app.seed import load_roster
+
+    load_roster(conn)
+    users = conn.execute("SELECT * FROM sys_user").fetchall()
+    groups = conn.execute("SELECT * FROM assignment_group").fetchall()
+    assert len(users) == 11
+    assert {g["name"] for g in groups} == {
+        "Support Tier 1", "Support Tier 2", "Solution Consultants",
+    }
+    group_names = {g["name"] for g in groups}
+    for u in users:
+        if u["assignment_group"] is not None:
+            assert u["assignment_group"] in group_names
+
+
+def test_roster_loading_is_idempotent(conn):
+    from app.seed import load_roster
+
+    load_roster(conn)
+    load_roster(conn)
+    assert conn.execute("SELECT COUNT(*) AS n FROM sys_user").fetchone()["n"] == 11
+    assert conn.execute("SELECT COUNT(*) AS n FROM assignment_group").fetchone()["n"] == 3

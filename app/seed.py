@@ -347,3 +347,23 @@ def derive_task_sla(conn) -> None:
                 (f"SLA-{incident['number']}-RES", incident["number"], res_target, res_actual, res_breached),
             )
     conn.commit()
+
+
+def load_roster(conn) -> None:
+    existing = conn.execute("SELECT COUNT(*) AS n FROM sys_user").fetchone()["n"]
+    if existing == 11:
+        return  # BEH-2
+    if existing not in (0, 11):
+        raise SeedError(
+            "SEED_STATE_INCONSISTENT", f"sys_user has {existing} rows; expected 0 or 11"
+        )
+
+    data = json.loads((_FIXTURES / "roster_seed.json").read_text())
+    for group in data["assignment_groups"]:
+        conn.execute("INSERT INTO assignment_group (name) VALUES (?)", (group,))
+    for user in data["sys_users"]:
+        conn.execute(
+            "INSERT INTO sys_user (name, role, assignment_group) VALUES (?, ?, ?)",
+            (user["name"], user["role"], user["assignment_group"]),
+        )
+    conn.commit()
