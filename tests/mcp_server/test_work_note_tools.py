@@ -184,3 +184,64 @@ async def test_add_work_note_tool_non_string_created_by_errors_before_http_reque
 
     assert result.is_error is True
     assert called["value"] is False
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize("author", ["customer", "jane.agent", "assist"])
+async def test_add_work_note_tool_succeeds_unconditionally_for_any_created_by(monkeypatch, author):
+    created = {**_CREATED_NOTE, "created_by": author}
+    fake = _FakeAddClient(created=created)
+    monkeypatch.setattr(work_notes_tools, "_client", lambda: fake)
+
+    async with Client(mcp) as client:
+        result = await client.call_tool(
+            "add_work_note",
+            {
+                "incident_number": "INC0010001", "created_by": author,
+                "note_type": "comment", "body": "x",
+            },
+        )
+
+    assert result.is_error is False
+    assert fake.received == ("INC0010001", author, "comment", "x")
+
+
+@pytest.mark.anyio
+async def test_add_work_note_tool_unknown_incident_number_errors_with_verbatim_message(monkeypatch):
+    fake = _FakeAddClient(error=UpstreamError(404, "Incident INC9999999 not found"))
+    monkeypatch.setattr(work_notes_tools, "_client", lambda: fake)
+
+    async with Client(mcp) as client:
+        result = await client.call_tool(
+            "add_work_note",
+            {
+                "incident_number": "INC9999999", "created_by": "assist",
+                "note_type": "comment", "body": "x",
+            },
+        )
+
+    assert result.is_error is True
+    assert "Incident INC9999999 not found" in result.content[0].text
+
+
+@pytest.mark.anyio
+async def test_add_work_note_tool_invalid_note_type_errors_with_verbatim_message(monkeypatch):
+    fake = _FakeAddClient(
+        error=UpstreamError(
+            422,
+            "note_type must be one of: comment, work_note, state_change, proposal_sent",
+        )
+    )
+    monkeypatch.setattr(work_notes_tools, "_client", lambda: fake)
+
+    async with Client(mcp) as client:
+        result = await client.call_tool(
+            "add_work_note",
+            {
+                "incident_number": "INC0010001", "created_by": "assist",
+                "note_type": "bogus", "body": "x",
+            },
+        )
+
+    assert result.is_error is True
+    assert "note_type must be one of" in result.content[0].text
