@@ -157,8 +157,12 @@ Deliberately lightweight, for a small standalone mock API in a training course:
   security-reviewer, consistency-analyzer) are disabled.
 - **Validation** (`governance/validate.yaml`): only the deterministic checks run (quality gates,
   source-manifest, boundaries, transition-gates, gate-executability). Both subagent-review checks
-  (spec-compliance, constitution-compliance) and visual-verification are disabled — this is a
-  headless HTTP API.
+  (spec-compliance, constitution-compliance) are disabled. Visual-verification (Check 11) is also
+  disabled — `agent-ui` does have a real browser UI (`static/`, served by `itsm-api` at `/`), but
+  its own `ui-e2e.spec.md` already drives that UI with a real Chromium browser via Playwright as
+  part of the ordinary test suite (`tests_e2e/test_ui_*.py`), which is the actual verification
+  mechanism; a separate subagent-driven visual-verification pass would duplicate that coverage,
+  not add to it.
 - **Risk policies** (`governance/risk-policies.yaml`): medium and low risk both run in `quick`
   mode with `minimal` test depth and no human-in-the-loop approval — most work here is expected
   to be fully agentic. `high` risk is the deliberate exception: full rigor, human approval

@@ -115,7 +115,10 @@ checks:
     context_pack: base
     severity: warning
     prompt: plugin:validate/checks/validate.check-11-visual-verification.md
-    enabled: false   # no UI — mock-servicenow is a headless HTTP API
+    enabled: false   # agent-ui exists, but ui-e2e.spec.md's real-Chromium Playwright suite
+                     # (tests_e2e/test_ui_*.py) already drives the actual served UI as part of
+                     # the ordinary test gates — a subagent visual-verification pass would
+                     # duplicate that coverage, not add to it.
 
   # check-12-heuristic-extraction removed by check-set-restructure.spec.md
   # (now runs as a Stop-event post-validate hook —
