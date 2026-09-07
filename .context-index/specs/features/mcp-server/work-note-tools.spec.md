@@ -9,14 +9,14 @@ created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
 source-manifest:
-  sha: "4269fcd"
+  sha: "c1e142a"
   files:
     - mcp_server/client.py
     - mcp_server/server.py
     - mcp_server/tools/work_notes.py
     - tests/mcp_server/test_client.py
     - tests/mcp_server/test_work_note_tools.py
-  computed-at: "2026-09-07T19:11:43.591Z"
+  computed-at: "2026-09-07T19:46:01.908Z"
 ---
 
 # Live Spec: Work Note MCP tools (list_work_notes, add_work_note)

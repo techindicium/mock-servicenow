@@ -9,7 +9,7 @@ created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
 source-manifest:
-  sha: "b3d9815"
+  sha: "fd5e5e8"
   files:
     - mcp_server/client.py
     - mcp_server/server.py
@@ -17,7 +17,7 @@ source-manifest:
     - mcp_server/tools/sla.py
     - tests/mcp_server/test_client.py
     - tests/mcp_server/test_escalation_sla_tools.py
-  computed-at: "2026-09-07T19:11:43.706Z"
+  computed-at: "2026-09-07T19:46:01.561Z"
 ---
 
 # Live Spec: Escalation and SLA MCP tools (list_escalations, list_sla_records)

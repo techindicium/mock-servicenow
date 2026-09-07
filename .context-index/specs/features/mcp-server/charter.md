@@ -1,7 +1,7 @@
 ---
 status: approved
 kind: feature
-revision: 10
+revision: 11
 updated: 2026-09-07
 ---
 
@@ -95,7 +95,7 @@ behaviour around these tools. A guarded MCP here would remove the exercise.
 | list_escalations tool | Wraps `GET /escalations`, filter parameters | must-have | mvp | implemented |
 | list_sla_records tool | Wraps `GET /sla`, filter parameters | must-have | mvp | implemented |
 | list_users tool | Wraps `GET /users` | must-have | mvp | implemented |
-| End-to-end MCP test suite | A real MCP client, over the real streamable-http transport, against a live server process | must-have | v1.1 | planned |
+| End-to-end MCP test suite | A real MCP client, over the real streamable-http transport, against a live server process | must-have | v1.1 | implemented |
 
 ## Deferred Capabilities
 

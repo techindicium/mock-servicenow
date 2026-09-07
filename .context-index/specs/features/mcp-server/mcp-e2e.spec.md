@@ -1,6 +1,6 @@
 ---
 charter: mcp-server
-status: review-passed
+status: implemented
 risk_level: medium
 milestone: v1.1
 revision: 2
@@ -8,6 +8,26 @@ charter-revision: 1
 created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
+source-manifest:
+  sha: "5e33d80"
+  files:
+    - requirements-e2e.txt
+    - tests/test_requirements_files.py
+    - tests_e2e/breached_sla_fixture.py
+    - tests_e2e/conftest.py
+    - tests_e2e/mcp_client.py
+    - tests_e2e/servers.py
+    - tests_e2e/test_mcp_breached_sla_fixture.py
+    - tests_e2e/test_mcp_client_helper.py
+    - tests_e2e/test_mcp_error_paths_e2e.py
+    - tests_e2e/test_mcp_escalation_sla_user_tools_e2e.py
+    - tests_e2e/test_mcp_incident_tools_e2e.py
+    - tests_e2e/test_mcp_server_fixture.py
+    - tests_e2e/test_mcp_server_unreachable_fixture.py
+    - tests_e2e/test_mcp_signature_round_trip_e2e.py
+    - tests_e2e/test_mcp_tool_discovery_e2e.py
+    - tests_e2e/test_mcp_work_note_tools_e2e.py
+  computed-at: "2026-09-07T19:46:02.027Z"
 ---
 
 # Live Spec: End-to-end MCP test suite (real client/transport)
