@@ -31,6 +31,8 @@ async def list_incidents(
             opened_after=opened_after, opened_before=opened_before, escalated=escalated,
             page=page, per_page=per_page,
         )
+    except UpstreamError as exc:
+        raise ToolError(exc.message) from exc
     except UpstreamUnreachableError as exc:
         raise ToolError(str(exc)) from exc
     finally:

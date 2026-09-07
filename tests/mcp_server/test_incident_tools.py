@@ -319,3 +319,74 @@ async def test_update_incident_tool_missing_number_errors_before_http_request(mo
 
     assert result.is_error is True
     assert called["value"] is False
+
+
+_UNREACHABLE_MESSAGE = "Could not reach itsm-api at http://itsm-api: connection refused"
+
+
+class _UnreachableClient(_FakeClient):
+    async def list_incidents(self, **kwargs):
+        raise UpstreamUnreachableError(_UNREACHABLE_MESSAGE)
+
+    async def get_incident(self, number):
+        raise UpstreamUnreachableError(_UNREACHABLE_MESSAGE)
+
+    async def create_incident(self, **kwargs):
+        raise UpstreamUnreachableError(_UNREACHABLE_MESSAGE)
+
+    async def update_incident(self, number, **fields):
+        raise UpstreamUnreachableError(_UNREACHABLE_MESSAGE)
+
+
+class _FiveHundredClient(_FakeClient):
+    async def list_incidents(self, **kwargs):
+        raise UpstreamError(500, "Internal Server Error")
+
+    async def get_incident(self, number):
+        raise UpstreamError(500, "Internal Server Error")
+
+    async def create_incident(self, **kwargs):
+        raise UpstreamError(500, "Internal Server Error")
+
+    async def update_incident(self, number, **fields):
+        raise UpstreamError(500, "Internal Server Error")
+
+
+_ALL_TOOL_CALLS = [
+    ("list_incidents", {}),
+    ("get_incident", {"number": "TICKET-004417"}),
+    (
+        "create_incident",
+        {
+            "account_id": "ACCOUNT-1001", "category": "billing", "short_description": "x",
+            "description": "y", "state": "new", "priority": 2,
+        },
+    ),
+    ("update_incident", {"number": "TICKET-004417", "state": "resolved"}),
+]
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize("tool_name, arguments", _ALL_TOOL_CALLS)
+async def test_incident_tool_unreachable_api_errors_with_clear_message(
+    monkeypatch, tool_name, arguments
+):
+    monkeypatch.setattr(incidents_tools, "_client", lambda: _UnreachableClient())
+
+    async with Client(mcp) as client:
+        result = await client.call_tool(tool_name, arguments)
+
+    assert result.is_error is True
+    assert "itsm-api" in result.content[0].text
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize("tool_name, arguments", _ALL_TOOL_CALLS)
+async def test_incident_tool_5xx_errors_with_verbatim_message(monkeypatch, tool_name, arguments):
+    monkeypatch.setattr(incidents_tools, "_client", lambda: _FiveHundredClient())
+
+    async with Client(mcp) as client:
+        result = await client.call_tool(tool_name, arguments)
+
+    assert result.is_error is True
+    assert "Internal Server Error" in result.content[0].text
