@@ -41,3 +41,10 @@ test("BEH-9/UI_VALIDATION_ERROR: a 422 on PATCH names the invalid field verbatim
   });
   assert.match(msg, /priority must be one of/);
 });
+
+test("BEH-9/UI_VALIDATION_ERROR: create-incident 422 names the invalid field", () => {
+  const msg = formatFetchError("Creating incident", {
+    status: 422, message: "priority is required",
+  });
+  assert.match(msg, /priority is required/);
+});

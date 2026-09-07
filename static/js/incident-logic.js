@@ -103,10 +103,27 @@
     return patch;
   }
 
+  const REQUIRED_CREATE_FIELDS = [
+    "account_id", "category", "short_description", "description", "state", "priority",
+  ];
+
+  function validateCreateIncidentForm(fields) {
+    const errors = {};
+    for (const key of REQUIRED_CREATE_FIELDS) {
+      const value = fields[key];
+      if (value === undefined || value === null || String(value).trim() === "") {
+        errors[key] = `${key} is required`;
+      }
+    }
+    return { valid: Object.keys(errors).length === 0, errors };
+    // category is deliberately unconstrained here — app/models.py's IncidentCreate.category
+    // is a plain str with no Literal enum, so this UI invents no enum the API doesn't have.
+  }
+
   return {
     INCIDENT_STATES, PRIORITIES, NOTE_TYPES, formatFetchError,
     buildIncidentQueryParams, shapePaginationInfo,
     formatNullableField, shapeIncidentRecordFields, sortWorkNotesChronological,
-    validateWorkNoteForm, shapeSlaRows, diffIncidentFields,
+    validateWorkNoteForm, shapeSlaRows, diffIncidentFields, validateCreateIncidentForm,
   };
 });

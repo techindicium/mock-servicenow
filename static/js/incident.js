@@ -289,6 +289,51 @@
 
   document.getElementById("edit-incident-form").addEventListener("submit", onEditIncidentSubmit);
 
+  populateSelectOptions(document.getElementById("create-state"), IncidentLogic.INCIDENT_STATES);
+  populateSelectOptions(document.getElementById("create-priority"), IncidentLogic.PRIORITIES);
+
+  document.getElementById("open-create-incident").addEventListener("click", () => {
+    document.getElementById("incident-list-view").hidden = true;
+    document.getElementById("create-incident").hidden = false;
+  });
+  document.getElementById("cancel-create-incident").addEventListener("click", (event) => {
+    event.preventDefault();
+    document.getElementById("create-incident-form").reset();
+    clearFormError("create-incident-error");
+    document.getElementById("create-incident").hidden = true;
+    document.getElementById("incident-list-view").hidden = false;
+  });
+
+  async function onCreateIncidentSubmit(event) {
+    event.preventDefault();
+    const form = event.target;
+    const fields = {
+      account_id: form.account_id.value, category: form.category.value,
+      short_description: form.short_description.value, description: form.description.value,
+      state: form.state.value, priority: form.priority.value,
+    };
+    const { valid, errors } = IncidentLogic.validateCreateIncidentForm(fields);
+    if (!valid) {
+      showFormError("create-incident-error", Object.values(errors)[0]);
+      return;
+    }
+    clearFormError("create-incident-error");
+    try {
+      const created = await fetchJson("/incidents", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...fields, priority: Number(fields.priority) }),
+      });
+      form.reset();
+      document.getElementById("create-incident").hidden = true;
+      await loadIncidentRecord(created.number); // BEH-8: navigate to the new record on success
+    } catch (err) {
+      showFormError("create-incident-error", IncidentLogic.formatFetchError("Creating incident", err));
+    }
+  }
+
+  document.getElementById("create-incident-form").addEventListener("submit", onCreateIncidentSubmit);
+
   window.IncidentApp = {
     fetchJson, showError, clearError, loadIncidentList, renderIncidentList, renderIncidentRow,
     loadIncidentRecord, renderRecordFields, renderWorkNoteTimeline,
