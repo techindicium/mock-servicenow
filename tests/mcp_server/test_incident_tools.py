@@ -103,3 +103,89 @@ async def test_list_incidents_tool_invalid_priority_type_errors_before_http_requ
 
     assert result.is_error is True
     assert called["value"] is False
+
+
+class _FakeCreateClient(_FakeClient):
+    def __init__(self, created=None, error=None):
+        super().__init__()
+        self._created = created
+        self._error = error
+
+    async def create_incident(self, **kwargs):
+        if self._error is not None:
+            raise self._error
+        return self._created
+
+
+@pytest.mark.anyio
+async def test_create_incident_tool_requires_all_six_fields_and_returns_created_incident(monkeypatch):
+    monkeypatch.setattr(
+        incidents_tools, "_client", lambda: _FakeCreateClient(created=_SAMPLE_INCIDENT)
+    )
+
+    async with Client(mcp) as client:
+        result = await client.call_tool(
+            "create_incident",
+            {
+                "account_id": "ACCOUNT-1001", "category": "billing",
+                "short_description": "Invoice mismatch",
+                "description": "Customer reports a mismatch.",
+                "state": "new", "priority": 2,
+            },
+        )
+
+    assert result.is_error is False
+    assert result.structured_content == _SAMPLE_INCIDENT
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize("missing_field", [
+    "account_id", "category", "short_description", "description", "state", "priority",
+])
+async def test_create_incident_tool_missing_any_required_field_errors_before_http_request(
+    monkeypatch, missing_field
+):
+    called = {"value": False}
+
+    def _client_spy():
+        called["value"] = True
+        return _FakeCreateClient()
+
+    monkeypatch.setattr(incidents_tools, "_client", _client_spy)
+
+    full_args = {
+        "account_id": "ACCOUNT-1001", "category": "billing",
+        "short_description": "Invoice mismatch", "description": "Customer reports a mismatch.",
+        "state": "new", "priority": 2,
+    }
+    args = {k: v for k, v in full_args.items() if k != missing_field}
+
+    async with Client(mcp) as client:
+        result = await client.call_tool("create_incident", args)
+
+    assert result.is_error is True
+    assert called["value"] is False  # schema validation rejected the call before _client() ran
+
+
+@pytest.mark.anyio
+async def test_create_incident_tool_invalid_category_errors_with_verbatim_message(monkeypatch):
+    fake = _FakeCreateClient(
+        error=UpstreamError(
+            422,
+            "category must be one of: receiving, putaway, picking, cycle-count, billing, "
+            "integrations, auth, reporting",
+        )
+    )
+    monkeypatch.setattr(incidents_tools, "_client", lambda: fake)
+
+    async with Client(mcp) as client:
+        result = await client.call_tool(
+            "create_incident",
+            {
+                "account_id": "ACCOUNT-1001", "category": "not-a-real-category",
+                "short_description": "x", "description": "y", "state": "new", "priority": 2,
+            },
+        )
+
+    assert result.is_error is True
+    assert "category must be one of" in result.content[0].text
