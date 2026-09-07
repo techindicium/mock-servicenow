@@ -25,6 +25,7 @@ def main() -> None:
     # user-tools) adds its own import line here as a side-effecting registration step; the line
     # below is incident-tools' own contribution to the shared list.
     import mcp_server.tools.incidents  # (import registers the tools as a side effect)
+    import mcp_server.tools.users
     import mcp_server.tools.work_notes  # noqa: F401  (this plan's addition)
 
     # See mock-jira/mcp_server/server.py for why this re-import-by-qualified-name is required:

@@ -270,3 +270,42 @@ async def test_request_maps_5xx_to_upstream_error():
     with pytest.raises(UpstreamError) as exc_info:
         await _client(handler).list_work_notes("INC0010001")
     assert exc_info.value.status_code == 500
+
+
+@pytest.mark.anyio
+async def test_list_users_returns_api_response_unmodified():
+    def handler(request):
+        assert request.method == "GET"
+        assert request.url.path == "/users"
+        return httpx.Response(
+            200,
+            json={
+                "items": [{"name": "Rui Bastos", "role": "Support Manager", "assignment_group": None}],
+                "page": 1,
+                "page_size": 20,
+                "total": 1,
+            },
+        )
+
+    result = await _client(handler).list_users()
+    assert result["items"][0]["name"] == "Rui Bastos"
+
+
+@pytest.mark.anyio
+async def test_list_users_5xx_raises_upstream_error_verbatim():
+    def handler(request):
+        return httpx.Response(500, json={"message": "internal error", "code": "INTERNAL_ERROR"})
+
+    with pytest.raises(UpstreamError) as exc_info:
+        await _client(handler).list_users()
+    assert exc_info.value.status_code == 500
+    assert exc_info.value.message == "internal error"
+
+
+@pytest.mark.anyio
+async def test_list_users_unreachable_api_raises_upstream_unreachable_error():
+    def handler(request):
+        raise httpx.ConnectError("Connection refused", request=request)
+
+    with pytest.raises(UpstreamUnreachableError):
+        await _client(handler).list_users()
