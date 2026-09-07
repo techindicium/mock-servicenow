@@ -1,3 +1,5 @@
+from typing import Literal
+
 from fastapi import APIRouter, Request
 
 from app.models import PaginatedTaskSla, TaskSlaRead
@@ -22,6 +24,7 @@ def list_sla_records(
     request: Request,
     incident_number: str | None = None,
     breached: bool | None = None,
+    sla_definition: Literal["first_response", "resolution"] | None = None,
     page: int = 1,
     page_size: int = 50,
 ):
@@ -34,6 +37,9 @@ def list_sla_records(
     if breached is not None:
         query += " AND has_breached = ?"
         params.append(1 if breached else 0)
+    if sla_definition is not None:
+        query += " AND sla_definition = ?"
+        params.append(sla_definition)
 
     total = conn.execute(
         f"SELECT COUNT(*) AS c FROM ({query})", params

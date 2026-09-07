@@ -77,3 +77,39 @@ def test_get_sla_invalid_breached_value_returns_422(client, conn):
     body = resp.json()
     assert body["code"] == "VALIDATION_ERROR"
     assert "breached" in body["message"]
+
+
+def test_get_sla_filtered_by_sla_definition_first_response(client, conn):
+    seed_task_sla(conn, sys_id="SLA-0001", sla_definition="first_response")
+    seed_task_sla(conn, sys_id="SLA-0002", sla_definition="resolution")
+
+    resp = client.get("/sla?sla_definition=first_response")
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["total"] == 1
+    assert body["items"][0]["sys_id"] == "SLA-0001"
+
+
+def test_get_sla_filtered_by_sla_definition_resolution(client, conn):
+    seed_task_sla(conn, sys_id="SLA-0001", sla_definition="first_response")
+    seed_task_sla(conn, sys_id="SLA-0002", sla_definition="resolution")
+
+    resp = client.get("/sla?sla_definition=resolution")
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["total"] == 1
+    assert body["items"][0]["sys_id"] == "SLA-0002"
+
+
+def test_get_sla_invalid_sla_definition_value_returns_422_naming_allowed_values(client, conn):
+    seed_task_sla(conn, sys_id="SLA-0001")
+
+    resp = client.get("/sla?sla_definition=escalation_response")
+
+    assert resp.status_code == 422
+    body = resp.json()
+    assert body["code"] == "VALIDATION_ERROR"
+    assert "sla_definition" in body["message"]
+    assert "first_response" in body["message"] and "resolution" in body["message"]
