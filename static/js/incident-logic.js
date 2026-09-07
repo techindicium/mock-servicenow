@@ -16,5 +16,24 @@
     return `${action} failed: ${(error && error.message) || "network error"}`;
   }
 
-  return { INCIDENT_STATES, PRIORITIES, NOTE_TYPES, formatFetchError };
+  function buildIncidentQueryParams(filters, page, pageSize) {
+    const params = {};
+    if (filters && filters.state) params.state = filters.state;
+    if (filters && filters.category) params.category = filters.category;
+    if (filters && filters.account_id) params.account_id = filters.account_id;
+    if (filters && filters.escalated) params.escalated = filters.escalated;
+    if (page) params.page = String(page);
+    if (pageSize) params.page_size = String(pageSize);
+    return params;
+  }
+
+  function shapePaginationInfo(page, pageSize, total) {
+    const totalPages = pageSize > 0 ? Math.max(1, Math.ceil(total / pageSize)) : 1;
+    return { page, pageSize, total, totalPages, hasPrev: page > 1, hasNext: page < totalPages };
+  }
+
+  return {
+    INCIDENT_STATES, PRIORITIES, NOTE_TYPES, formatFetchError,
+    buildIncidentQueryParams, shapePaginationInfo,
+  };
 });
