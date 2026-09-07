@@ -59,10 +59,9 @@ def start_itsm_api(tmp_path: Path) -> Iterator[str]:
     port = _free_port()
     db_path = Path(tmp_path) / "e2e.db"
     base_url = f"http://127.0.0.1:{port}"
-    # app/main.py reads DATABASE_PATH; app/seed.py's main() reads ITSM_DB_PATH. Both
-    # env vars are set to the same path so the seed command and the live server agree
-    # on which database file they're each pointed at.
-    env = {**os.environ, "DATABASE_PATH": str(db_path), "ITSM_DB_PATH": str(db_path)}
+    # Both app/main.py and app/seed.py's main() read DATABASE_PATH, so the seed command
+    # and the live server agree on which database file they're each pointed at.
+    env = {**os.environ, "DATABASE_PATH": str(db_path)}
 
     seed_result = subprocess.run(
         [sys.executable, "-m", "app.seed"],

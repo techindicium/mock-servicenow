@@ -412,7 +412,7 @@ def main() -> None:
 
     from app.db import create_schema, get_connection
 
-    db_path = os.environ.get("ITSM_DB_PATH", "itsm.db")
+    db_path = os.environ.get("DATABASE_PATH", "servicenow.db")
     conn = get_connection(db_path)
     try:
         create_schema(conn)
