@@ -1,6 +1,6 @@
 ---
 charter: itsm-api
-status: review-passed
+status: implemented
 risk_level: low
 milestone: v1.1
 revision: 1
@@ -8,6 +8,26 @@ charter-revision: 1
 created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
+source-manifest:
+  sha: "a2a5161"
+  files:
+    - .context-index/governance/gates.yaml
+    - tests/test_gates_config.py
+    - tests/test_pytest_config.py
+    - tests_e2e/__init__.py
+    - tests_e2e/conftest.py
+    - tests_e2e/servers.py
+    - tests_e2e/test_analytics_filter_e2e.py
+    - tests_e2e/test_directory_e2e.py
+    - tests_e2e/test_error_paths_e2e.py
+    - tests_e2e/test_escalations_e2e.py
+    - tests_e2e/test_incident_crud_e2e.py
+    - tests_e2e/test_openapi_e2e.py
+    - tests_e2e/test_seeded_discrepancies_e2e.py
+    - tests_e2e/test_server_fixture.py
+    - tests_e2e/test_sla_e2e.py
+    - tests_e2e/test_work_notes_e2e.py
+  computed-at: "2026-09-07T19:11:43.475Z"
 ---
 
 # Live Spec: End-to-end API test suite (real HTTP)

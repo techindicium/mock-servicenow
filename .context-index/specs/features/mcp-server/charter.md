@@ -1,7 +1,7 @@
 ---
 status: approved
 kind: feature
-revision: 5
+revision: 10
 updated: 2026-09-07
 ---
 
@@ -90,11 +90,11 @@ behaviour around these tools. A guarded MCP here would remove the exercise.
 | get_incident tool | Wraps `GET /incidents/{number}` | must-have | mvp | implemented |
 | create_incident tool | Wraps `POST /incidents` | must-have | mvp | implemented |
 | update_incident tool | Wraps `PATCH /incidents/{number}`, unguarded | must-have | mvp | implemented |
-| list_work_notes tool | Wraps `GET /incidents/{number}/work_notes` | must-have | mvp | planned |
-| add_work_note tool | Wraps `POST /incidents/{number}/work_notes`, unguarded author | must-have | mvp | planned |
-| list_escalations tool | Wraps `GET /escalations`, filter parameters | must-have | mvp | planned |
-| list_sla_records tool | Wraps `GET /sla`, filter parameters | must-have | mvp | planned |
-| list_users tool | Wraps `GET /users` | must-have | mvp | planned |
+| list_work_notes tool | Wraps `GET /incidents/{number}/work_notes` | must-have | mvp | implemented |
+| add_work_note tool | Wraps `POST /incidents/{number}/work_notes`, unguarded author | must-have | mvp | implemented |
+| list_escalations tool | Wraps `GET /escalations`, filter parameters | must-have | mvp | implemented |
+| list_sla_records tool | Wraps `GET /sla`, filter parameters | must-have | mvp | implemented |
+| list_users tool | Wraps `GET /users` | must-have | mvp | implemented |
 | End-to-end MCP test suite | A real MCP client, over the real streamable-http transport, against a live server process | must-have | v1.1 | planned |
 
 ## Deferred Capabilities

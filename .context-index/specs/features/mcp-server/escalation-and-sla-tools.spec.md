@@ -1,6 +1,6 @@
 ---
 charter: mcp-server
-status: review-passed
+status: implemented
 risk_level: low
 milestone: mvp
 revision: 1
@@ -8,6 +8,16 @@ charter-revision: 1
 created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
+source-manifest:
+  sha: "b3d9815"
+  files:
+    - mcp_server/client.py
+    - mcp_server/server.py
+    - mcp_server/tools/escalations.py
+    - mcp_server/tools/sla.py
+    - tests/mcp_server/test_client.py
+    - tests/mcp_server/test_escalation_sla_tools.py
+  computed-at: "2026-09-07T19:11:43.706Z"
 ---
 
 # Live Spec: Escalation and SLA MCP tools (list_escalations, list_sla_records)

@@ -9,7 +9,7 @@ created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
 source-manifest:
-  sha: "2deb7ee"
+  sha: "0bbaa12"
   files:
     - mcp_server/client.py
     - mcp_server/config.py
@@ -20,8 +20,7 @@ source-manifest:
     - tests/mcp_server/conftest.py
     - tests/mcp_server/test_client.py
     - tests/mcp_server/test_incident_tools.py
-  computed-at: "2026-09-07T18:49:50.508Z"
-drift_detected: true
+  computed-at: "2026-09-07T19:11:43.949Z"
 ---
 
 # Live Spec: Incident MCP tools (list/get/create/update)

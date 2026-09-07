@@ -1,6 +1,6 @@
 ---
 charter: mcp-server
-status: review-passed
+status: implemented
 risk_level: medium
 milestone: mvp
 revision: 1
@@ -8,6 +8,15 @@ charter-revision: 1
 created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
+source-manifest:
+  sha: "4269fcd"
+  files:
+    - mcp_server/client.py
+    - mcp_server/server.py
+    - mcp_server/tools/work_notes.py
+    - tests/mcp_server/test_client.py
+    - tests/mcp_server/test_work_note_tools.py
+  computed-at: "2026-09-07T19:11:43.591Z"
 ---
 
 # Live Spec: Work Note MCP tools (list_work_notes, add_work_note)

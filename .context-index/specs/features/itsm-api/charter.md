@@ -1,7 +1,7 @@
 ---
 status: approved
 kind: feature
-revision: 8
+revision: 9
 updated: 2026-09-07
 ---
 
@@ -128,7 +128,7 @@ ticket) is the point of building this at all.
 | List users and assignment groups | List the support-team directory | must-have | mvp | implemented |
 | Seed fixture data | Idempotent seed command populating all six tables from the sources PRD.md names, preserving the ten narrative tickets and the three seeded discrepancies | must-have | mvp | implemented |
 | OpenAPI contract | Auto-generated, browsable API documentation | should-have | mvp | planned |
-| End-to-end API test suite | Real HTTP calls over a real socket against a live server process | must-have | v1.1 | planned |
+| End-to-end API test suite | Real HTTP calls over a real socket against a live server process | must-have | v1.1 | implemented |
 
 ## Deferred Capabilities
 
