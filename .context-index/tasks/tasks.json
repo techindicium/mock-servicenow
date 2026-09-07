@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "seq": 12,
+  "seq": 13,
   "epics": [
     {
       "id": "epic-cjs4ac",
@@ -109,6 +109,15 @@
       "notes": "Real MCP client over the real streamable-http transport against live itsm-api/mcp-server processes, including the unguarded create/add_work_note(assist)/resolve-with-open-breach round trip",
       "created": "2026-09-07T17:28:17.602Z",
       "updated": "2026-09-07T17:28:17.602Z"
+    },
+    {
+      "id": "epic-57gyqz",
+      "title": "Escalations, directory, and nav shell (agent-ui)",
+      "status": "open",
+      "planRef": ".context-index/specs/features/agent-ui/escalations-directory-nav.plan.md",
+      "notes": "Add the nav rail (Incidents/Escalations/Directory, default-active, client-side switching) on top of incident-console's static skeleton, plus the Escalations edit screen and read-only Directory screen.",
+      "created": "2026-09-07T22:46:17.568Z",
+      "updated": "2026-09-07T22:46:17.568Z"
     }
   ],
   "issues": []
