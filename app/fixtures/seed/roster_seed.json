@@ -1,0 +1,17 @@
+{
+  "_provenance": "Named individuals from course-shared/canon/company.md's Named People table: the three support-team members (Rui Bastos, Priya Nair, Joao Pinto), plus Mei Tan and Kofi Adjei (Assist engineering), who appear as work-note authors on the pilot-linked narrative tickets. The remaining six support-team rows are invented at seed-authoring time per user-directory.spec.md rev 2, checked against course-shared/canon/{company.md,identifiers.md} for name collisions. company.md itself is never edited.",
+  "sys_users": [
+    {"name": "Rui Bastos", "role": "Support Manager", "assignment_group": null},
+    {"name": "Joao Pinto", "role": "Support Engineer", "assignment_group": "Support Tier 1"},
+    {"name": "Miguel Costa", "role": "Support Engineer", "assignment_group": "Support Tier 1"},
+    {"name": "Ines Carvalho", "role": "Support Engineer", "assignment_group": "Support Tier 1"},
+    {"name": "Diego Fernandes", "role": "Support Engineer", "assignment_group": "Support Tier 2"},
+    {"name": "Aline Souza", "role": "Support Engineer", "assignment_group": "Support Tier 2"},
+    {"name": "Tariq Osei", "role": "Support Engineer", "assignment_group": "Support Tier 2"},
+    {"name": "Priya Nair", "role": "Solution Consultant", "assignment_group": "Solution Consultants"},
+    {"name": "Noor Haddad", "role": "Solution Consultant", "assignment_group": "Solution Consultants"},
+    {"name": "Mei Tan", "role": "Support Engineer", "assignment_group": null},
+    {"name": "Kofi Adjei", "role": "Support Engineer", "assignment_group": null}
+  ],
+  "assignment_groups": ["Support Tier 1", "Support Tier 2", "Solution Consultants"]
+}

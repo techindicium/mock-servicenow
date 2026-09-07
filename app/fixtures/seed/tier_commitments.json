@@ -1,0 +1,6 @@
+{
+  "$comment": "Portwell's contractual commitments per tier. POLICY-01 and POLICY-11 both read from this table.",
+  "enterprise": {"first_response_minutes": 30,  "resolution_business_hours": 8,  "human_review_areas": ["billing", "integrations"]},
+  "business":   {"first_response_minutes": 60,  "resolution_business_days": 2,   "human_review_areas": ["billing"]},
+  "standard":   {"first_response_minutes": 480, "resolution_business_days": 5,   "human_review_areas": []}
+}
