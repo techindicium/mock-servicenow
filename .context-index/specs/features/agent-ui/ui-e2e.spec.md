@@ -1,6 +1,6 @@
 ---
 charter: agent-ui
-status: implemented
+status: validated
 risk_level: low
 milestone: v1.1
 revision: 1

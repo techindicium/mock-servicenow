@@ -1,7 +1,7 @@
 ---
 status: approved
 kind: feature
-revision: 20
+revision: 21
 updated: 2026-09-07
 ---
 
@@ -115,7 +115,7 @@ presence of a UI at all — a real support desk has a UI agents work tickets fro
 | Escalations screen | List + edit form for Escalations, ownerless rows shown as-is | must-have | mvp | validated |
 | Directory screen | Read-only Users/AssignmentGroups list | should-have | mvp | validated |
 | App navigation shell | Persistent left-hand nav (Incidents / Escalations / Directory) | should-have | mvp | validated |
-| End-to-end UI test suite | Real browser automation (a real rendering engine, real clicks/form fills) driving the actual served page — the same interface a person uses, never calling the UI's JS functions directly | must-have | v1.1 | implemented |
+| End-to-end UI test suite | Real browser automation (a real rendering engine, real clicks/form fills) driving the actual served page — the same interface a person uses, never calling the UI's JS functions directly | must-have | v1.1 | validated |
 
 ## Deferred Capabilities
 
