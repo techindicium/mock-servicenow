@@ -30,7 +30,7 @@ gates:
     name: JS Unit Tests
     kind: deterministic
     tier: fast
-    command: [node, --test, tests_js/]
+    command: [node, --test, "tests_js/**/*.test.js"]
     scope: project
     required: true
     severity: error
