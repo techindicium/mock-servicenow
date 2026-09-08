@@ -137,8 +137,8 @@ def load_incidents_and_work_notes(conn) -> None:
                 raise SeedError(
                     "SEED_DATA_INVALID", f"unknown interaction actor {actor!r} on {number!r}"
                 )
-            if kind == "suggestion_sent":
-                note_type = "suggestion_sent"
+            if kind == "proposal_sent":
+                note_type = "proposal_sent"
             elif kind == "message":
                 note_type = "comment" if actor == "customer" else "work_note"
             else:

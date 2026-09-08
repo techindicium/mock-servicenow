@@ -7,7 +7,7 @@ from typing import Literal
 from pydantic import BaseModel
 
 INCIDENT_STATES = ("new", "in_progress", "on_hold", "resolved", "closed")
-NOTE_TYPES = ("comment", "work_note", "state_change", "suggestion_sent")
+NOTE_TYPES = ("comment", "work_note", "state_change", "proposal_sent")
 
 
 class IncidentCreate(BaseModel):
@@ -57,7 +57,7 @@ class IncidentPage(BaseModel):
 
 class WorkNoteCreate(BaseModel):
     created_by: str
-    note_type: Literal["comment", "work_note", "state_change", "suggestion_sent"]
+    note_type: Literal["comment", "work_note", "state_change", "proposal_sent"]
     body: str
 
 
