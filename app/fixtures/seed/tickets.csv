@@ -35,10 +35,10 @@ TICKET-005033,ACCOUNT-1001,auth,2026-06-26T09:07:00Z,Session expiring early,Repo
 TICKET-005034,ACCOUNT-1001,putaway,2026-06-15T08:34:00Z,Putaway suggesting a full zone,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005035,ACCOUNT-1001,picking,2026-06-15T10:44:00Z,Wave will not release,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005036,ACCOUNT-1001,putaway,2026-06-27T08:29:00Z,Putaway suggesting a full zone,Reported by the Nordkai Logistics operations team.,closed
-TICKET-005037,ACCOUNT-1001,reporting,2026-06-03T15:14:00Z,Deflection number changed,Reported by the Nordkai Logistics operations team.,closed
+TICKET-005037,ACCOUNT-1001,reporting,2026-06-03T15:14:00Z,Self-service number changed,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005038,ACCOUNT-1001,putaway,2026-06-27T17:49:00Z,Directed putaway skipped,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005039,ACCOUNT-1001,cycle-count,2026-06-15T13:09:00Z,Recount loop,Reported by the Nordkai Logistics operations team.,closed
-TICKET-005040,ACCOUNT-1001,reporting,2026-06-16T18:43:00Z,Deflection number changed,Reported by the Nordkai Logistics operations team.,closed
+TICKET-005040,ACCOUNT-1001,reporting,2026-06-16T18:43:00Z,Self-service number changed,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005041,ACCOUNT-1001,putaway,2026-06-16T11:44:00Z,Directed putaway skipped,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005042,ACCOUNT-1001,receiving,2026-06-24T11:21:00Z,Pallet count differs,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005043,ACCOUNT-1001,cycle-count,2026-06-17T17:15:00Z,Variance threshold question,Reported by the Nordkai Logistics operations team.,closed
@@ -80,7 +80,7 @@ TICKET-005078,ACCOUNT-1001,billing,2026-06-18T16:39:00Z,Storage fees look wrong,
 TICKET-005079,ACCOUNT-1001,cycle-count,2026-06-09T16:36:00Z,Recount loop,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005080,ACCOUNT-1001,billing,2026-06-23T13:06:00Z,Invoice line unexplained,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005081,ACCOUNT-1001,cycle-count,2026-06-02T12:30:00Z,Count task not generated,Reported by the Nordkai Logistics operations team.,closed
-TICKET-005082,ACCOUNT-1001,reporting,2026-06-06T16:38:00Z,Deflection number changed,Reported by the Nordkai Logistics operations team.,closed
+TICKET-005082,ACCOUNT-1001,reporting,2026-06-06T16:38:00Z,Self-service number changed,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005083,ACCOUNT-1001,integrations,2026-06-15T16:02:00Z,EDI feed rejecting,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005084,ACCOUNT-1001,integrations,2026-06-12T09:12:00Z,Webhook retries exhausted,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005085,ACCOUNT-1001,cycle-count,2026-06-12T15:36:00Z,Count task not generated,Reported by the Nordkai Logistics operations team.,closed
@@ -120,17 +120,17 @@ TICKET-005118,ACCOUNT-1002,reporting,2026-06-05T07:17:00Z,Figure differs from po
 TICKET-005119,ACCOUNT-1002,auth,2026-06-02T16:33:00Z,Session expiring early,Reported by the Tavares Distribuicao operations team.,closed
 TICKET-005120,ACCOUNT-1002,billing,2026-06-15T09:41:00Z,Invoice line unexplained,Reported by the Tavares Distribuicao operations team.,closed
 TICKET-005121,ACCOUNT-1003,putaway,2026-06-25T18:02:00Z,Directed putaway skipped,Reported by the Halden Cold Chain operations team.,closed
-TICKET-005122,ACCOUNT-1003,reporting,2026-06-25T11:12:00Z,Deflection number changed,Reported by the Halden Cold Chain operations team.,closed
+TICKET-005122,ACCOUNT-1003,reporting,2026-06-25T11:12:00Z,Self-service number changed,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005123,ACCOUNT-1003,putaway,2026-06-20T08:50:00Z,Putaway suggesting a full zone,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005124,ACCOUNT-1003,receiving,2026-06-04T16:50:00Z,ASN mismatch on inbound,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005125,ACCOUNT-1003,picking,2026-06-26T18:18:00Z,Wave will not release,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005126,ACCOUNT-1003,receiving,2026-06-02T10:07:00Z,Pallet count differs,Reported by the Halden Cold Chain operations team.,closed
-TICKET-005127,ACCOUNT-1003,reporting,2026-06-16T09:50:00Z,Deflection number changed,Reported by the Halden Cold Chain operations team.,closed
+TICKET-005127,ACCOUNT-1003,reporting,2026-06-16T09:50:00Z,Self-service number changed,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005128,ACCOUNT-1003,billing,2026-06-06T09:08:00Z,Invoice line unexplained,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005129,ACCOUNT-1003,putaway,2026-06-14T12:45:00Z,Directed putaway skipped,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005130,ACCOUNT-1003,picking,2026-06-27T11:12:00Z,Wave will not release,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005131,ACCOUNT-1003,billing,2026-06-06T12:33:00Z,Refund window question,Reported by the Halden Cold Chain operations team.,closed
-TICKET-005132,ACCOUNT-1003,reporting,2026-06-09T18:36:00Z,Deflection number changed,Reported by the Halden Cold Chain operations team.,closed
+TICKET-005132,ACCOUNT-1003,reporting,2026-06-09T18:36:00Z,Self-service number changed,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005133,ACCOUNT-1003,reporting,2026-06-15T07:59:00Z,Figure differs from portal,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005134,ACCOUNT-1003,receiving,2026-06-14T14:20:00Z,Receipt not posting,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005135,ACCOUNT-1003,putaway,2026-06-03T10:14:00Z,Directed putaway skipped,Reported by the Halden Cold Chain operations team.,closed
@@ -179,7 +179,7 @@ TICKET-005177,ACCOUNT-1003,picking,2026-06-14T07:24:00Z,Short pick not recorded,
 TICKET-005178,ACCOUNT-1003,picking,2026-06-23T15:10:00Z,Short pick not recorded,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005179,ACCOUNT-1003,cycle-count,2026-06-27T13:49:00Z,Variance threshold question,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005180,ACCOUNT-1003,cycle-count,2026-06-25T16:52:00Z,Count task not generated,Reported by the Halden Cold Chain operations team.,closed
-TICKET-005181,ACCOUNT-1003,reporting,2026-06-20T14:04:00Z,Deflection number changed,Reported by the Halden Cold Chain operations team.,closed
+TICKET-005181,ACCOUNT-1003,reporting,2026-06-20T14:04:00Z,Self-service number changed,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005182,ACCOUNT-1003,receiving,2026-06-25T12:00:00Z,ASN mismatch on inbound,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005183,ACCOUNT-1003,picking,2026-06-21T09:45:00Z,Short pick not recorded,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005184,ACCOUNT-1003,billing,2026-06-17T17:43:00Z,Refund window question,Reported by the Halden Cold Chain operations team.,closed
@@ -201,7 +201,7 @@ TICKET-005199,ACCOUNT-1004,putaway,2026-06-20T15:36:00Z,Zone capacity wrong,Repo
 TICKET-005200,ACCOUNT-1004,integrations,2026-06-12T15:26:00Z,Webhook retries exhausted,Reported by the Brightpath Freight operations team.,closed
 TICKET-005201,ACCOUNT-1004,picking,2026-06-03T08:05:00Z,Pick face empty,Reported by the Brightpath Freight operations team.,closed
 TICKET-005202,ACCOUNT-1004,picking,2026-06-20T18:36:00Z,Short pick not recorded,Reported by the Brightpath Freight operations team.,closed
-TICKET-005203,ACCOUNT-1004,reporting,2026-06-04T08:15:00Z,Deflection number changed,Reported by the Brightpath Freight operations team.,closed
+TICKET-005203,ACCOUNT-1004,reporting,2026-06-04T08:15:00Z,Self-service number changed,Reported by the Brightpath Freight operations team.,closed
 TICKET-005204,ACCOUNT-1004,putaway,2026-06-11T13:04:00Z,Zone capacity wrong,Reported by the Brightpath Freight operations team.,closed
 TICKET-005205,ACCOUNT-1004,cycle-count,2026-06-27T16:10:00Z,Variance threshold question,Reported by the Brightpath Freight operations team.,closed
 TICKET-005206,ACCOUNT-1004,reporting,2026-06-16T09:22:00Z,Figure differs from portal,Reported by the Brightpath Freight operations team.,closed
@@ -232,13 +232,13 @@ TICKET-005230,ACCOUNT-1004,cycle-count,2026-06-14T09:20:00Z,Count task not gener
 TICKET-005231,ACCOUNT-1004,picking,2026-06-22T16:35:00Z,Pick face empty,Reported by the Brightpath Freight operations team.,closed
 TICKET-005232,ACCOUNT-1005,cycle-count,2026-06-04T11:01:00Z,Count task not generated,Reported by the Meseta Almacenes operations team.,closed
 TICKET-005233,ACCOUNT-1005,integrations,2026-06-03T13:14:00Z,Webhook retries exhausted,Reported by the Meseta Almacenes operations team.,closed
-TICKET-005234,ACCOUNT-1005,reporting,2026-06-01T18:45:00Z,Deflection number changed,Reported by the Meseta Almacenes operations team.,closed
+TICKET-005234,ACCOUNT-1005,reporting,2026-06-01T18:45:00Z,Self-service number changed,Reported by the Meseta Almacenes operations team.,closed
 TICKET-005235,ACCOUNT-1005,cycle-count,2026-06-05T14:10:00Z,Recount loop,Reported by the Meseta Almacenes operations team.,closed
 TICKET-005236,ACCOUNT-1005,picking,2026-06-16T16:21:00Z,Wave will not release,Reported by the Meseta Almacenes operations team.,closed
 TICKET-005237,ACCOUNT-1005,receiving,2026-06-25T10:44:00Z,Receipt not posting,Reported by the Meseta Almacenes operations team.,closed
 TICKET-005238,ACCOUNT-1005,reporting,2026-06-05T12:23:00Z,Report export empty,Reported by the Meseta Almacenes operations team.,closed
 TICKET-005239,ACCOUNT-1006,billing,2026-06-18T18:39:00Z,Storage fees look wrong,Reported by the Kestrel Parts Group operations team.,closed
-TICKET-005240,ACCOUNT-1006,reporting,2026-06-03T07:45:00Z,Deflection number changed,Reported by the Kestrel Parts Group operations team.,closed
+TICKET-005240,ACCOUNT-1006,reporting,2026-06-03T07:45:00Z,Self-service number changed,Reported by the Kestrel Parts Group operations team.,closed
 TICKET-005241,ACCOUNT-1006,receiving,2026-06-08T16:53:00Z,Pallet count differs,Reported by the Kestrel Parts Group operations team.,closed
 TICKET-005242,ACCOUNT-1006,picking,2026-06-09T11:35:00Z,Pick face empty,Reported by the Kestrel Parts Group operations team.,closed
 TICKET-005243,ACCOUNT-1006,reporting,2026-06-17T16:50:00Z,Report export empty,Reported by the Kestrel Parts Group operations team.,closed
@@ -351,10 +351,10 @@ TICKET-005349,ACCOUNT-1008,picking,2026-06-22T10:28:00Z,Short pick not recorded,
 TICKET-005350,ACCOUNT-1008,billing,2026-06-03T14:57:00Z,Storage fees look wrong,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005351,ACCOUNT-1008,picking,2026-06-13T13:24:00Z,Pick face empty,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005352,ACCOUNT-1008,receiving,2026-06-24T11:48:00Z,ASN mismatch on inbound,Reported by the Sunder Retail Supply operations team.,closed
-TICKET-005353,ACCOUNT-1008,reporting,2026-06-10T12:24:00Z,Deflection number changed,Reported by the Sunder Retail Supply operations team.,closed
+TICKET-005353,ACCOUNT-1008,reporting,2026-06-10T12:24:00Z,Self-service number changed,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005354,ACCOUNT-1008,receiving,2026-06-12T13:59:00Z,ASN mismatch on inbound,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005355,ACCOUNT-1008,putaway,2026-06-04T09:55:00Z,Zone capacity wrong,Reported by the Sunder Retail Supply operations team.,closed
-TICKET-005356,ACCOUNT-1008,reporting,2026-06-18T10:23:00Z,Deflection number changed,Reported by the Sunder Retail Supply operations team.,closed
+TICKET-005356,ACCOUNT-1008,reporting,2026-06-18T10:23:00Z,Self-service number changed,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005357,ACCOUNT-1008,picking,2026-06-21T15:59:00Z,Pick face empty,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005358,ACCOUNT-1008,auth,2026-06-01T07:50:00Z,Operator cannot log in,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005359,ACCOUNT-1008,picking,2026-06-24T11:08:00Z,Wave will not release,Reported by the Sunder Retail Supply operations team.,closed
@@ -382,7 +382,7 @@ TICKET-005380,ACCOUNT-1008,picking,2026-06-03T10:10:00Z,Pick face empty,Reported
 TICKET-005381,ACCOUNT-1008,receiving,2026-06-05T07:53:00Z,Receipt not posting,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005382,ACCOUNT-1008,putaway,2026-06-25T16:25:00Z,Zone capacity wrong,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005383,ACCOUNT-1008,billing,2026-06-04T11:24:00Z,Invoice line unexplained,Reported by the Sunder Retail Supply operations team.,closed
-TICKET-005384,ACCOUNT-1008,reporting,2026-06-24T16:32:00Z,Deflection number changed,Reported by the Sunder Retail Supply operations team.,closed
+TICKET-005384,ACCOUNT-1008,reporting,2026-06-24T16:32:00Z,Self-service number changed,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005385,ACCOUNT-1008,billing,2026-06-13T10:54:00Z,Storage fees look wrong,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005386,ACCOUNT-1009,receiving,2026-06-13T18:33:00Z,ASN mismatch on inbound,Reported by the Copal Andina operations team.,closed
 TICKET-005387,ACCOUNT-1009,integrations,2026-06-18T09:03:00Z,EDI feed rejecting,Reported by the Copal Andina operations team.,closed
@@ -601,7 +601,7 @@ TICKET-005599,ACCOUNT-1003,billing,2026-07-09T18:34:00Z,Refund window question,R
 TICKET-005600,ACCOUNT-1003,receiving,2026-07-21T18:41:00Z,Receipt not posting,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005601,ACCOUNT-1003,receiving,2026-07-08T07:21:00Z,Receipt not posting,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005602,ACCOUNT-1003,receiving,2026-07-14T18:08:00Z,Pallet count differs,Reported by the Halden Cold Chain operations team.,closed
-TICKET-005603,ACCOUNT-1003,reporting,2026-07-24T13:21:00Z,Deflection number changed,Reported by the Halden Cold Chain operations team.,closed
+TICKET-005603,ACCOUNT-1003,reporting,2026-07-24T13:21:00Z,Self-service number changed,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005604,ACCOUNT-1003,receiving,2026-07-01T14:52:00Z,Receipt not posting,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005605,ACCOUNT-1003,receiving,2026-07-03T07:19:00Z,Pallet count differs,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005606,ACCOUNT-1004,putaway,2026-07-16T08:31:00Z,Putaway suggesting a full zone,Reported by the Brightpath Freight operations team.,closed
@@ -612,7 +612,7 @@ TICKET-005610,ACCOUNT-1004,picking,2026-07-23T18:17:00Z,Short pick not recorded,
 TICKET-005611,ACCOUNT-1004,cycle-count,2026-07-08T13:51:00Z,Recount loop,Reported by the Brightpath Freight operations team.,closed
 TICKET-005612,ACCOUNT-1004,picking,2026-07-24T12:21:00Z,Short pick not recorded,Reported by the Brightpath Freight operations team.,closed
 TICKET-005613,ACCOUNT-1004,integrations,2026-07-04T09:11:00Z,Webhook retries exhausted,Reported by the Brightpath Freight operations team.,closed
-TICKET-005614,ACCOUNT-1004,reporting,2026-07-14T13:29:00Z,Deflection number changed,Reported by the Brightpath Freight operations team.,closed
+TICKET-005614,ACCOUNT-1004,reporting,2026-07-14T13:29:00Z,Self-service number changed,Reported by the Brightpath Freight operations team.,closed
 TICKET-005615,ACCOUNT-1004,picking,2026-07-01T13:23:00Z,Wave will not release,Reported by the Brightpath Freight operations team.,closed
 TICKET-005616,ACCOUNT-1004,billing,2026-07-19T07:59:00Z,Storage fees look wrong,Reported by the Brightpath Freight operations team.,closed
 TICKET-005617,ACCOUNT-1004,receiving,2026-07-09T16:53:00Z,Receipt not posting,Reported by the Brightpath Freight operations team.,closed
@@ -666,7 +666,7 @@ TICKET-005664,ACCOUNT-1006,picking,2026-07-10T14:12:00Z,Wave will not release,Re
 TICKET-005665,ACCOUNT-1006,picking,2026-07-22T15:11:00Z,Pick face empty,Reported by the Kestrel Parts Group operations team.,closed
 TICKET-005666,ACCOUNT-1006,receiving,2026-07-23T10:57:00Z,Receipt not posting,Reported by the Kestrel Parts Group operations team.,closed
 TICKET-005667,ACCOUNT-1006,receiving,2026-07-12T09:08:00Z,ASN mismatch on inbound,Reported by the Kestrel Parts Group operations team.,closed
-TICKET-005668,ACCOUNT-1006,reporting,2026-07-06T18:09:00Z,Deflection number changed,Reported by the Kestrel Parts Group operations team.,closed
+TICKET-005668,ACCOUNT-1006,reporting,2026-07-06T18:09:00Z,Self-service number changed,Reported by the Kestrel Parts Group operations team.,closed
 TICKET-005669,ACCOUNT-1006,auth,2026-07-13T17:31:00Z,Session expiring early,Reported by the Kestrel Parts Group operations team.,closed
 TICKET-005670,ACCOUNT-1006,reporting,2026-07-22T11:45:00Z,Figure differs from portal,Reported by the Kestrel Parts Group operations team.,closed
 TICKET-005671,ACCOUNT-1006,picking,2026-07-12T18:45:00Z,Pick face empty,Reported by the Kestrel Parts Group operations team.,closed
@@ -715,14 +715,14 @@ TICKET-005713,ACCOUNT-1008,billing,2026-07-25T13:43:00Z,Invoice line unexplained
 TICKET-005714,ACCOUNT-1008,receiving,2026-07-10T11:15:00Z,Pallet count differs,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005715,ACCOUNT-1008,picking,2026-07-07T14:35:00Z,Pick face empty,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005716,ACCOUNT-1008,auth,2026-07-13T09:03:00Z,SSO mapping wrong,Reported by the Sunder Retail Supply operations team.,closed
-TICKET-005717,ACCOUNT-1008,reporting,2026-07-13T10:48:00Z,Deflection number changed,Reported by the Sunder Retail Supply operations team.,closed
+TICKET-005717,ACCOUNT-1008,reporting,2026-07-13T10:48:00Z,Self-service number changed,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005718,ACCOUNT-1008,receiving,2026-07-11T14:44:00Z,ASN mismatch on inbound,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005719,ACCOUNT-1008,auth,2026-07-11T17:18:00Z,Session expiring early,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005720,ACCOUNT-1008,auth,2026-07-02T16:50:00Z,Session expiring early,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005721,ACCOUNT-1008,billing,2026-07-02T10:29:00Z,Refund window question,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005722,ACCOUNT-1008,receiving,2026-07-14T14:30:00Z,Pallet count differs,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005723,ACCOUNT-1008,picking,2026-07-22T10:18:00Z,Wave will not release,Reported by the Sunder Retail Supply operations team.,closed
-TICKET-005724,ACCOUNT-1008,reporting,2026-07-05T12:29:00Z,Deflection number changed,Reported by the Sunder Retail Supply operations team.,closed
+TICKET-005724,ACCOUNT-1008,reporting,2026-07-05T12:29:00Z,Self-service number changed,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005725,ACCOUNT-1008,receiving,2026-07-03T15:08:00Z,Receipt not posting,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005726,ACCOUNT-1008,receiving,2026-07-02T16:49:00Z,Receipt not posting,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005727,ACCOUNT-1008,putaway,2026-07-08T12:42:00Z,Putaway suggesting a full zone,Reported by the Sunder Retail Supply operations team.,closed
@@ -744,7 +744,7 @@ TICKET-005742,ACCOUNT-1008,receiving,2026-07-24T13:37:00Z,Pallet count differs,R
 TICKET-005743,ACCOUNT-1008,billing,2026-07-24T17:03:00Z,Refund window question,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005744,ACCOUNT-1008,reporting,2026-07-02T14:09:00Z,Report export empty,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005745,ACCOUNT-1008,receiving,2026-07-12T08:51:00Z,Pallet count differs,Reported by the Sunder Retail Supply operations team.,closed
-TICKET-005746,ACCOUNT-1008,reporting,2026-07-20T10:18:00Z,Deflection number changed,Reported by the Sunder Retail Supply operations team.,closed
+TICKET-005746,ACCOUNT-1008,reporting,2026-07-20T10:18:00Z,Self-service number changed,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005747,ACCOUNT-1008,cycle-count,2026-07-07T10:46:00Z,Variance threshold question,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005748,ACCOUNT-1008,reporting,2026-07-03T18:37:00Z,Report export empty,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005749,ACCOUNT-1008,receiving,2026-07-08T09:22:00Z,Receipt not posting,Reported by the Sunder Retail Supply operations team.,closed
@@ -791,7 +791,7 @@ TICKET-005789,ACCOUNT-1008,billing,2026-07-01T09:19:00Z,Refund window question,R
 TICKET-005790,ACCOUNT-1008,picking,2026-07-27T14:08:00Z,Pick face empty,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005791,ACCOUNT-1008,picking,2026-07-09T10:15:00Z,Pick face empty,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005792,ACCOUNT-1008,picking,2026-07-12T12:04:00Z,Short pick not recorded,Reported by the Sunder Retail Supply operations team.,closed
-TICKET-005793,ACCOUNT-1008,reporting,2026-07-13T18:19:00Z,Deflection number changed,Reported by the Sunder Retail Supply operations team.,closed
+TICKET-005793,ACCOUNT-1008,reporting,2026-07-13T18:19:00Z,Self-service number changed,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-005794,ACCOUNT-1009,receiving,2026-07-26T17:22:00Z,Pallet count differs,Reported by the Copal Andina operations team.,closed
 TICKET-005795,ACCOUNT-1009,integrations,2026-07-18T08:39:00Z,API 429 on bulk post,Reported by the Copal Andina operations team.,closed
 TICKET-005796,ACCOUNT-1009,billing,2026-07-04T17:38:00Z,Refund window question,Reported by the Copal Andina operations team.,closed
@@ -834,7 +834,7 @@ TICKET-005832,ACCOUNT-1001,auth,2026-08-23T07:42:00Z,SSO mapping wrong,Reported 
 TICKET-005833,ACCOUNT-1001,putaway,2026-08-17T17:43:00Z,Putaway suggesting a full zone,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005834,ACCOUNT-1001,receiving,2026-08-14T13:00:00Z,ASN mismatch on inbound,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005835,ACCOUNT-1001,putaway,2026-08-03T08:53:00Z,Directed putaway skipped,Reported by the Nordkai Logistics operations team.,closed
-TICKET-005836,ACCOUNT-1001,reporting,2026-08-08T15:34:00Z,Deflection number changed,Reported by the Nordkai Logistics operations team.,closed
+TICKET-005836,ACCOUNT-1001,reporting,2026-08-08T15:34:00Z,Self-service number changed,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005837,ACCOUNT-1001,auth,2026-08-27T18:37:00Z,Session expiring early,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005838,ACCOUNT-1001,auth,2026-08-03T14:00:00Z,Session expiring early,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005839,ACCOUNT-1001,receiving,2026-08-10T15:04:00Z,ASN mismatch on inbound,Reported by the Nordkai Logistics operations team.,closed
@@ -858,7 +858,7 @@ TICKET-005856,ACCOUNT-1001,receiving,2026-08-27T17:48:00Z,Pallet count differs,R
 TICKET-005857,ACCOUNT-1001,auth,2026-08-19T12:59:00Z,Operator cannot log in,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005858,ACCOUNT-1001,cycle-count,2026-08-22T09:48:00Z,Count task not generated,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005859,ACCOUNT-1001,auth,2026-08-11T15:32:00Z,Session expiring early,Reported by the Nordkai Logistics operations team.,closed
-TICKET-005860,ACCOUNT-1001,reporting,2026-08-25T07:36:00Z,Deflection number changed,Reported by the Nordkai Logistics operations team.,closed
+TICKET-005860,ACCOUNT-1001,reporting,2026-08-25T07:36:00Z,Self-service number changed,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005861,ACCOUNT-1001,receiving,2026-08-03T14:54:00Z,ASN mismatch on inbound,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005862,ACCOUNT-1001,receiving,2026-08-08T15:42:00Z,ASN mismatch on inbound,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005863,ACCOUNT-1001,picking,2026-08-27T15:09:00Z,Wave will not release,Reported by the Nordkai Logistics operations team.,closed
@@ -870,7 +870,7 @@ TICKET-005868,ACCOUNT-1001,reporting,2026-08-15T11:21:00Z,Figure differs from po
 TICKET-005869,ACCOUNT-1001,picking,2026-08-12T11:48:00Z,Wave will not release,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005870,ACCOUNT-1001,reporting,2026-08-11T13:08:00Z,Figure differs from portal,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005871,ACCOUNT-1001,receiving,2026-08-22T07:01:00Z,Pallet count differs,Reported by the Nordkai Logistics operations team.,closed
-TICKET-005872,ACCOUNT-1001,reporting,2026-08-17T16:31:00Z,Deflection number changed,Reported by the Nordkai Logistics operations team.,closed
+TICKET-005872,ACCOUNT-1001,reporting,2026-08-17T16:31:00Z,Self-service number changed,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005873,ACCOUNT-1001,integrations,2026-08-15T11:30:00Z,API 429 on bulk post,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005874,ACCOUNT-1001,picking,2026-08-27T11:59:00Z,Wave will not release,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005875,ACCOUNT-1001,integrations,2026-08-08T07:55:00Z,EDI feed rejecting,Reported by the Nordkai Logistics operations team.,closed
@@ -890,14 +890,14 @@ TICKET-005888,ACCOUNT-1001,receiving,2026-08-21T16:13:00Z,ASN mismatch on inboun
 TICKET-005889,ACCOUNT-1001,reporting,2026-08-22T08:27:00Z,Figure differs from portal,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005890,ACCOUNT-1001,billing,2026-08-21T11:23:00Z,Storage fees look wrong,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005891,ACCOUNT-1001,putaway,2026-08-22T14:03:00Z,Zone capacity wrong,Reported by the Nordkai Logistics operations team.,closed
-TICKET-005892,ACCOUNT-1001,reporting,2026-08-23T14:08:00Z,Deflection number changed,Reported by the Nordkai Logistics operations team.,closed
+TICKET-005892,ACCOUNT-1001,reporting,2026-08-23T14:08:00Z,Self-service number changed,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005893,ACCOUNT-1001,picking,2026-08-08T13:36:00Z,Wave will not release,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005894,ACCOUNT-1001,billing,2026-08-24T13:57:00Z,Invoice line unexplained,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005895,ACCOUNT-1001,putaway,2026-08-18T16:10:00Z,Directed putaway skipped,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005896,ACCOUNT-1001,picking,2026-08-21T08:17:00Z,Pick face empty,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005897,ACCOUNT-1001,billing,2026-08-09T14:34:00Z,Storage fees look wrong,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005898,ACCOUNT-1001,picking,2026-08-14T07:08:00Z,Pick face empty,Reported by the Nordkai Logistics operations team.,closed
-TICKET-005899,ACCOUNT-1001,reporting,2026-08-16T08:50:00Z,Deflection number changed,Reported by the Nordkai Logistics operations team.,closed
+TICKET-005899,ACCOUNT-1001,reporting,2026-08-16T08:50:00Z,Self-service number changed,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005900,ACCOUNT-1001,cycle-count,2026-08-15T18:45:00Z,Recount loop,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005901,ACCOUNT-1001,billing,2026-08-07T12:36:00Z,Refund window question,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005902,ACCOUNT-1001,picking,2026-08-08T09:33:00Z,Pick face empty,Reported by the Nordkai Logistics operations team.,closed
@@ -907,14 +907,14 @@ TICKET-005905,ACCOUNT-1001,billing,2026-08-12T12:13:00Z,Refund window question,R
 TICKET-005906,ACCOUNT-1001,cycle-count,2026-08-19T11:52:00Z,Variance threshold question,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005907,ACCOUNT-1001,putaway,2026-08-12T16:16:00Z,Directed putaway skipped,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005908,ACCOUNT-1001,billing,2026-08-23T07:47:00Z,Invoice line unexplained,Reported by the Nordkai Logistics operations team.,closed
-TICKET-005909,ACCOUNT-1001,reporting,2026-08-15T12:09:00Z,Deflection number changed,Reported by the Nordkai Logistics operations team.,closed
+TICKET-005909,ACCOUNT-1001,reporting,2026-08-15T12:09:00Z,Self-service number changed,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005910,ACCOUNT-1001,receiving,2026-08-16T13:22:00Z,Receipt not posting,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005911,ACCOUNT-1001,integrations,2026-08-02T12:31:00Z,EDI feed rejecting,Reported by the Nordkai Logistics operations team.,closed
 TICKET-005912,ACCOUNT-1002,billing,2026-08-13T14:32:00Z,Invoice line unexplained,Reported by the Tavares Distribuicao operations team.,closed
 TICKET-005913,ACCOUNT-1002,picking,2026-08-26T18:48:00Z,Wave will not release,Reported by the Tavares Distribuicao operations team.,closed
 TICKET-005914,ACCOUNT-1002,integrations,2026-08-07T14:09:00Z,EDI feed rejecting,Reported by the Tavares Distribuicao operations team.,closed
 TICKET-005915,ACCOUNT-1002,billing,2026-08-24T12:58:00Z,Invoice line unexplained,Reported by the Tavares Distribuicao operations team.,closed
-TICKET-005916,ACCOUNT-1002,reporting,2026-08-26T11:24:00Z,Deflection number changed,Reported by the Tavares Distribuicao operations team.,closed
+TICKET-005916,ACCOUNT-1002,reporting,2026-08-26T11:24:00Z,Self-service number changed,Reported by the Tavares Distribuicao operations team.,closed
 TICKET-005917,ACCOUNT-1002,billing,2026-08-05T17:28:00Z,Storage fees look wrong,Reported by the Tavares Distribuicao operations team.,closed
 TICKET-005918,ACCOUNT-1002,putaway,2026-08-05T07:01:00Z,Putaway suggesting a full zone,Reported by the Tavares Distribuicao operations team.,closed
 TICKET-005919,ACCOUNT-1002,integrations,2026-08-21T18:16:00Z,Webhook retries exhausted,Reported by the Tavares Distribuicao operations team.,closed
@@ -935,7 +935,7 @@ TICKET-005933,ACCOUNT-1002,picking,2026-08-09T17:25:00Z,Short pick not recorded,
 TICKET-005934,ACCOUNT-1002,billing,2026-08-03T14:36:00Z,Storage fees look wrong,Reported by the Tavares Distribuicao operations team.,closed
 TICKET-005935,ACCOUNT-1002,putaway,2026-08-01T16:52:00Z,Zone capacity wrong,Reported by the Tavares Distribuicao operations team.,closed
 TICKET-005936,ACCOUNT-1002,auth,2026-08-21T14:38:00Z,SSO mapping wrong,Reported by the Tavares Distribuicao operations team.,closed
-TICKET-005937,ACCOUNT-1003,reporting,2026-08-24T11:00:00Z,Deflection number changed,Reported by the Halden Cold Chain operations team.,closed
+TICKET-005937,ACCOUNT-1003,reporting,2026-08-24T11:00:00Z,Self-service number changed,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005938,ACCOUNT-1003,receiving,2026-08-11T09:10:00Z,ASN mismatch on inbound,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005939,ACCOUNT-1003,picking,2026-08-23T08:03:00Z,Wave will not release,Reported by the Halden Cold Chain operations team.,closed
 TICKET-005940,ACCOUNT-1003,integrations,2026-08-05T11:47:00Z,API 429 on bulk post,Reported by the Halden Cold Chain operations team.,closed
@@ -1077,7 +1077,7 @@ TICKET-006075,ACCOUNT-1006,receiving,2026-08-22T13:18:00Z,Receipt not posting,Re
 TICKET-006076,ACCOUNT-1006,billing,2026-08-15T09:08:00Z,Invoice line unexplained,Reported by the Kestrel Parts Group operations team.,closed
 TICKET-006077,ACCOUNT-1006,picking,2026-08-09T18:20:00Z,Pick face empty,Reported by the Kestrel Parts Group operations team.,closed
 TICKET-006078,ACCOUNT-1006,picking,2026-08-20T09:42:00Z,Pick face empty,Reported by the Kestrel Parts Group operations team.,closed
-TICKET-006079,ACCOUNT-1006,reporting,2026-08-16T09:21:00Z,Deflection number changed,Reported by the Kestrel Parts Group operations team.,closed
+TICKET-006079,ACCOUNT-1006,reporting,2026-08-16T09:21:00Z,Self-service number changed,Reported by the Kestrel Parts Group operations team.,closed
 TICKET-006080,ACCOUNT-1006,picking,2026-08-07T14:40:00Z,Wave will not release,Reported by the Kestrel Parts Group operations team.,closed
 TICKET-006081,ACCOUNT-1006,billing,2026-08-17T07:51:00Z,Refund window question,Reported by the Kestrel Parts Group operations team.,closed
 TICKET-006082,ACCOUNT-1007,billing,2026-08-18T09:59:00Z,Refund window question,Reported by the Vlietwerk BV operations team.,closed
@@ -1087,14 +1087,14 @@ TICKET-006085,ACCOUNT-1007,billing,2026-08-04T13:51:00Z,Refund window question,R
 TICKET-006086,ACCOUNT-1007,billing,2026-08-02T17:52:00Z,Refund window question,Reported by the Vlietwerk BV operations team.,closed
 TICKET-006087,ACCOUNT-1008,picking,2026-08-16T07:27:00Z,Wave will not release,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-006088,ACCOUNT-1008,reporting,2026-08-01T16:11:00Z,Figure differs from portal,Reported by the Sunder Retail Supply operations team.,closed
-TICKET-006089,ACCOUNT-1008,reporting,2026-08-06T07:33:00Z,Deflection number changed,Reported by the Sunder Retail Supply operations team.,closed
+TICKET-006089,ACCOUNT-1008,reporting,2026-08-06T07:33:00Z,Self-service number changed,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-006090,ACCOUNT-1008,billing,2026-08-19T12:02:00Z,Invoice line unexplained,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-006091,ACCOUNT-1008,picking,2026-08-20T08:05:00Z,Wave will not release,Reported by the Sunder Retail Supply operations team.,closed
-TICKET-006092,ACCOUNT-1008,reporting,2026-08-14T14:31:00Z,Deflection number changed,Reported by the Sunder Retail Supply operations team.,closed
+TICKET-006092,ACCOUNT-1008,reporting,2026-08-14T14:31:00Z,Self-service number changed,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-006093,ACCOUNT-1008,integrations,2026-08-07T17:48:00Z,Webhook retries exhausted,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-006094,ACCOUNT-1008,picking,2026-08-18T11:31:00Z,Pick face empty,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-006095,ACCOUNT-1008,integrations,2026-08-12T16:23:00Z,Webhook retries exhausted,Reported by the Sunder Retail Supply operations team.,closed
-TICKET-006096,ACCOUNT-1008,reporting,2026-08-20T08:28:00Z,Deflection number changed,Reported by the Sunder Retail Supply operations team.,closed
+TICKET-006096,ACCOUNT-1008,reporting,2026-08-20T08:28:00Z,Self-service number changed,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-006097,ACCOUNT-1008,picking,2026-08-22T10:15:00Z,Wave will not release,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-006098,ACCOUNT-1008,billing,2026-08-13T10:08:00Z,Refund window question,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-006099,ACCOUNT-1008,receiving,2026-08-16T09:22:00Z,Receipt not posting,Reported by the Sunder Retail Supply operations team.,closed
@@ -1170,7 +1170,7 @@ TICKET-006168,ACCOUNT-1008,picking,2026-08-27T14:17:00Z,Short pick not recorded,
 TICKET-006169,ACCOUNT-1008,putaway,2026-08-10T18:39:00Z,Zone capacity wrong,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-006170,ACCOUNT-1008,picking,2026-08-02T15:27:00Z,Short pick not recorded,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-006171,ACCOUNT-1008,cycle-count,2026-08-03T15:04:00Z,Variance threshold question,Reported by the Sunder Retail Supply operations team.,closed
-TICKET-006172,ACCOUNT-1008,reporting,2026-08-26T10:22:00Z,Deflection number changed,Reported by the Sunder Retail Supply operations team.,closed
+TICKET-006172,ACCOUNT-1008,reporting,2026-08-26T10:22:00Z,Self-service number changed,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-006173,ACCOUNT-1008,auth,2026-08-15T14:19:00Z,Operator cannot log in,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-006174,ACCOUNT-1008,cycle-count,2026-08-22T13:00:00Z,Variance threshold question,Reported by the Sunder Retail Supply operations team.,closed
 TICKET-006175,ACCOUNT-1008,receiving,2026-08-01T13:47:00Z,Pallet count differs,Reported by the Sunder Retail Supply operations team.,closed

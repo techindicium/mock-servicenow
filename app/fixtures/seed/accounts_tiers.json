@@ -1,12 +1,133 @@
 [
-  {"account_id": "ACCOUNT-1001", "name": "Nordkai Logistics",    "tier": "enterprise", "region": "EU",    "seats": 340, "modules": ["receiving","putaway","picking","billing","integrations"], "pilot": true},
-  {"account_id": "ACCOUNT-1002", "name": "Tavares Distribuicao", "tier": "business",   "region": "LATAM", "seats": 88,  "modules": ["receiving","picking","cycle-count"], "pilot": true},
-  {"account_id": "ACCOUNT-1003", "name": "Halden Cold Chain",    "tier": "enterprise", "region": "EU",    "seats": 275, "modules": ["receiving","putaway","picking","cycle-count","integrations"], "pilot": true},
-  {"account_id": "ACCOUNT-1004", "name": "Brightpath Freight",   "tier": "business",   "region": "NA",    "seats": 120, "modules": ["picking","billing"], "pilot": true},
-  {"account_id": "ACCOUNT-1005", "name": "Meseta Almacenes",     "tier": "standard",   "region": "LATAM", "seats": 24,  "modules": ["receiving","picking"], "pilot": false},
-  {"account_id": "ACCOUNT-1006", "name": "Kestrel Parts Group",  "tier": "business",   "region": "NA",    "seats": 96,  "modules": ["receiving","putaway","billing","integrations"], "pilot": true},
-  {"account_id": "ACCOUNT-1007", "name": "Vlietwerk BV",         "tier": "standard",   "region": "EU",    "seats": 18,  "modules": ["picking"], "pilot": false},
-  {"account_id": "ACCOUNT-1008", "name": "Sunder Retail Supply", "tier": "enterprise", "region": "NA",    "seats": 410, "modules": ["receiving","putaway","picking","cycle-count","billing","integrations"], "pilot": true},
-  {"account_id": "ACCOUNT-1009", "name": "Copal Andina",         "tier": "business",   "region": "LATAM", "seats": 71,  "modules": ["receiving","cycle-count"], "pilot": false},
-  {"account_id": "ACCOUNT-1010", "name": "Fjordline Depot",      "tier": "standard",   "region": "EU",    "seats": 12,  "modules": ["receiving"], "pilot": false}
+  {
+    "account_id": "ACCOUNT-1001",
+    "name": "Nordkai Logistics",
+    "tier": "enterprise",
+    "region": "EU",
+    "seats": 340,
+    "modules": [
+      "receiving",
+      "putaway",
+      "picking",
+      "billing",
+      "integrations"
+    ],
+    "portal_enabled": true
+  },
+  {
+    "account_id": "ACCOUNT-1002",
+    "name": "Tavares Distribuicao",
+    "tier": "business",
+    "region": "LATAM",
+    "seats": 88,
+    "modules": [
+      "receiving",
+      "picking",
+      "cycle-count"
+    ],
+    "portal_enabled": true
+  },
+  {
+    "account_id": "ACCOUNT-1003",
+    "name": "Halden Cold Chain",
+    "tier": "enterprise",
+    "region": "EU",
+    "seats": 275,
+    "modules": [
+      "receiving",
+      "putaway",
+      "picking",
+      "cycle-count",
+      "integrations"
+    ],
+    "portal_enabled": true
+  },
+  {
+    "account_id": "ACCOUNT-1004",
+    "name": "Brightpath Freight",
+    "tier": "business",
+    "region": "NA",
+    "seats": 120,
+    "modules": [
+      "picking",
+      "billing"
+    ],
+    "portal_enabled": true
+  },
+  {
+    "account_id": "ACCOUNT-1005",
+    "name": "Meseta Almacenes",
+    "tier": "standard",
+    "region": "LATAM",
+    "seats": 24,
+    "modules": [
+      "receiving",
+      "picking"
+    ],
+    "portal_enabled": false
+  },
+  {
+    "account_id": "ACCOUNT-1006",
+    "name": "Kestrel Parts Group",
+    "tier": "business",
+    "region": "NA",
+    "seats": 96,
+    "modules": [
+      "receiving",
+      "putaway",
+      "billing",
+      "integrations"
+    ],
+    "portal_enabled": true
+  },
+  {
+    "account_id": "ACCOUNT-1007",
+    "name": "Vlietwerk BV",
+    "tier": "standard",
+    "region": "EU",
+    "seats": 18,
+    "modules": [
+      "picking"
+    ],
+    "portal_enabled": false
+  },
+  {
+    "account_id": "ACCOUNT-1008",
+    "name": "Sunder Retail Supply",
+    "tier": "enterprise",
+    "region": "NA",
+    "seats": 410,
+    "modules": [
+      "receiving",
+      "putaway",
+      "picking",
+      "cycle-count",
+      "billing",
+      "integrations"
+    ],
+    "portal_enabled": true
+  },
+  {
+    "account_id": "ACCOUNT-1009",
+    "name": "Copal Andina",
+    "tier": "business",
+    "region": "LATAM",
+    "seats": 71,
+    "modules": [
+      "receiving",
+      "cycle-count"
+    ],
+    "portal_enabled": false
+  },
+  {
+    "account_id": "ACCOUNT-1010",
+    "name": "Fjordline Depot",
+    "tier": "standard",
+    "region": "EU",
+    "seats": 12,
+    "modules": [
+      "receiving"
+    ],
+    "portal_enabled": false
+  }
 ]

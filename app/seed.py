@@ -129,16 +129,16 @@ def load_incidents_and_work_notes(conn) -> None:
             kind = note["kind"]
             if actor == "customer":
                 created_by = "customer"
-            elif actor == "assist":
-                created_by = "assist"
+            elif actor == "portal":
+                created_by = "portal"
             elif actor == "agent":
                 created_by = derived["assigned_to"]
             else:
                 raise SeedError(
                     "SEED_DATA_INVALID", f"unknown interaction actor {actor!r} on {number!r}"
                 )
-            if kind == "proposal_sent":
-                note_type = "proposal_sent"
+            if kind == "suggestion_sent":
+                note_type = "suggestion_sent"
             elif kind == "message":
                 note_type = "comment" if actor == "customer" else "work_note"
             else:
