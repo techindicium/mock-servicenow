@@ -6,6 +6,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app/ ./app/
+COPY static/ ./static/
 
 ENV PORT=8030
 ENV DATABASE_PATH=/data/mock_servicenow.db
