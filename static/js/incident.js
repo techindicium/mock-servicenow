@@ -35,6 +35,8 @@
   function renderIncidentRow(incident) {
     const tr = document.createElement("tr");
     tr.dataset.number = incident.number;
+    tr.dataset.priority = String(incident.priority);
+    if (incident.escalated) tr.dataset.escalated = "true";
     const cells = [
       incident.number, incident.short_description, incident.state,
       String(incident.priority), incident.category, incident.account_id,

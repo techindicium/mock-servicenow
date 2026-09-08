@@ -1,25 +1,118 @@
-/* static/css/nav.css */
-.app-shell { display: flex; min-height: 100vh; }
+/* static/css/nav.css — nav rail + Escalations/Directory screens.
+   Tokens are defined once in console.css's :root (loaded first in index.html <head>) and
+   inherited here, so both stylesheets draw from the same palette. */
+
+.app-shell {
+  display: flex;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
 .nav-rail {
+  flex: 0 0 168px;
   display: flex;
   flex-direction: column;
-  width: 200px;
-  flex-shrink: 0;
-  border-right: 1px solid #ccc;
+  gap: 0.15rem;
+  padding: 1rem 0;
+  background: var(--rail);
+  border-right: 1px solid var(--ink-line);
+  min-height: 100vh;
+  box-sizing: border-box;
 }
+
 .nav-item {
-  padding: 0.75rem 1rem;
+  display: block;
+  width: 100%;
   text-align: left;
   background: none;
+  box-shadow: none;
   border: none;
-  border-left: 3px solid transparent;
+  border-left: 4px solid transparent;
+  border-radius: 0;
+  padding: 0.6rem 1rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--paper-text-on-rail);
+  cursor: pointer;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+
+.nav-item:hover {
+  background: var(--rail-light);
+}
+
+.nav-item.active {
+  background: var(--rail-light);
+  border-left-color: var(--stamp-gold);
+  color: var(--paper);
+}
+
+.app-main {
+  flex: 1;
+  min-width: 0;
+  padding: 1rem 1.5rem;
+}
+
+.view[hidden] {
+  display: none;
+}
+
+/* ── Escalations / Directory: ledger-style tables ─────────────────────── */
+
+#escalations-table,
+#users-table,
+#assignment-groups-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--paper);
+  border: 1px solid var(--ink-line);
+  border-radius: 2px;
+  box-shadow: var(--stamp-shadow);
+  margin: 1rem 0;
+}
+
+#escalations-table td,
+#users-table td,
+#assignment-groups-table td {
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--ink-line);
+  font-size: 0.85rem;
+  color: var(--ink-text-on-paper);
+}
+
+#escalations-table tbody tr:last-child td,
+#users-table tbody tr:last-child td,
+#assignment-groups-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+#escalations-table tbody tr:hover {
+  background: var(--paper-dim);
   cursor: pointer;
 }
-.nav-item.active { border-left-color: #2563eb; background: #eef2ff; font-weight: 600; }
-.app-main { flex: 1; padding: 1rem; overflow: auto; }
-.view[hidden] { display: none; }
 
-#escalations-table, #users-table, #assignment-groups-table { width: 100%; border-collapse: collapse; }
-#escalations-table td, #users-table td, #assignment-groups-table td { padding: 0.4rem 0.6rem; border-bottom: 1px solid #eee; }
-.owner-unassigned { color: #666; font-style: italic; }
-[role="alert"] { background: #fee2e2; color: #991b1b; padding: 0.5rem 0.75rem; margin-bottom: 0.75rem; }
+#escalations-table td:first-child {
+  font-family: var(--mono);
+  font-weight: 600;
+  color: var(--ink-line);
+}
+
+.owner-unassigned {
+  color: var(--stamp-gold);
+  font-style: italic;
+}
+
+#escalation-edit-form {
+  background: var(--paper);
+  border: 1px solid var(--ink-line);
+  border-radius: 2px;
+  box-shadow: var(--stamp-shadow);
+  padding: 1rem;
+  max-width: 380px;
+}
+
+#users-table,
+#assignment-groups-table {
+  max-width: 640px;
+}

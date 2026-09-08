@@ -14,3 +14,4 @@
 {"event":"validator_report","step":"validate","validator":"validate.check-4-constitution","severity":"error","verdict":"PASS","notes":"Quick-tier synthesized check: P4/P5/P6 + safe-DOM standard all PASS","ts":"2026-09-07T23:42:29.061Z"}
 {"event":"validator_report","step":"validate","validator":"validate.check-11-visual-verification","severity":"warning","verdict":"PASS","notes":"SKIPPED-DISABLED: covered by ui-e2e.spec.md's real-browser Playwright suite instead","ts":"2026-09-07T23:42:29.137Z"}
 {"event":"step_completed","step":"validate","verdict":"PASS","ts":"2026-09-07T23:42:58.842Z"}
+{"event":"code_drift_detected","drift_source":"static/js/incident.js","drift_at":"2026-09-08T00:11:03.165Z","ts":"2026-09-08T00:11:03.166Z"}

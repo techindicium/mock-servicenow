@@ -1,3 +1,25 @@
+:root {
+  /* Support-desk ticket palette — shares mock-jira's dispatch-board design system (same 7
+     named tokens, same derived shades) so the two course mocks read as siblings. */
+  --ink: #16261f;        /* deep pine-teal-black — page background */
+  --rail: #2f4a3e;       /* mid-tone pine — nav rail, primary actions */
+  --paper: #f1ecdd;      /* warm off-white ticket stock — cards/surfaces only, never full-page bg */
+  --stamp-red: #a3402f;  /* brick/rubber-stamp red — P1, breaches, escalated, destructive */
+  --stamp-gold: #b98a2e; /* brass/ochre — P2, rules/accents */
+  --stamp-green: #4c7a5e;/* P3/P4, on-time SLA */
+  --ink-line: #55483a;   /* warm dark hairline border/rule on paper surfaces */
+
+  /* Derived shades (opacity/lighten only — not new named colors). */
+  --rail-light: #3c5c4e;         /* hover/active state on rail surfaces */
+  --paper-dim: #e7e1cf;          /* recessed paper surface (inputs, hover) */
+  --ink-text-on-paper: #201a12;  /* near-black warm text on --paper */
+  --paper-text-on-rail: #f1ecdd; /* --paper reused as text color on --ink/--rail */
+  --stamp-gold-dim: rgba(185, 138, 46, 0.35); /* brass rule at low opacity */
+
+  --mono: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", monospace;
+  --stamp-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+}
+
 [hidden] {
   display: none !important;
 }
@@ -10,30 +32,8 @@ body {
   font-family: -apple-system, "Segoe UI", "Inter", system-ui, sans-serif;
   margin: 0;
   padding: 0;
-  color: #1a1a1a;
-  background: #f6f6f4;
-}
-
-/* ── App shell: sidebar + view containers ─────────────────────────────── */
-
-.app-shell {
-  display: flex;
-  align-items: flex-start;
-  min-height: 100vh;
-}
-
-.sidebar {
-  flex: 0 0 168px;
-  min-height: 100vh;
-  box-sizing: border-box;
-  background: #20293a;
-  border-right: 1px solid #10141d;
-}
-
-.app-main {
-  flex: 1;
-  min-width: 0;
-  padding: 1rem 1.5rem;
+  color: var(--paper-text-on-rail);
+  background: var(--ink);
 }
 
 .view h1 {
@@ -41,6 +41,7 @@ body {
   font-weight: 800;
   letter-spacing: -0.02em;
   margin: 0 0 1rem 0;
+  color: var(--paper);
 }
 
 /* ── Errors ────────────────────────────────────────────────────────────── */
@@ -48,23 +49,30 @@ body {
 #incidents-error,
 #create-incident-error,
 #edit-incident-error,
-#add-work-note-error {
-  background: #fff;
-  color: #a3402f;
-  border: 1px solid #a3402f;
-  border-left: 4px solid #a3402f;
+#add-work-note-error,
+#escalations-error,
+#directory-error {
+  background: var(--paper);
+  color: var(--stamp-red);
+  border: 1px solid var(--stamp-red);
+  border-left: 4px solid var(--stamp-red);
   border-radius: 2px;
   padding: 0.5rem 0.75rem;
   margin-bottom: 1rem;
   font-weight: 600;
 }
 
-/* ── Forms/tables basics ───────────────────────────────────────────────── */
+/* ── Forms ─────────────────────────────────────────────────────────────── */
 
 form label {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
   font-size: 0.85rem;
+  color: var(--paper-text-on-rail);
+}
+
+.view form label {
+  color: var(--ink-text-on-paper);
 }
 
 form input,
@@ -74,26 +82,14 @@ form textarea {
   width: 100%;
   max-width: 360px;
   box-sizing: border-box;
-  margin-top: 0.25rem;
+  margin-top: 0.3rem;
   padding: 0.4rem 0.5rem;
   font-family: inherit;
   font-size: 0.85rem;
-  border: 1px solid #b8b8b0;
+  color: var(--ink-text-on-paper);
+  background: var(--paper-dim);
+  border: 1px solid var(--ink-line);
   border-radius: 2px;
-}
-
-table {
-  border-collapse: collapse;
-  width: 100%;
-  margin: 1rem 0;
-}
-
-th,
-td {
-  text-align: left;
-  padding: 0.4rem 0.6rem;
-  border-bottom: 1px solid #ddd;
-  font-size: 0.85rem;
 }
 
 button {
@@ -101,32 +97,287 @@ button {
   font-size: 0.85rem;
   font-weight: 600;
   border-radius: 2px;
-  border: 1px solid #b8b8b0;
+  border: 1px solid var(--ink-line);
   padding: 0.45rem 0.9rem;
   cursor: pointer;
-  background: #fff;
+  background: var(--paper);
+  color: var(--ink-text-on-paper);
+  box-shadow: var(--stamp-shadow);
 }
 
 button:hover {
-  background: #eee;
+  background: var(--paper-dim);
+}
+
+#open-create-incident,
+#create-incident-form button[type="submit"],
+#edit-incident-form button[type="submit"],
+#add-work-note-form button[type="submit"] {
+  background: var(--rail);
+  color: var(--paper);
+  border-color: var(--rail);
+}
+
+#open-create-incident:hover,
+#create-incident-form button[type="submit"]:hover,
+#edit-incident-form button[type="submit"]:hover,
+#add-work-note-form button[type="submit"]:hover {
+  background: var(--rail-light);
+}
+
+/* ── Incident list ─────────────────────────────────────────────────────── */
+
+#incident-list-view {
+  background: var(--paper);
+  border: 1px solid var(--ink-line);
+  border-radius: 2px;
+  box-shadow: var(--stamp-shadow);
+  padding: 1rem 1.25rem;
+}
+
+#incident-filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  align-items: flex-end;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--ink-line);
+}
+
+#incident-filter-form label {
+  margin-bottom: 0;
+  min-width: 130px;
+}
+
+#incident-filter-form input,
+#incident-filter-form select {
+  max-width: 160px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0;
+}
+
+th {
+  text-align: left;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ink-line);
+  border-bottom: 2px solid var(--stamp-gold-dim);
+}
+
+td {
+  text-align: left;
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid var(--ink-line);
+  font-size: 0.85rem;
+  color: var(--ink-text-on-paper);
+}
+
+#incidents-table-body tr {
+  border-left: 4px solid transparent;
+}
+
+#incidents-table-body tr[data-priority="1"] {
+  border-left-color: var(--stamp-red);
+}
+
+#incidents-table-body tr[data-priority="2"] {
+  border-left-color: var(--stamp-gold);
+}
+
+#incidents-table-body tr[data-priority="3"],
+#incidents-table-body tr[data-priority="4"] {
+  border-left-color: var(--stamp-green);
+}
+
+#incidents-table-body tr:hover {
+  background: var(--paper-dim);
+  cursor: pointer;
+}
+
+#incidents-table-body td:first-child {
+  font-family: var(--mono);
+  font-weight: 600;
+  color: var(--ink-line);
+}
+
+#incidents-table-body tr[data-escalated="true"] td:nth-child(2) {
+  color: var(--stamp-red);
+  font-weight: 700;
+}
+
+#incidents-pagination {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+#incidents-page-info {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--ink-line);
+}
+
+/* ── Create incident ───────────────────────────────────────────────────── */
+
+#create-incident {
+  background: var(--paper);
+  border: 1px solid var(--ink-line);
+  border-radius: 2px;
+  box-shadow: var(--stamp-shadow);
+  padding: 1rem;
+  max-width: 420px;
+}
+
+#create-incident h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.75rem 0;
+  color: var(--ink-text-on-paper);
+}
+
+/* ── Record view ───────────────────────────────────────────────────────── */
+
+#incident-record-view {
+  background: var(--paper);
+  border: 1px solid var(--ink-line);
+  border-radius: 2px;
+  box-shadow: var(--stamp-shadow);
+  padding: 1rem 1.25rem;
+}
+
+#record-number {
+  font-family: var(--mono);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--ink-text-on-paper);
+  margin: 0.5rem 0 1rem 0;
 }
 
 dl#record-fields {
   display: grid;
   grid-template-columns: max-content 1fr;
-  gap: 0.25rem 1rem;
+  gap: 0.4rem 1.5rem;
+  margin: 0 0 1.25rem 0;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--ink-line);
 }
 
 dl#record-fields dt {
-  font-weight: 600;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ink-line);
 }
 
 dl#record-fields dd {
   margin: 0;
+  font-size: 0.9rem;
+  color: var(--ink-text-on-paper);
+  overflow-wrap: anywhere;
 }
 
-.sla-breached {
-  /* Visibly distinct, never alarming or apologetic — a breach is a fact (Principle 6). */
-  background: #fff3e0;
+#edit-incident-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  align-items: flex-end;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--ink-line);
+}
+
+#edit-incident-form label {
+  margin-bottom: 0;
+}
+
+#edit-incident-form input,
+#edit-incident-form select {
+  max-width: 180px;
+}
+
+#sla-panel,
+#work-notes-panel {
+  margin-top: 1.25rem;
+}
+
+#sla-panel h3,
+#work-notes-panel h3 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink-text-on-paper);
+  margin: 0 0 0.6rem 0;
+}
+
+/* ── SLA panel — a breach is shown as a fact, never hidden or apologized for ── */
+
+#sla-table-body tr {
+  border-left: 4px solid var(--stamp-green);
+}
+
+#sla-table-body tr.sla-breached {
+  border-left-color: var(--stamp-red);
+  background: rgba(163, 64, 47, 0.07);
+}
+
+#sla-table-body tr.sla-breached td {
+  color: var(--stamp-red);
   font-weight: 600;
+}
+
+/* ── Work-note timeline — read like a dispatch log ────────────────────── */
+
+#work-notes-timeline {
+  list-style: none;
+  margin: 0 0 1rem 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+#work-notes-timeline li {
+  border-left: 3px solid var(--stamp-gold-dim);
+  padding: 0.35rem 0 0.35rem 0.85rem;
+}
+
+.work-note-meta {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--ink-line);
+  margin: 0 0 0.2rem 0;
+}
+
+#work-notes-timeline li p:last-child {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--ink-text-on-paper);
+  overflow-wrap: anywhere;
+}
+
+#add-work-note-form {
+  max-width: 460px;
+}
+
+/* ── Accessibility: deliberate keyboard focus, respected reduced-motion ──── */
+
+:focus-visible {
+  outline: 2px solid var(--stamp-gold);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
 }
