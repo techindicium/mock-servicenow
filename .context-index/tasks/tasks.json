@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "seq": 14,
+  "seq": 15,
   "epics": [
     {
       "id": "epic-cjs4ac",
@@ -118,6 +118,15 @@
       "notes": "Add the nav rail (Incidents/Escalations/Directory, default-active, client-side switching) on top of incident-console's static skeleton, plus the Escalations edit screen and read-only Directory screen.",
       "created": "2026-09-07T22:46:17.568Z",
       "updated": "2026-09-07T22:46:17.568Z"
+    },
+    {
+      "id": "epic-voczyb",
+      "title": "Escalation Create (POST /escalations)",
+      "status": "open",
+      "planRef": ".context-index/specs/features/itsm-api/escalations-rev-2-create-escalation.plan.md",
+      "notes": "Add POST /escalations, mirroring POST /incidents' server-assigned-identifier pattern.",
+      "created": "2026-09-09T16:47:49.194Z",
+      "updated": "2026-09-09T16:47:49.194Z"
     }
   ],
   "issues": [
