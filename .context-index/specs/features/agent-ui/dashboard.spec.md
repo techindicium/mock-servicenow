@@ -1,6 +1,6 @@
 ---
 charter: agent-ui
-status: draft
+status: validated
 risk_level: medium
 milestone: v1.2
 revision: 1
@@ -8,6 +8,19 @@ charter-revision: 22
 created: 2026-09-09
 updated: 2026-09-09
 kind: behavioral
+source-manifest:
+  sha: "dd88ebc"
+  files:
+    - static/css/dashboard.css
+    - static/index.html
+    - static/js/dashboard-logic.js
+    - static/js/dashboard.js
+    - static/js/nav-logic.js
+    - static/js/nav.js
+    - tests_e2e/test_ui_dashboard_e2e.py
+    - tests_js/beh-1-dashboard-tiles.test.js
+    - tests_js/nav-beh-1-view-switch-logic.test.js
+  computed-at: "2026-09-09T11:24:07.643Z"
 ---
 
 # Live Spec: Incident dashboard (KPI tiles)
