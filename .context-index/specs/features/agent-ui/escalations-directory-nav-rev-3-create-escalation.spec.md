@@ -1,7 +1,7 @@
 ---
 charter: agent-ui
 kind: behavioral
-status: implemented
+status: validated
 risk_level: low
 revision: 1
 charter-revision: 28
