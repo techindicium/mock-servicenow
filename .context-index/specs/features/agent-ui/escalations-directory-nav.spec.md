@@ -9,7 +9,7 @@ created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
 source-manifest:
-  sha: "5eaf186"
+  sha: "bfe000f"
   files:
     - static/css/nav.css
     - static/index.html
@@ -28,7 +28,7 @@ source-manifest:
     - tests_js/nav-beh-1-markup.test.js
     - tests_js/nav-beh-1-view-switch-logic.test.js
     - tests_js/nav-beh-1-wiring.test.js
-  computed-at: "2026-09-09T10:34:33.916Z"
+  computed-at: "2026-09-09T11:07:26.562Z"
 ---
 
 # Live Spec: Escalations screen, directory screen, and navigation shell

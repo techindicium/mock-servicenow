@@ -1,6 +1,6 @@
 ---
 charter: agent-ui
-status: specified
+status: implemented
 risk_level: low
 milestone: mvp
 revision: 3
@@ -9,7 +9,7 @@ created: 2026-09-07
 updated: 2026-09-09
 kind: behavioral
 source-manifest:
-  sha: "2c83a8c"
+  sha: "d728488"
   files:
     - .context-index/governance/gates.yaml
     - app/main.py
@@ -18,7 +18,9 @@ source-manifest:
     - static/js/incident-logic.js
     - static/js/incident.js
     - tests/test_static_assets.py
+    - tests_e2e/test_ui_related_escalation_e2e.py
     - tests_js/beh-1-list-load.test.js
+    - tests_js/beh-10-related-escalation.test.js
     - tests_js/beh-2-list-filters.test.js
     - tests_js/beh-3-record-view.test.js
     - tests_js/beh-4-work-note-timeline.test.js
@@ -27,7 +29,7 @@ source-manifest:
     - tests_js/beh-7-edit-incident.test.js
     - tests_js/beh-8-create-incident.test.js
     - tests_js/beh-9-error-formatting.test.js
-  computed-at: "2026-09-09T10:34:33.850Z"
+  computed-at: "2026-09-09T11:07:26.493Z"
 ---
 
 # Live Spec: Incident console (list, record view, work notes, SLA, editing, create)

@@ -1,7 +1,7 @@
 ---
 status: approved
 kind: feature
-revision: 22
+revision: 23
 updated: 2026-09-09
 ---
 
@@ -128,7 +128,7 @@ presence of a UI at all — a real support desk has a UI agents work tickets fro
 | App navigation shell | Persistent left-hand nav (Incidents / Escalations / Directory) | should-have | mvp | validated |
 | End-to-end UI test suite | Real browser automation (a real rendering engine, real clicks/form fills) driving the actual served page — the same interface a person uses, never calling the UI's JS functions directly | must-have | v1.1 | validated |
 | Incident dashboard | KPI tiles (per-state counts, escalated count, breached-SLA count) sourced from the API's own totals; state/escalated tiles clickable through to a filtered Incidents view | should-have | v1.2 | planned |
-| Related escalation panel | Incident record view shows the matching Escalation (by `incident_number`) or an explicit "none" state | should-have | v1.2 | planned |
+| Related escalation panel | Incident record view shows the matching Escalation (by `incident_number`) or an explicit "none" state | should-have | v1.2 | implemented |
 
 ## Deferred Capabilities
 
