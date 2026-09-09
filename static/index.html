@@ -2,13 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>mock-servicenow Incident Console</title>
+  <title>DeskNow Incident Console</title>
   <link rel="stylesheet" href="/static/css/console.css" />
   <link rel="stylesheet" href="/static/css/nav.css">
   <script src="/static/js/incident-logic.js"></script>
   <script src="/static/js/incident.js" defer></script>
 </head>
 <body>
+  <!-- "DeskNow" is a fictional parody brand for this training mock — a ServiceNow-shaped ITSM
+       API/UI, not affiliated with or endorsed by ServiceNow, Inc. Its wordmark and mark echo the
+       same visual idea (lowercase two-tone wordmark, a small icon cut into one letter) without
+       tracing ServiceNow's actual logo file or exact brand colors. -->
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 32 32" width="26" height="26" aria-hidden="true">
+        <circle cx="16" cy="16" r="16" class="brand-mark-bg" />
+        <path d="M9 17l4 4 10-10" class="brand-mark-check" />
+      </svg>
+      <span class="brand-word"><span class="brand-desk">desk</span><span class="brand-now">now</span></span>
+    </div>
+  </header>
   <div class="app-shell">
     <nav class="nav-rail" id="nav-rail" aria-label="Main navigation">
       <button type="button" class="nav-item active" id="nav-incidents" data-view="incidents">Incidents</button>

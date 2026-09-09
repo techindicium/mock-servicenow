@@ -7,6 +7,11 @@ Independent repo: no dependency on `course-shared`, the other `mock-*` repos, or
 Tracks that need it (see `adev-workspace.yaml` at the workspace root for which ones) pull it in
 as a service dependency; this repo never depends on them back.
 
+The bundled `agent-ui` (`static/`, served by `itsm-api` at `/`) is skinned as **"DeskNow"** — a
+fictional parody brand styled after real enterprise ITSM consoles (dense list/form views, a dark
+app navigator, a two-tone wordmark), invented for this training mock and not affiliated with or
+endorsed by any real vendor.
+
 ## Running with Docker
 
 Bring up the whole stack with one command from the repo root:

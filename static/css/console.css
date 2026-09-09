@@ -1,23 +1,28 @@
 :root {
-  /* Support-desk ticket palette — shares mock-jira's dispatch-board design system (same 7
-     named tokens, same derived shades) so the two course mocks read as siblings. */
-  --ink: #16261f;        /* deep pine-teal-black — page background */
-  --rail: #2f4a3e;       /* mid-tone pine — nav rail, primary actions */
-  --paper: #f1ecdd;      /* warm off-white ticket stock — cards/surfaces only, never full-page bg */
-  --stamp-red: #a3402f;  /* brick/rubber-stamp red — P1, breaches, escalated, destructive */
-  --stamp-gold: #b98a2e; /* brass/ochre — P2, rules/accents */
-  --stamp-green: #4c7a5e;/* P3/P4, on-time SLA */
-  --ink-line: #55483a;   /* warm dark hairline border/rule on paper surfaces */
+  /* DeskNow — a fictional parody ITSM brand for this training mock, styled in the same family
+     as real enterprise ticketing consoles (dense list/form views, dark app header, a two-tone
+     wordmark) without tracing any real product's exact palette or logo file. */
+  --brand-dark: #22343a;       /* header bar, nav rail */
+  --brand-dark-2: #1a2a2f;     /* hover/active on dark surfaces */
+  --brand-accent: #6fae87;     /* wordmark accent, active-nav indicator */
+  --brand-accent-dark: #4f8a66;
 
-  /* Derived shades (opacity/lighten only — not new named colors). */
-  --rail-light: #3c5c4e;         /* hover/active state on rail surfaces */
-  --paper-dim: #e7e1cf;          /* recessed paper surface (inputs, hover) */
-  --ink-text-on-paper: #201a12;  /* near-black warm text on --paper */
-  --paper-text-on-rail: #f1ecdd; /* --paper reused as text color on --ink/--rail */
-  --stamp-gold-dim: rgba(185, 138, 46, 0.35); /* brass rule at low opacity */
+  --bg: #eef1f2;               /* page background */
+  --surface: #ffffff;          /* panels, tables, forms */
+  --surface-dim: #f4f6f7;      /* recessed surface (inputs, striped rows) */
+  --border: #d8dee2;           /* hairline borders */
+  --text: #1f2933;             /* primary text */
+  --text-muted: #5b6b73;       /* secondary text, header labels */
+
+  --link: #2c6fbb;             /* primary action / link blue */
+  --link-dark: #1f4f8a;
+  --danger: #c0392b;           /* P1, breach, destructive */
+  --warning: #c9821b;          /* P2/P3 */
+  --positive: #2e8b57;         /* P4, on-time SLA */
+  --info: #2c6fbb;
 
   --mono: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", monospace;
-  --stamp-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+  --radius: 3px;
 }
 
 [hidden] {
@@ -29,19 +34,66 @@
 }
 
 body {
-  font-family: -apple-system, "Segoe UI", "Inter", system-ui, sans-serif;
+  font-family: Arial, "Helvetica Neue", -apple-system, "Segoe UI", sans-serif;
+  font-size: 13px;
   margin: 0;
   padding: 0;
-  color: var(--paper-text-on-rail);
-  background: var(--ink);
+  color: var(--text);
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ── Top bar / brand ──────────────────────────────────────────────────── */
+
+.topbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 1rem;
+  background: var(--brand-dark);
+  border-bottom: 1px solid var(--brand-dark-2);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.brand-mark-bg {
+  fill: var(--brand-accent);
+}
+
+.brand-mark-check {
+  fill: none;
+  stroke: var(--brand-dark);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.brand-word {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.brand-desk {
+  color: #ffffff;
+}
+
+.brand-now {
+  color: var(--brand-accent);
 }
 
 .view h1 {
-  font-size: 1.2rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  margin: 0 0 1rem 0;
-  color: var(--paper);
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.85rem 0;
+  color: var(--text);
 }
 
 /* ── Errors ────────────────────────────────────────────────────────────── */
@@ -52,11 +104,11 @@ body {
 #add-work-note-error,
 #escalations-error,
 #directory-error {
-  background: var(--paper);
-  color: var(--stamp-red);
-  border: 1px solid var(--stamp-red);
-  border-left: 4px solid var(--stamp-red);
-  border-radius: 2px;
+  background: #fdf1ef;
+  color: var(--danger);
+  border: 1px solid #f0c2ba;
+  border-left: 3px solid var(--danger);
+  border-radius: var(--radius);
   padding: 0.5rem 0.75rem;
   margin-bottom: 1rem;
   font-weight: 600;
@@ -67,12 +119,9 @@ body {
 form label {
   display: block;
   margin-bottom: 0.6rem;
-  font-size: 0.85rem;
-  color: var(--paper-text-on-rail);
-}
-
-.view form label {
-  color: var(--ink-text-on-paper);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
 }
 
 form input,
@@ -83,55 +132,60 @@ form textarea {
   max-width: 360px;
   box-sizing: border-box;
   margin-top: 0.3rem;
-  padding: 0.4rem 0.5rem;
+  padding: 0.35rem 0.5rem;
   font-family: inherit;
   font-size: 0.85rem;
-  color: var(--ink-text-on-paper);
-  background: var(--paper-dim);
-  border: 1px solid var(--ink-line);
-  border-radius: 2px;
+  font-weight: 400;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+  border-color: var(--link);
 }
 
 button {
   font-family: inherit;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 600;
-  border-radius: 2px;
-  border: 1px solid var(--ink-line);
-  padding: 0.45rem 0.9rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.85rem;
   cursor: pointer;
-  background: var(--paper);
-  color: var(--ink-text-on-paper);
-  box-shadow: var(--stamp-shadow);
+  background: var(--surface);
+  color: var(--text);
 }
 
 button:hover {
-  background: var(--paper-dim);
+  background: var(--surface-dim);
 }
 
 #open-create-incident,
 #create-incident-form button[type="submit"],
 #edit-incident-form button[type="submit"],
 #add-work-note-form button[type="submit"] {
-  background: var(--rail);
-  color: var(--paper);
-  border-color: var(--rail);
+  background: var(--link);
+  color: #ffffff;
+  border-color: var(--link);
 }
 
 #open-create-incident:hover,
 #create-incident-form button[type="submit"]:hover,
 #edit-incident-form button[type="submit"]:hover,
 #add-work-note-form button[type="submit"]:hover {
-  background: var(--rail-light);
+  background: var(--link-dark);
 }
 
 /* ── Incident list ─────────────────────────────────────────────────────── */
 
 #incident-list-view {
-  background: var(--paper);
-  border: 1px solid var(--ink-line);
-  border-radius: 2px;
-  box-shadow: var(--stamp-shadow);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   padding: 1rem 1.25rem;
 }
 
@@ -142,7 +196,7 @@ button:hover {
   align-items: flex-end;
   margin-bottom: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--ink-line);
+  border-bottom: 1px solid var(--border);
 }
 
 #incident-filter-form label {
@@ -166,48 +220,72 @@ th {
   padding: 0.5rem 0.6rem;
   font-size: 0.72rem;
   font-weight: 700;
-  color: var(--ink-line);
-  border-bottom: 2px solid var(--stamp-gold-dim);
+  text-transform: none;
+  color: var(--text-muted);
+  background: var(--surface-dim);
+  border-bottom: 1px solid var(--border);
 }
 
 td {
   text-align: left;
-  padding: 0.5rem 0.6rem;
-  border-bottom: 1px solid var(--ink-line);
-  font-size: 0.85rem;
-  color: var(--ink-text-on-paper);
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.83rem;
+  color: var(--text);
 }
 
-#incidents-table-body tr {
-  border-left: 4px solid transparent;
-}
-
-#incidents-table-body tr[data-priority="1"] {
-  border-left-color: var(--stamp-red);
-}
-
-#incidents-table-body tr[data-priority="2"] {
-  border-left-color: var(--stamp-gold);
-}
-
-#incidents-table-body tr[data-priority="3"],
-#incidents-table-body tr[data-priority="4"] {
-  border-left-color: var(--stamp-green);
+#incidents-table-body tr:nth-child(even) {
+  background: var(--surface-dim);
 }
 
 #incidents-table-body tr:hover {
-  background: var(--paper-dim);
+  background: #e9f1f8;
   cursor: pointer;
 }
 
 #incidents-table-body td:first-child {
   font-family: var(--mono);
   font-weight: 600;
-  color: var(--ink-line);
+  color: var(--link);
 }
 
-#incidents-table-body tr[data-escalated="true"] td:nth-child(2) {
-  color: var(--stamp-red);
+/* Priority: a small colored dot ahead of the value, the one place this list spends color —
+   ServiceNow's own list views mark priority this way and leave state as plain text. */
+#incidents-table-body td:nth-child(4) {
+  position: relative;
+  padding-left: 1.1rem;
+}
+
+#incidents-table-body td:nth-child(4)::before {
+  content: "";
+  position: absolute;
+  left: 0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+#incidents-table-body tr[data-priority="1"] td:nth-child(4)::before {
+  background: var(--danger);
+}
+
+#incidents-table-body tr[data-priority="2"] td:nth-child(4)::before {
+  background: #d9731c;
+}
+
+#incidents-table-body tr[data-priority="3"] td:nth-child(4)::before {
+  background: var(--warning);
+}
+
+#incidents-table-body tr[data-priority="4"] td:nth-child(4)::before {
+  background: var(--positive);
+}
+
+#incidents-table-body tr[data-escalated="true"] td:last-child {
+  color: var(--danger);
   font-weight: 700;
 }
 
@@ -219,46 +297,41 @@ td {
 }
 
 #incidents-page-info {
-  font-family: var(--mono);
-  font-size: 0.8rem;
-  color: var(--ink-line);
+  font-size: 0.78rem;
+  color: var(--text-muted);
 }
 
 /* ── Create incident ───────────────────────────────────────────────────── */
 
 #create-incident {
-  background: var(--paper);
-  border: 1px solid var(--ink-line);
-  border-radius: 2px;
-  box-shadow: var(--stamp-shadow);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   padding: 1rem;
   max-width: 420px;
 }
 
 #create-incident h2 {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
-  letter-spacing: -0.01em;
   margin: 0 0 0.75rem 0;
-  color: var(--ink-text-on-paper);
+  color: var(--text);
 }
 
 /* ── Record view ───────────────────────────────────────────────────────── */
 
 #incident-record-view {
-  background: var(--paper);
-  border: 1px solid var(--ink-line);
-  border-radius: 2px;
-  box-shadow: var(--stamp-shadow);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   padding: 1rem 1.25rem;
 }
 
 #record-number {
   font-family: var(--mono);
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 700;
-  letter-spacing: 0.01em;
-  color: var(--ink-text-on-paper);
+  color: var(--link);
   margin: 0.5rem 0 1rem 0;
 }
 
@@ -268,19 +341,19 @@ dl#record-fields {
   gap: 0.4rem 1.5rem;
   margin: 0 0 1.25rem 0;
   padding-bottom: 1.25rem;
-  border-bottom: 1px solid var(--ink-line);
+  border-bottom: 1px solid var(--border);
 }
 
 dl#record-fields dt {
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  color: var(--ink-line);
+  color: var(--text-muted);
 }
 
 dl#record-fields dd {
   margin: 0;
-  font-size: 0.9rem;
-  color: var(--ink-text-on-paper);
+  font-size: 0.87rem;
+  color: var(--text);
   overflow-wrap: anywhere;
 }
 
@@ -291,7 +364,7 @@ dl#record-fields dd {
   align-items: flex-end;
   margin-bottom: 1.5rem;
   padding-bottom: 1.25rem;
-  border-bottom: 1px solid var(--ink-line);
+  border-bottom: 1px solid var(--border);
 }
 
 #edit-incident-form label {
@@ -310,30 +383,29 @@ dl#record-fields dd {
 
 #sla-panel h3,
 #work-notes-panel h3 {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--ink-text-on-paper);
+  color: var(--text);
   margin: 0 0 0.6rem 0;
 }
 
-/* ── SLA panel — a breach is shown as a fact, never hidden or apologized for ── */
-
-#sla-table-body tr {
-  border-left: 4px solid var(--stamp-green);
-}
-
-#sla-table-body tr.sla-breached {
-  border-left-color: var(--stamp-red);
-  background: rgba(163, 64, 47, 0.07);
-}
+/* ── SLA panel — a breach is a badge, a stated fact, never an alarm ───── */
 
 #sla-table-body tr.sla-breached td {
-  color: var(--stamp-red);
+  background: #fdf1ef;
+}
+
+#sla-table-body tr.sla-breached td:nth-child(4) {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+#sla-table-body tr:not(.sla-breached) td:nth-child(4) {
+  color: var(--positive);
   font-weight: 600;
 }
 
-/* ── Work-note timeline — read like a dispatch log ────────────────────── */
+/* ── Work notes — read like an activity stream, one accent per note type ── */
 
 #work-notes-timeline {
   list-style: none;
@@ -341,26 +413,42 @@ dl#record-fields dd {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.5rem;
 }
 
 #work-notes-timeline li {
-  border-left: 3px solid var(--stamp-gold-dim);
+  border-left: 3px solid var(--border);
   padding: 0.35rem 0 0.35rem 0.85rem;
+}
+
+#work-notes-timeline li[data-note-type="comment"] {
+  border-left-color: var(--info);
+}
+
+#work-notes-timeline li[data-note-type="work_note"] {
+  border-left-color: var(--positive);
+}
+
+#work-notes-timeline li[data-note-type="state_change"] {
+  border-left-color: var(--warning);
+}
+
+#work-notes-timeline li[data-note-type="proposal_sent"] {
+  border-left-color: var(--brand-accent-dark);
 }
 
 .work-note-meta {
   font-family: var(--mono);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 600;
-  color: var(--ink-line);
+  color: var(--text-muted);
   margin: 0 0 0.2rem 0;
 }
 
 #work-notes-timeline li p:last-child {
   margin: 0;
   font-size: 0.85rem;
-  color: var(--ink-text-on-paper);
+  color: var(--text);
   overflow-wrap: anywhere;
 }
 
@@ -371,7 +459,7 @@ dl#record-fields dd {
 /* ── Accessibility: deliberate keyboard focus, respected reduced-motion ──── */
 
 :focus-visible {
-  outline: 2px solid var(--stamp-gold);
+  outline: 2px solid var(--link);
   outline-offset: 2px;
 }
 

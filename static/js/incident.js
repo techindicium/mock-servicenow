@@ -36,6 +36,7 @@
     const tr = document.createElement("tr");
     tr.dataset.number = incident.number;
     tr.dataset.priority = String(incident.priority);
+    tr.dataset.state = incident.state;
     if (incident.escalated) tr.dataset.escalated = "true";
     const cells = [
       incident.number, incident.short_description, incident.state,
@@ -137,6 +138,7 @@
 
   function renderWorkNoteRow(note) {
     const li = document.createElement("li");
+    li.dataset.noteType = note.note_type;
     const meta = document.createElement("p");
     meta.className = "work-note-meta";
     meta.textContent = `${note.created_by} · ${note.note_type} · ${note.created_at}`;

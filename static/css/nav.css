@@ -1,22 +1,21 @@
-/* static/css/nav.css — nav rail + Escalations/Directory screens.
+/* static/css/nav.css — application navigator + Escalations/Directory screens.
    Tokens are defined once in console.css's :root (loaded first in index.html <head>) and
-   inherited here, so both stylesheets draw from the same palette. */
+   inherited here. */
 
 .app-shell {
   display: flex;
   align-items: flex-start;
-  min-height: 100vh;
+  flex: 1;
+  min-height: 0;
 }
 
 .nav-rail {
-  flex: 0 0 168px;
+  flex: 0 0 180px;
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
-  padding: 1rem 0;
-  background: var(--rail);
-  border-right: 1px solid var(--ink-line);
-  min-height: 100vh;
+  padding: 0.5rem 0;
+  background: var(--brand-dark);
+  min-height: 100%;
   box-sizing: border-box;
 }
 
@@ -25,60 +24,65 @@
   width: 100%;
   text-align: left;
   background: none;
-  box-shadow: none;
   border: none;
-  border-left: 4px solid transparent;
+  border-left: 3px solid transparent;
   border-radius: 0;
-  padding: 0.6rem 1rem;
+  padding: 0.55rem 1rem;
   font-family: inherit;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 600;
-  color: var(--paper-text-on-rail);
+  color: #c3ccce;
   cursor: pointer;
-  transition: background-color 0.12s ease, border-color 0.12s ease;
+  transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease;
 }
 
 .nav-item:hover {
-  background: var(--rail-light);
+  background: var(--brand-dark-2);
+  color: #ffffff;
 }
 
 .nav-item.active {
-  background: var(--rail-light);
-  border-left-color: var(--stamp-gold);
-  color: var(--paper);
+  background: var(--brand-dark-2);
+  border-left-color: var(--brand-accent);
+  color: #ffffff;
 }
 
 .app-main {
   flex: 1;
   min-width: 0;
-  padding: 1rem 1.5rem;
+  padding: 1.25rem 1.5rem;
 }
 
 .view[hidden] {
   display: none;
 }
 
-/* ── Escalations / Directory: ledger-style tables ─────────────────────── */
+/* ── Escalations / Directory: dense list-view tables ──────────────────── */
 
 #escalations-table,
 #users-table,
 #assignment-groups-table {
   width: 100%;
   border-collapse: collapse;
-  background: var(--paper);
-  border: 1px solid var(--ink-line);
-  border-radius: 2px;
-  box-shadow: var(--stamp-shadow);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   margin: 1rem 0;
 }
 
 #escalations-table td,
 #users-table td,
 #assignment-groups-table td {
-  padding: 0.55rem 0.75rem;
-  border-bottom: 1px solid var(--ink-line);
-  font-size: 0.85rem;
-  color: var(--ink-text-on-paper);
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.83rem;
+  color: var(--text);
+}
+
+#escalations-table tbody tr:nth-child(even) td,
+#users-table tbody tr:nth-child(even) td,
+#assignment-groups-table tbody tr:nth-child(even) td {
+  background: var(--surface-dim);
 }
 
 #escalations-table tbody tr:last-child td,
@@ -87,27 +91,26 @@
   border-bottom: none;
 }
 
-#escalations-table tbody tr:hover {
-  background: var(--paper-dim);
+#escalations-table tbody tr:hover td {
+  background: #e9f1f8;
   cursor: pointer;
 }
 
 #escalations-table td:first-child {
   font-family: var(--mono);
   font-weight: 600;
-  color: var(--ink-line);
+  color: var(--link);
 }
 
 .owner-unassigned {
-  color: var(--stamp-gold);
+  color: var(--warning);
   font-style: italic;
 }
 
 #escalation-edit-form {
-  background: var(--paper);
-  border: 1px solid var(--ink-line);
-  border-radius: 2px;
-  box-shadow: var(--stamp-shadow);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   padding: 1rem;
   max-width: 380px;
 }
