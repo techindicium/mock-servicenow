@@ -157,3 +157,81 @@ def test_patch_escalation_malformed_json_returns_400(client):
     )
     assert resp.status_code == 400
     assert resp.json()["code"] == "MALFORMED_JSON"
+
+
+def test_create_escalation_returns_201_with_server_assigned_fields(client):
+    resp = client.post(
+        "/escalations", json={"account_id": "ACC-1", "summary": "New escalation"}
+    )
+    assert resp.status_code == 201
+    body = resp.json()
+    assert body["number"].startswith("ESCALATION-")
+    assert body["account_id"] == "ACC-1"
+    assert body["summary"] == "New escalation"
+    assert body["opened_at"] is not None
+    assert body["incident_number"] is None
+    assert body["owner"] is None
+    assert body["closed_at"] is None
+
+
+def test_create_escalation_stores_optional_incident_number_and_owner(client):
+    resp = client.post(
+        "/escalations",
+        json={
+            "account_id": "ACC-1",
+            "summary": "New escalation",
+            "incident_number": "TICKET-000123",
+            "owner": "dana",
+        },
+    )
+    assert resp.status_code == 201
+    body = resp.json()
+    assert body["incident_number"] == "TICKET-000123"
+    assert body["owner"] == "dana"
+
+
+def test_create_escalation_ignores_closed_at_in_request_body(client):
+    resp = client.post(
+        "/escalations",
+        json={
+            "account_id": "ACC-1",
+            "summary": "New escalation",
+            "closed_at": "2026-01-01T00:00:00Z",
+        },
+    )
+    assert resp.status_code == 201
+    assert resp.json()["closed_at"] is None
+
+
+def test_create_escalation_missing_required_field_returns_422_and_creates_nothing(client):
+    resp = client.post("/escalations", json={"summary": "No account"})
+    assert resp.status_code == 422
+    body = resp.json()
+    assert body["code"] == "VALIDATION_ERROR"
+    assert "account_id" in body["message"]
+    assert client.get("/escalations").json()["total"] == 0
+
+
+def test_create_escalation_malformed_json_returns_400(client):
+    resp = client.post(
+        "/escalations",
+        content=b"{not valid json",
+        headers={"Content-Type": "application/json"},
+    )
+    assert resp.status_code == 400
+    assert resp.json()["code"] == "MALFORMED_JSON"
+    assert client.get("/escalations").json()["total"] == 0
+
+
+def test_create_escalation_immediately_visible_via_list_and_get(client):
+    created = client.post(
+        "/escalations", json={"account_id": "ACC-1", "summary": "New escalation"}
+    ).json()
+    number = created["number"]
+
+    listing = client.get("/escalations").json()
+    assert number in {item["number"] for item in listing["items"]}
+
+    fetched = client.get(f"/escalations/{number}")
+    assert fetched.status_code == 200
+    assert fetched.json()["summary"] == "New escalation"

@@ -1,6 +1,9 @@
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, HTTPException, Request
 
-from app.models import EscalationPage, EscalationPatch, EscalationRead
+from app.db import next_escalation_number
+from app.models import EscalationCreate, EscalationPage, EscalationPatch, EscalationRead
 
 router = APIRouter()
 
@@ -62,6 +65,26 @@ def get_escalation(number: str, request: Request):
             status_code=404,
             detail={"message": f"Escalation {number} not found", "code": "ESCALATION_NOT_FOUND"},
         )
+    return _row_to_escalation_read(row)
+
+
+@router.post("/escalations", response_model=EscalationRead, status_code=201)
+def create_escalation(payload: EscalationCreate, request: Request):
+    conn = request.app.state.db_conn
+    number = next_escalation_number(conn)
+    opened_at = datetime.now(timezone.utc).isoformat()
+
+    conn.execute(
+        """
+        INSERT INTO escalations
+            (number, incident_number, account_id, summary, opened_at, closed_at, owner)
+        VALUES (?, ?, ?, ?, ?, NULL, ?)
+        """,
+        (number, payload.incident_number, payload.account_id, payload.summary, opened_at,
+         payload.owner),
+    )
+    conn.commit()
+    row = conn.execute("SELECT * FROM escalations WHERE number = ?", (number,)).fetchone()
     return _row_to_escalation_read(row)
 
 
