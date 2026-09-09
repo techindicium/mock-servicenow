@@ -11,7 +11,8 @@ Modeled directly on mock-jira's tests_e2e/browser.py::launch_chromium.
 import contextlib
 from collections.abc import Iterator
 
-from playwright.sync_api import Browser, Error as PlaywrightError, sync_playwright
+from playwright.sync_api import Browser, sync_playwright
+from playwright.sync_api import Error as PlaywrightError
 
 
 class E2EBrowserNotInstalled(RuntimeError):

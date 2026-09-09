@@ -7,6 +7,8 @@ client-side transition guard — this suite intentionally never registers a Play
 handler, since none should ever fire.
 """
 
+from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
+
 
 def test_edit_incident_priority_persists_after_reload(page, ui_app_server):
     page.goto(ui_app_server)
@@ -44,8 +46,8 @@ def test_resolve_incident_with_open_first_response_breach_saves_with_no_confirma
         rows = page.locator("#incidents-table-body tr")
         try:
             page.wait_for_selector("#incidents-table-body tr", timeout=2000)
-        except Exception:
-            continue
+        except PlaywrightTimeoutError:
+            continue  # no rows for this state filter — try the next one
         for i in range(rows.count()):
             rows.nth(i).click()
             page.wait_for_selector("#incident-record-view:not([hidden])")
