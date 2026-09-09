@@ -1,7 +1,7 @@
 ---
 charter: itsm-api
 kind: behavioral
-status: review-pending
+status: review-passed
 risk_level: low
 revision: 1
 charter-revision: 1
@@ -48,7 +48,10 @@ non-exceptional values) is unchanged and applies equally to created Escalations.
   `incident_number: null`, `owner: null`, `closed_at: null`.
 - **BEH-10** — **When** a `POST /escalations` request additionally supplies `incident_number`
   and/or `owner`, **then** the API stores and returns those values exactly as given, alongside
-  the server-assigned `number` and `opened_at`.
+  the server-assigned `number` and `opened_at`. `incident_number` is accepted as given without
+  checking it against an existing Incident's `number` — this API enforces no foreign-key
+  integrity on create, consistent with how `Incident.assigned_to`/`assignment_group` are already
+  unenforced free-text references elsewhere in this API (charter Relationships section).
 - **BEH-11** — **When** a `POST /escalations` request includes a `closed_at` value in the body,
   **then** the API silently ignores it — `closed_at` is not a creatable field (mirroring how
   `number`/`account_id`/`opened_at` are silently ignored on `PATCH`) — and the created Escalation's
@@ -84,7 +87,10 @@ non-exceptional values) is unchanged and applies equally to created Escalations.
   rejects, consistent with how the base spec treats them on read/update.
 - **Principle 3:** "Identifiers reconcile with the shared canon." — Applies because the new
   `number` values follow the existing `ESCALATION-NNNN` scheme and must not collide with the
-  seeded `ESCALATION-04xx` range.
+  seeded `ESCALATION-04xx` range. `account_id` is accepted as given and not validated against
+  the canon account list at create time — mirroring `POST /incidents`' existing `IncidentCreate`
+  behavior, which likewise accepts `account_id` unvalidated. This is the established precedent in
+  this API, not a new gap this amendment introduces.
 
 ## Actionable Task Map
 
