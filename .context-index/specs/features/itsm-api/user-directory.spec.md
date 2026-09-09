@@ -17,6 +17,7 @@ source-manifest:
     - pytest.ini
     - tests/test_directory.py
   computed-at: "2026-09-07T18:49:50.859Z"
+drift_detected: true
 ---
 
 # Live Spec: User and assignment group directory

@@ -1,7 +1,7 @@
 ---
 status: approved
 kind: feature
-revision: 21
+revision: 23
 updated: 2026-09-09
 ---
 
@@ -124,7 +124,7 @@ ticket) is the point of building this at all.
 | Create/update Incident | Create an Incident; update `state`, `priority`, `assigned_to`, `assignment_group` — unguarded | must-have | mvp | validated |
 | List/add Work Notes | List an Incident's work notes; post a new one as any author, any note_type — unguarded | must-have | mvp | validated |
 | List/get/update Escalations | List (filterable by `account_id`, `open_only`), fetch, and update Escalations | must-have | mvp | validated |
-| Create Escalation | Server-assigns `number`/`opened_at`; client supplies `account_id`, `summary`, optional `incident_number`/`owner` — mirrors `POST /incidents`' server-assigned-identifier pattern | must-have | v2 | planned |
+| Create Escalation | Server-assigns `number`/`opened_at`; client supplies `account_id`, `summary`, optional `incident_number`/`owner` — mirrors `POST /incidents`' server-assigned-identifier pattern | must-have | v2 | implemented |
 | List SLA records | List Task SLA records (filterable by `incident_number`, `breached`, `sla_definition`) | must-have | mvp | validated |
 | List users and assignment groups | List the support-team directory | must-have | mvp | validated |
 | Seed fixture data | Idempotent seed command populating all six tables from the sources PRD.md names, preserving the ten narrative tickets and the three seeded discrepancies | must-have | mvp | validated |

@@ -17,6 +17,7 @@ source-manifest:
     - tests/conftest.py
     - tests/test_escalations.py
   computed-at: "2026-09-07T18:49:50.623Z"
+drift_detected: true
 ---
 
 # Live Spec: Escalation list, get, and update

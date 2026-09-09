@@ -1,7 +1,7 @@
 ---
 charter: itsm-api
 kind: behavioral
-status: review-passed
+status: implemented
 risk_level: low
 revision: 1
 charter-revision: 1
@@ -9,6 +9,15 @@ amends: .context-index/specs/features/itsm-api/escalations.spec.md
 target-revision: 2
 created: 2026-09-09
 updated: 2026-09-09
+source-manifest:
+  sha: "e2e4dea"
+  files:
+    - app/db.py
+    - app/models.py
+    - app/routers/escalations.py
+    - tests/test_db.py
+    - tests/test_escalations.py
+  computed-at: "2026-09-09T16:58:59.553Z"
 ---
 
 # Amendment: Live Spec: Escalation list, get, and update (targeting rev 2)
