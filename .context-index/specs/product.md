@@ -4,7 +4,7 @@
 
 A standalone, offline mock of a ServiceNow-shaped ITSM API — incidents, work notes, escalations,
 and SLA records — exposed over HTTP and a thin MCP layer, that other adev-course tracks
-(`portwell-assist` / SDLC, `portwell-analytics` / DDLC, `portwell-knowledge` / KDLC) integrate
+(`portwell-portal` / SDLC, `portwell-analytics` / DDLC, `portwell-knowledge` / KDLC) integrate
 against as a realistic external dependency with a real, writable tool boundary.
 
 ## Module Map

@@ -39,11 +39,11 @@ source-manifest:
   that runs from a clean container"), distinct from any implicit seed-on-startup behavior — it
   can be run once at container build/first-start and re-run any number of times thereafter.
 - Reconciliation with `../course-shared/canon` (`identifiers.md`, `company.md`) and vendoring of
-  the `../portwell-assist` CSVs and `../portwell-knowledge` escalation sheets happens once, at
+  the `../portwell-portal` CSVs and `../portwell-knowledge` escalation sheets happens once, at
   implementation/authoring time, never at seed-command runtime. The source rows the seed command
   reads live as static fixture files committed inside this repository — a one-time, authoring-time
   copy of the sources PRD.md's "Seed data" section names. The running seed command never opens a
-  file outside this repository. This is non-negotiable: a runtime read of `../portwell-assist`,
+  file outside this repository. This is non-negotiable: a runtime read of `../portwell-portal`,
   `../portwell-knowledge`, or `../course-shared/*` would be an inbound dependency on another repo
   or on `course-shared`, which constitution Non-Negotiable Principle 1 forbids outright.
 - Recording the three seeded discrepancies in `../course-shared/heldout/seeded-defects.md` (per
@@ -69,7 +69,7 @@ source-manifest:
   the second run is identical to after the first run. This holds for any number of repeated runs,
   not just a second one.
 - **BEH-3** — **When** the seed command loads the ten narrative tickets named in PRD.md (the
-  tickets `portwell-assist`'s own tests key on), **then** each keeps its exact `number` and
+  tickets `portwell-portal`'s own tests key on), **then** each keeps its exact `number` and
   content byte-identical to the source CSV, across every run of the seed command, forever — this
   identifier stability is never affected by BEH-2's idempotency mechanism reordering or
   regenerating rows.
@@ -92,7 +92,7 @@ source-manifest:
   `GET /escalations` returns exactly 5 Escalations (two with `owner: null`), `GET /sla` returns
   one or two records per Incident, and `GET /users`/`GET /assignment_groups` return the full
   seeded directory.
-- The ten narrative tickets' `number` values are stable identifiers `portwell-assist` can key on
+- The ten narrative tickets' `number` values are stable identifiers `portwell-portal` can key on
   indefinitely — they are never renumbered by any seed run, past or future.
 - No seed run ever reaches a file path outside this repository, and no seed run ever reaches a
   real network endpoint.

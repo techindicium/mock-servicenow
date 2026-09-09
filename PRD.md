@@ -18,7 +18,7 @@ looking at it, not just to a program calling its API.
 
 | Track | Uses it for | Module it first matters in |
 | :- | :- | :- |
-| `portwell-assist` (SDLC) | The support desk the Assist service reads tickets from and writes proposals against | 2 |
+| `portwell-portal` (SDLC) | The support desk the Assist service reads tickets from and writes proposals against | 2 |
 | `portwell-analytics` (DDLC) | The source it extracts ticket and interaction data from | 2 |
 | `portwell-knowledge` (KDLC) | Open escalations and their ages, quoted in the monthly service review packs | 2 |
 
@@ -206,14 +206,14 @@ over.
 
 | From | Into | Rows |
 | :- | :- | :- |
-| `portwell-assist/data/seed/history/tickets.csv` | `incident` | 1,307 |
-| `portwell-assist/data/seed/history/interactions.csv` | `work_note` | 2,614 |
+| `portwell-portal/data/seed/history/tickets.csv` | `incident` | 1,307 |
+| `portwell-portal/data/seed/history/interactions.csv` | `work_note` | 2,614 |
 | `portwell-knowledge` pack escalation sheets | `escalation` | 5 |
 | Derived from tier commitments and work-note timestamps | `task_sla` | one or two per incident |
 | `course-shared/canon/company.md` | `sys_user`, `assignment_group` | ~12 |
 
 The ten narrative tickets keep their exact identifiers and content, because tests in
-`portwell-assist` key on them.
+`portwell-portal` key on them.
 
 Seeding must be a documented command that runs from a clean container, and re-running it must be
 idempotent.

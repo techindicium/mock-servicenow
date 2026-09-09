@@ -14,7 +14,7 @@ updated: 2026-09-07
 ## Business Intent
 
 mcp-server exposes `itsm-api`'s incident/work-note/escalation/SLA/user operations as MCP tools,
-so an AI agent working in a consuming course track (`portwell-assist`/SDLC, `portwell-analytics`/
+so an AI agent working in a consuming course track (`portwell-portal`/SDLC, `portwell-analytics`/
 DDLC, `portwell-knowledge`/KDLC) can read and act on Portwell's support desk directly through the
 Model Context Protocol, without hand-rolling HTTP calls. Like `itsm-api`'s other clients, it owns
 no persisted data and never touches the database directly.

@@ -16,7 +16,7 @@ updated: 2026-09-07
 itsm-api provides a ServiceNow-shaped ITSM domain (incidents, work notes, escalations, SLA
 records) backed by a local SQLite database, exposed over an HTTP API. It is the system of record
 for Portwell's support desk, and exists so the adev-course tracks that need a realistic upstream
-ITSM system — `portwell-assist` (SDLC), `portwell-analytics` (DDLC), and `portwell-knowledge`
+ITSM system — `portwell-portal` (SDLC), `portwell-analytics` (DDLC), and `portwell-knowledge`
 (KDLC) — have something concrete and offline to integrate against, without any real ServiceNow
 instance involved. This is the core module of `mock-servicenow`: `mcp-server` is a pure client of
 this API, never the other way around.
@@ -44,7 +44,7 @@ ticket) is the point of building this at all.
   assignment-group list. Pagination on every list endpoint.
 - SQLite persistence, a single local file, created fresh on first run.
 - A documented, idempotent seed command loading all six tables from the sources PRD.md's "Seed
-  data" section names (`portwell-assist` ticket/interaction CSVs, `portwell-knowledge` escalation
+  data" section names (`portwell-portal` ticket/interaction CSVs, `portwell-knowledge` escalation
   sheets, tier-commitment-derived SLA records, `course-shared/canon/company.md`), preserving the
   ten narrative tickets' exact identifiers and content.
 - The three seeded discrepancies from PRD.md's "Seeded discrepancies" section (SLA
@@ -72,7 +72,7 @@ ticket) is the point of building this at all.
 | Dependency | Type | Description |
 |-----------|------|-------------|
 | `../course-shared/canon/identifiers.md` and `company.md` | shared reference (read-only) | Seed fixture identifiers (accounts, users, groups) must reconcile with the canon. Not a runtime/code dependency. |
-| `../portwell-assist/data/seed/history/{tickets.csv,interactions.csv}` | seed source (read-only, seed-time only) | Source rows for `incident`/`work_note`. Read once by the seed command; never a runtime dependency. |
+| `../portwell-portal/data/seed/history/{tickets.csv,interactions.csv}` | seed source (read-only, seed-time only) | Source rows for `incident`/`work_note`. Read once by the seed command; never a runtime dependency. |
 | `../portwell-knowledge` escalation pack sheets | seed source (read-only, seed-time only) | Source rows for `escalation`. |
 | `../course-shared/heldout/seeded-defects.md` | shared reference (write, seed-time only) | Where the three seeded discrepancies are recorded once seeding lands — not readable by participants during the course. |
 
@@ -103,7 +103,7 @@ ticket) is the point of building this at all.
 ### Invariants
 
 - `incident.number` is stable and never renumbered once seeded or created — it is the identifier
-  `portwell-assist` tests key on for the ten narrative tickets.
+  `portwell-portal` tests key on for the ten narrative tickets.
 - `incident.state` is always one of `new`, `in_progress`, `on_hold`, `resolved`, `closed`; the API
   rejects any other value.
 - `incident.priority` is always an integer 1 to 4.

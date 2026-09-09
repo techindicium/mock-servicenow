@@ -16,7 +16,7 @@
 OS process (never in-process via FastAPI's `TestClient`) and drives every documented
 Incident/WorkNote/Escalation/TaskSla/directory behavior — plus the PRD's analytics-parity filter
 query, the documented error paths, the OpenAPI contract, and all three seeded discrepancies —
-over a live socket, exactly as `portwell-assist`, `portwell-analytics`, or `portwell-knowledge`
+over a live socket, exactly as `portwell-portal`, `portwell-analytics`, or `portwell-knowledge`
 would connect.
 
 **Architecture:** A `tests_e2e/` directory sits alongside the fast, in-process `tests/` suites the

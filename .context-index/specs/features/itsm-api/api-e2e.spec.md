@@ -49,7 +49,7 @@ source-manifest:
   before any test runs. They never import the application's Python objects into the test process
   and never use FastAPI's in-process `TestClient` (an in-process ASGI transport). This is the one
   thing that distinguishes this spec from the module's existing unit/integration tests: every
-  request in this suite travels over a real TCP socket, exactly as `portwell-assist`,
+  request in this suite travels over a real TCP socket, exactly as `portwell-portal`,
   `portwell-analytics`, or `portwell-knowledge` would connect.
 - A real HTTP client (e.g. `httpx.Client(base_url=...)`) issues every request in this suite.
 - The server process is torn down after the test session, whether it passed or failed.

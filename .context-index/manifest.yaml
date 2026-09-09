@@ -9,7 +9,7 @@
 project:
   name: "mock-servicenow"
   adev_version: "0.27.9"
-  description: "Standalone mock of a ServiceNow-shaped ITSM API — incidents, work notes, assignment groups, and SLA records — run locally by the adev-course tracks that need one (portwell-assist / SDLC, portwell-analytics / DDLC, portwell-knowledge / KDLC) as an external system dependency. No dependency on any other repo in the workspace."
+  description: "Standalone mock of a ServiceNow-shaped ITSM API — incidents, work notes, assignment groups, and SLA records — run locally by the adev-course tracks that need one (portwell-portal / SDLC, portwell-analytics / DDLC, portwell-knowledge / KDLC) as an external system dependency. No dependency on any other repo in the workspace."
   # Repository type: monorepo | single-app | library | cli
   type: single-app
 

@@ -6,7 +6,7 @@
 
 mock-servicenow is a standalone mock of a ServiceNow-shaped ITSM API: incidents, work notes,
 assignment groups, and SLA records. It is the system of record for Portwell's support desk in
-the adev-course workspace, consumed by `portwell-assist` (SDLC), `portwell-analytics` (DDLC), and
+the adev-course workspace, consumed by `portwell-portal` (SDLC), `portwell-analytics` (DDLC), and
 `portwell-knowledge` (KDLC).
 
 It is course infrastructure, not a course exercise. Its own API surface and internals are not
@@ -23,7 +23,7 @@ connecting to them. A guarded MCP would remove the exercise.
    Everything this API serves comes from local fixtures.
 3. **Identifiers reconcile with the shared canon.** `incident.number`, `account_id`, and user/
    group names must be consistent with `course-shared/canon/identifiers.md`, and the ten
-   narrative tickets keep their exact identifiers because `portwell-assist` tests key on them.
+   narrative tickets keep their exact identifiers because `portwell-portal` tests key on them.
 4. **The HTTP contract is the boundary.** Consuming tracks integrate through the documented API
    only, never by importing this repo's internals directly.
 5. **The MCP tools stay unguarded.** `update_incident` and `add_work_note` must remain capable of

@@ -26,17 +26,17 @@ Preconditions and constitution Non-Negotiable Principle 1 ("No inbound dependenc
 external source this plan touches is copied **by value** into this repo, once, during
 implementation of this plan — not read live at seed-command runtime, ever. Concretely:
 
-- `../portwell-assist/data/seed/history/tickets.csv` (1,297 rows, all `status: closed`) and
+- `../portwell-portal/data/seed/history/tickets.csv` (1,297 rows, all `status: closed`) and
   `interactions.csv` (2,594 rows) are copied verbatim into `app/fixtures/seed/tickets.csv` and
   `app/fixtures/seed/interactions.csv`.
-- `../portwell-assist/data/tickets.json` — the **ten narrative tickets**
+- `../portwell-portal/data/tickets.json` — the **ten narrative tickets**
   (`TICKET-004401/04405/04409/04411/04417/04420/04424/04429/04433/04438`, the tickets
-  `portwell-assist`'s own test suite keys on — verified by reading
-  `portwell-assist/service/tests/test_api_contract.py`) — is copied verbatim into
+  `portwell-portal`'s own test suite keys on — verified by reading
+  `portwell-portal/service/tests/test_api_contract.py`) — is copied verbatim into
   `app/fixtures/seed/narrative_tickets.json`. **1,297 + 10 = 1,307**; this is exactly BEH-1's
   Incident count, not a coincidence — the narrative tickets are the extra ten.
-- `../portwell-assist/data/accounts.json` (account→tier mapping) and
-  `../portwell-assist/data/tier-commitments.json` (tier→SLA-minutes table) are copied verbatim
+- `../portwell-portal/data/accounts.json` (account→tier mapping) and
+  `../portwell-portal/data/tier-commitments.json` (tier→SLA-minutes table) are copied verbatim
   into `app/fixtures/seed/accounts_tiers.json` and `app/fixtures/seed/tier_commitments.json` —
   `task_sla.target_minutes` is derived from these, per PRD.md's "Derived from tier commitments
   and work-note timestamps."
@@ -58,7 +58,7 @@ implementation of this plan — not read live at seed-command runtime, ever. Con
   `app/fixtures/seed/roster_seed.json` — 11 SysUser rows total.
 
 The running seed command (`app/seed.py`, invoked as `python -m app.seed`) never opens
-`../portwell-assist`, `../portwell-knowledge`, or `../course-shared/*` — it reads only
+`../portwell-portal`, `../portwell-knowledge`, or `../course-shared/*` — it reads only
 `app/fixtures/seed/*`, files that live inside this repository. This satisfies the spec's
 Postcondition "No seed run ever reaches a file path outside this repository" and constitution
 Principle 1.
@@ -99,11 +99,11 @@ No task is `[REQUIRES HUMAN APPROVAL]`.
 ## File Structure
 
 **Create:**
-- `app/fixtures/seed/tickets.csv` — verbatim copy of `portwell-assist/data/seed/history/tickets.csv`
+- `app/fixtures/seed/tickets.csv` — verbatim copy of `portwell-portal/data/seed/history/tickets.csv`
 - `app/fixtures/seed/interactions.csv` — verbatim copy of `.../interactions.csv`
-- `app/fixtures/seed/narrative_tickets.json` — verbatim copy of `portwell-assist/data/tickets.json`
-- `app/fixtures/seed/accounts_tiers.json` — verbatim copy of `portwell-assist/data/accounts.json`
-- `app/fixtures/seed/tier_commitments.json` — verbatim copy of `portwell-assist/data/tier-commitments.json`
+- `app/fixtures/seed/narrative_tickets.json` — verbatim copy of `portwell-portal/data/tickets.json`
+- `app/fixtures/seed/accounts_tiers.json` — verbatim copy of `portwell-portal/data/accounts.json`
+- `app/fixtures/seed/tier_commitments.json` — verbatim copy of `portwell-portal/data/tier-commitments.json`
 - `app/fixtures/seed/escalations_seed.json` — hand-authored, 5 rows extracted by value from the
   `portwell-knowledge` pack workbooks' `escalations` sheets, with a provenance comment
 - `app/fixtures/seed/roster_seed.json` — hand-authored, 11 SysUser rows + 3 AssignmentGroup names,
@@ -128,9 +128,9 @@ note below):**
 - `.context-index/specs/features/itsm-api/charter.md` — Domain Model, Capability Map
 - `CLAUDE.md` — constitution: Principle 1 (no inbound deps), Principle 3 (canon reconciliation),
   Principle 6 (seeded discrepancies load-bearing)
-- `../portwell-assist/data/seed/history/{tickets.csv,interactions.csv}`,
-  `../portwell-assist/data/{tickets.json,accounts.json,tier-commitments.json}`,
-  `../portwell-assist/service/tests/test_api_contract.py` (confirms the ten narrative ticket IDs)
+- `../portwell-portal/data/seed/history/{tickets.csv,interactions.csv}`,
+  `../portwell-portal/data/{tickets.json,accounts.json,tier-commitments.json}`,
+  `../portwell-portal/service/tests/test_api_contract.py` (confirms the ten narrative ticket IDs)
   — read once, at this plan's authoring time, to produce the vendored copies above; never read
   again at seed-command runtime
 - `../portwell-knowledge/data/packs/2026-07/{ACCOUNT-1001,ACCOUNT-1003,ACCOUNT-1008}-2026-07.xlsx`
@@ -325,11 +325,11 @@ Copy the two CSVs and `tickets.json` verbatim (no transformation):
 
 ```bash
 mkdir -p app/fixtures/seed
-cp ../portwell-assist/data/seed/history/tickets.csv app/fixtures/seed/tickets.csv
-cp ../portwell-assist/data/seed/history/interactions.csv app/fixtures/seed/interactions.csv
-cp ../portwell-assist/data/tickets.json app/fixtures/seed/narrative_tickets.json
-cp ../portwell-assist/data/accounts.json app/fixtures/seed/accounts_tiers.json
-cp ../portwell-assist/data/tier-commitments.json app/fixtures/seed/tier_commitments.json
+cp ../portwell-portal/data/seed/history/tickets.csv app/fixtures/seed/tickets.csv
+cp ../portwell-portal/data/seed/history/interactions.csv app/fixtures/seed/interactions.csv
+cp ../portwell-portal/data/tickets.json app/fixtures/seed/narrative_tickets.json
+cp ../portwell-portal/data/accounts.json app/fixtures/seed/accounts_tiers.json
+cp ../portwell-portal/data/tier-commitments.json app/fixtures/seed/tier_commitments.json
 ```
 
 Hand-author `app/fixtures/seed/escalations_seed.json` (extracted by value from the three
