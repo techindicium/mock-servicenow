@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "_generated_by": "/adev:route — do not hand-edit; re-run instead.",
+  "entries": [
+    {
+      "task_id": "task-1",
+      "selected_agent": "auto-agent",
+      "scores": {
+        "spec_completeness": 1,
+        "pattern_coverage": 0.8,
+        "blast_radius": 1,
+        "novelty": 1
+      },
+      "rationale": "Markup-only task with explicit HTML given in the plan, mirroring the existing create-incident form section verbatim; single file, single module."
+    },
+    {
+      "task_id": "task-2",
+      "selected_agent": "auto-agent",
+      "scores": {
+        "spec_completeness": 1,
+        "pattern_coverage": 0.8,
+        "blast_radius": 0.8,
+        "novelty": 1
+      },
+      "rationale": "Validation/payload logic directly mirrors incident-logic.js's validateCreateIncidentForm; 3 files (1 modify, 2 test) in one module."
+    },
+    {
+      "task_id": "task-3",
+      "selected_agent": "auto-agent",
+      "scores": {
+        "spec_completeness": 1,
+        "pattern_coverage": 0.8,
+        "blast_radius": 1,
+        "novelty": 1
+      },
+      "rationale": "DOM wiring directly mirrors incident.js's onCreateIncidentSubmit pattern with exact code given in the plan; single file."
+    },
+    {
+      "task_id": "task-4",
+      "selected_agent": "auto-agent",
+      "scores": {
+        "spec_completeness": 1,
+        "pattern_coverage": 0.8,
+        "blast_radius": 1,
+        "novelty": 1
+      },
+      "rationale": "e2e coverage mirrors test_ui_create_incident_e2e.py and test_ui_error_path_e2e.py's route-abort pattern exactly; one new file."
+    }
+  ]
+}
