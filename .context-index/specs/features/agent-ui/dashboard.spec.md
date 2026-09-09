@@ -21,6 +21,7 @@ source-manifest:
     - tests_js/beh-1-dashboard-tiles.test.js
     - tests_js/nav-beh-1-view-switch-logic.test.js
   computed-at: "2026-09-09T11:24:07.643Z"
+drift_detected: true
 ---
 
 # Live Spec: Incident dashboard (KPI tiles)
