@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "seq": 13,
+  "seq": 14,
   "epics": [
     {
       "id": "epic-cjs4ac",
@@ -120,5 +120,19 @@
       "updated": "2026-09-07T22:46:17.568Z"
     }
   ],
-  "issues": []
+  "issues": [
+    {
+      "id": "issue-ssq4yv",
+      "title": "Escalation create (POST /escalations) — amendment to escalations spec",
+      "status": "open",
+      "priority": 2,
+      "type": "feature",
+      "spec_ref": "/Users/dpavancini/Development/adev-course/mock-servicenow/.context-index/specs/features/itsm-api/escalations-rev-2-create-escalation.spec.md",
+      "dependencies": [],
+      "notes": "Bound 1:1 to spec at /Users/dpavancini/Development/adev-course/mock-servicenow/.context-index/specs/features/itsm-api/escalations-rev-2-create-escalation.spec.md. Created by /adev:specify on 2026-09-09.",
+      "next_action": "Run /adev:review-specs --module itsm-api",
+      "created": "2026-09-09T16:38:26.030Z",
+      "updated": "2026-09-09T16:38:26.030Z"
+    }
+  ]
 }
