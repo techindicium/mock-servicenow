@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "seq": 16,
+  "seq": 17,
   "epics": [
     {
       "id": "epic-cjs4ac",
@@ -127,6 +127,15 @@
       "notes": "Add POST /escalations, mirroring POST /incidents' server-assigned-identifier pattern.",
       "created": "2026-09-09T16:47:49.194Z",
       "updated": "2026-09-09T16:47:49.194Z"
+    },
+    {
+      "id": "epic-26mwk5",
+      "title": "New Escalation form on the Escalations screen",
+      "status": "open",
+      "planRef": ".context-index/specs/features/agent-ui/escalations-directory-nav-rev-3-create-escalation.plan.md",
+      "notes": "Add a New Escalation form to agent-ui's Escalations screen calling POST /escalations, closing the last dependency now that itsm-api's create-escalation endpoint has shipped.",
+      "created": "2026-09-09T20:58:03.482Z",
+      "updated": "2026-09-09T20:58:03.482Z"
     }
   ],
   "issues": [
