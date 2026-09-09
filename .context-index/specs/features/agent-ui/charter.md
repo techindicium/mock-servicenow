@@ -1,7 +1,7 @@
 ---
 status: approved
 kind: feature
-revision: 26
+revision: 27
 updated: 2026-09-09
 ---
 
@@ -135,7 +135,7 @@ presence of a UI at all — a real support desk has a UI agents work tickets fro
 | Capability | Reason | Target Milestone | Depends On |
 |-----------|--------|-------------|------------|
 | Real-time multi-viewer sync | No multi-user requirement yet; polling/reload suffices | v2 | — |
-| Escalation create | PRD.md's Escalation create is out of scope this milestone at the API layer too — nothing for this UI to call | v2 | itsm-api escalation-create capability (also deferred) |
+| Escalation create | itsm-api's Create Escalation capability is now active (v2, planned) but not yet implemented — this UI's "New Escalation" affordance stays deferred until `POST /escalations` lands and can be called | v2 | itsm-api Create Escalation capability (charter revision 19: promoted to active scope, not yet built) |
 | Kanban-style board view | Incident's state model doesn't fit a small fixed-column board the way mock-jira's Issue does | — | — |
 
 ## Interface Contracts
