@@ -1,7 +1,7 @@
 ---
 charter: agent-ui
 kind: behavioral
-status: review-passed
+status: implemented
 risk_level: low
 revision: 1
 charter-revision: 28
@@ -9,6 +9,16 @@ amends: .context-index/specs/features/agent-ui/escalations-directory-nav.spec.md
 target-revision: 3
 created: 2026-09-09
 updated: 2026-09-09
+source-manifest:
+  sha: "0674e25"
+  files:
+    - static/index.html
+    - static/js/escalations-logic.js
+    - static/js/escalations.js
+    - tests_e2e/test_ui_create_escalation_e2e.py
+    - tests_js/escalations-beh-6-7-create-payload.test.js
+    - tests_js/escalations-beh-8-validation.test.js
+  computed-at: "2026-09-09T21:11:10.968Z"
 ---
 
 # Amendment: Live Spec: Escalations screen, directory screen, and navigation shell (targeting rev 3)
