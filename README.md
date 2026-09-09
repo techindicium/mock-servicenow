@@ -7,8 +7,26 @@ Independent repo: no dependency on `course-shared`, the other `mock-*` repos, or
 Tracks that need it (see `adev-workspace.yaml` at the workspace root for which ones) pull it in
 as a service dependency; this repo never depends on them back.
 
-Not yet scoped. Run `/adev:brainstorm` here to charter what the mock API surface needs to cover
-before implementing it.
+## Running with Docker
+
+Bring up the whole stack with one command from the repo root:
+
+```bash
+docker compose build   # builds the itsm-api and mcp-server images
+docker compose up      # starts itsm-api first, waits for it to be healthy,
+                       # then starts mcp-server
+```
+
+- `itsm-api` is published at `http://localhost:8030`. Override the host port with `PORT=<port>`.
+- `mcp-server` is published at `http://localhost:8031/mcp`, speaking the MCP streamable-http
+  transport. Override the host port with `MCP_PORT=<port>`.
+- Neither port is exposed beyond `localhost` by default.
+
+Ports across the four mocks do not overlap: the issue tracker uses 8010 and 8011, the CRM 8020
+and 8021, this repo 8030 and 8031, and the knowledge base 8040 and 8041. All four can run at
+once.
+
+Confirm health with `docker compose ps`, or `curl http://localhost:8030/`.
 
 ## Running the UI end-to-end test suite
 
