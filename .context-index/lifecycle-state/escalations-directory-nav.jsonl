@@ -26,3 +26,4 @@
 {"event":"code_drift_detected","drift_source":"static/index.html","drift_at":"2026-09-09T10:24:26.259Z","ts":"2026-09-09T10:24:26.260Z"}
 {"event":"code_drift_detected","drift_source":"static/index.html","drift_at":"2026-09-09T11:03:41.742Z","ts":"2026-09-09T11:03:41.742Z"}
 {"event":"code_drift_detected","drift_source":"tests_js/nav-beh-1-view-switch-logic.test.js","drift_at":"2026-09-09T11:10:27.048Z","ts":"2026-09-09T11:10:27.049Z"}
+{"event":"spec_amended","amendment_slug":"escalations-directory-nav-rev-3-create-escalation","amendment_path":".context-index/specs/features/agent-ui/escalations-directory-nav-rev-3-create-escalation.spec.md","target_revision":3,"ts":"2026-09-09T20:45:57.918Z"}
