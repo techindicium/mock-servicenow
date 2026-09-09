@@ -20,6 +20,30 @@ def test_create_escalation_form_prepends_new_row(page, ui_app_server):
     assert first_row_summary == summary
 
 
+def test_create_escalation_with_owner_renders_the_api_returned_value(page, ui_app_server):
+    # BEH-7: the created row's owner cell reflects the server's response object
+    # (escalationsCache is seeded from `created`, not the form's local input state).
+    page.goto(ui_app_server)
+    page.click("#nav-escalations")
+    page.wait_for_selector("#view-escalations:not([hidden])")
+
+    summary = f"e2e-created escalation with owner {uuid.uuid4()}"
+    page.click("#open-create-escalation")
+    page.wait_for_selector("#create-escalation:not([hidden])")
+
+    page.fill("#create-escalation-account_id", "ACCOUNT-1001")
+    page.fill("#create-escalation-summary", summary)
+    page.fill("#create-escalation-owner", "Rui Bastos")
+    page.click("#create-escalation-form button[type=submit]")
+
+    page.wait_for_selector("#create-escalation", state="hidden")
+    first_row = page.locator("#escalations-table tbody tr").first
+    assert first_row.locator("td").nth(2).inner_text() == summary
+    owner_cell = first_row.locator("td").nth(5)
+    assert owner_cell.inner_text() == "Rui Bastos"
+    assert "owner-unassigned" not in (owner_cell.get_attribute("class") or "")
+
+
 def test_create_escalation_missing_required_field_shows_inline_error(page, ui_app_server):
     # BEH-8: client-side validation blocks the request entirely — no fetch is ever made.
     page.goto(ui_app_server)
