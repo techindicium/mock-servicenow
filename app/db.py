@@ -3,6 +3,7 @@ import sqlite3
 import threading
 
 _NUMBER_RE = re.compile(r"^TICKET-(\d{6})$")
+_ESCALATION_NUMBER_RE = re.compile(r"^ESCALATION-(\d{4})$")
 
 
 class _FetchedRows:
@@ -172,6 +173,19 @@ def next_incident_number(conn: sqlite3.Connection) -> str:
         if match:
             max_seq = max(max_seq, int(match.group(1)))
     return f"TICKET-{max_seq + 1:06d}"
+
+
+def next_escalation_number(conn: sqlite3.Connection) -> str:
+    """Server-assigned, ESCALATION-NNNN, guaranteed not to collide with any existing row
+    (seeded or previously created) — derived from the current max suffix, mirroring
+    next_incident_number's collision-proof scheme, sized to the existing 4-digit
+    ESCALATION-04xx seed range."""
+    max_seq = 0
+    for row in conn.execute("SELECT number FROM escalations"):
+        match = _ESCALATION_NUMBER_RE.match(row["number"])
+        if match:
+            max_seq = max(max_seq, int(match.group(1)))
+    return f"ESCALATION-{max_seq + 1:04d}"
 
 
 def allocate_work_note_sys_id(conn: sqlite3.Connection) -> str:
