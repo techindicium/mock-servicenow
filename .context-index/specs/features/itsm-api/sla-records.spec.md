@@ -9,7 +9,7 @@ created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
 source-manifest:
-  sha: "13d7446"
+  sha: "a5a3b94"
   files:
     - app/db.py
     - app/main.py
@@ -17,8 +17,7 @@ source-manifest:
     - app/routers/sla.py
     - tests/conftest.py
     - tests/test_sla.py
-  computed-at: "2026-09-07T18:49:50.276Z"
-drift_detected: true
+  computed-at: "2026-09-09T11:24:00.266Z"
 ---
 
 # Live Spec: Task SLA record listing

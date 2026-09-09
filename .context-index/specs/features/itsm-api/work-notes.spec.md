@@ -9,7 +9,7 @@ created: 2026-09-07
 updated: 2026-09-07
 kind: behavioral
 source-manifest:
-  sha: "c4c2174"
+  sha: "f158489"
   files:
     - app/db.py
     - app/main.py
@@ -18,8 +18,7 @@ source-manifest:
     - tests/conftest.py
     - tests/test_db.py
     - tests/test_work_notes.py
-  computed-at: "2026-09-07T18:49:50.162Z"
-drift_detected: true
+  computed-at: "2026-09-09T11:24:00.329Z"
 ---
 
 # Live Spec: Work notes list and add
