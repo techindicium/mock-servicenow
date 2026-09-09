@@ -19,6 +19,7 @@ source-manifest:
     - tests/test_db.py
     - tests/test_work_notes.py
   computed-at: "2026-09-07T18:49:50.162Z"
+drift_detected: true
 ---
 
 # Live Spec: Work notes list and add

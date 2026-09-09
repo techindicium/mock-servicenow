@@ -1,13 +1,81 @@
 import re
 import sqlite3
+import threading
 
 _NUMBER_RE = re.compile(r"^TICKET-(\d{6})$")
+
+
+class _FetchedRows:
+    """Cursor-shaped proxy over an eagerly-fetched row list.
+
+    Returned by `_ThreadSafeConnection.execute()` in place of a live `sqlite3.Cursor`, so
+    every existing call site in this codebase (`conn.execute(...).fetchall()`,
+    `.fetchone()`, or bare iteration/ignoring the result) keeps working unchanged.
+    """
+
+    def __init__(self, rows):
+        self._rows = rows
+
+    def fetchall(self):
+        return self._rows
+
+    def fetchone(self):
+        return self._rows[0] if self._rows else None
+
+    def __iter__(self):
+        return iter(self._rows)
+
+
+class _ThreadSafeConnection:
+    """Serializes access to one sqlite3.Connection shared across FastAPI's worker threadpool.
+
+    FastAPI runs sync `def` route handlers (every router in this app) on a threadpool, so
+    several requests can call `execute()` on the single app-wide connection concurrently — this
+    is exactly what the incident dashboard's BEH-1 does on purpose (seven parallel GET
+    requests). A raw sqlite3.Connection is not safe for concurrent use from multiple threads
+    even with `check_same_thread=False`: interleaved `execute()`/`fetchall()` calls on the same
+    connection can raise or silently return another thread's partial result set. This wrapper
+    holds a lock for the full duration of each `execute()` call and eagerly materializes the
+    result set inside that lock, so no unlocked cursor state is ever shared between threads.
+
+    This is an internal-only fix — it changes no HTTP request/response shape, only how the
+    existing routers reach the database underneath. `get_connection()` returns this wrapper in
+    place of a raw `sqlite3.Connection` for every caller (the app, the seed script, tests).
+    """
+
+    def __init__(self, conn: sqlite3.Connection):
+        self._conn = conn
+        self._lock = threading.RLock()
+
+    def execute(self, sql, params=()):
+        with self._lock:
+            cursor = self._conn.execute(sql, params)
+            return _FetchedRows(cursor.fetchall())
+
+    def executemany(self, sql, seq_of_params):
+        with self._lock:
+            self._conn.executemany(sql, seq_of_params)
+            return self
+
+    def commit(self):
+        with self._lock:
+            self._conn.commit()
+
+    def rollback(self):
+        with self._lock:
+            self._conn.rollback()
+
+    def __getattr__(self, name):
+        # Fallback for anything not explicitly wrapped above (e.g. close()) — still
+        # serialized, since it still touches the shared underlying connection.
+        with self._lock:
+            return getattr(self._conn, name)
 
 
 def get_connection(db_path: str) -> sqlite3.Connection:
     conn = sqlite3.connect(db_path, check_same_thread=False)
     conn.row_factory = sqlite3.Row
-    return conn
+    return _ThreadSafeConnection(conn)
 
 
 def create_schema(conn: sqlite3.Connection) -> None:
