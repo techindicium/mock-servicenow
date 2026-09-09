@@ -179,6 +179,30 @@
     for (const row of IncidentLogic.shapeSlaRows(rows)) body.appendChild(renderSlaRow(row));
   }
 
+  function renderRelatedEscalation(related) {
+    const container = document.getElementById("related-escalation-content");
+    container.innerHTML = ""; // safe clear-only assignment — no stale panel survives a new load
+    if (!related) {
+      const p = document.createElement("p");
+      p.textContent = "No related escalation";
+      container.appendChild(p);
+      return;
+    }
+    const dl = document.createElement("dl");
+    for (const [label, value] of [
+      ["Number", related.number], ["Summary", related.summary],
+      ["Owner", related.owner], ["Closed at", related.closed_at],
+    ]) {
+      const dt = document.createElement("dt");
+      dt.textContent = label;
+      const dd = document.createElement("dd");
+      dd.textContent = value; // safe DOM insertion — summary/owner are unguarded free text
+      dl.appendChild(dt);
+      dl.appendChild(dd);
+    }
+    container.appendChild(dl);
+  }
+
   async function loadIncidentRecord(number) {
     try {
       const incident = await fetchJson(`/incidents/${number}`);
@@ -203,6 +227,13 @@
       renderSlaPanel(slaPage.items);
     } catch (err) {
       showError(IncidentLogic.formatFetchError("Loading SLA records", err));
+    }
+    try {
+      const escalationsPage = await fetchJson("/escalations");
+      const related = IncidentLogic.shapeRelatedEscalation(escalationsPage.items, number);
+      renderRelatedEscalation(related);
+    } catch (err) {
+      showError(IncidentLogic.formatFetchError("Loading related escalation", err));
     }
   }
 

@@ -103,6 +103,20 @@
     return patch;
   }
 
+  function shapeRelatedEscalation(escalations, incidentNumber) {
+    const matches = (Array.isArray(escalations) ? escalations : [])
+      .filter((e) => e.incident_number === incidentNumber)
+      .sort((a, b) => (a.number < b.number ? -1 : a.number > b.number ? 1 : 0));
+    if (matches.length === 0) return null;
+    const match = matches[0];
+    return {
+      number: match.number,
+      summary: match.summary,
+      owner: formatNullableField(match.owner, "unassigned"),
+      closed_at: formatNullableField(match.closed_at, "Open"),
+    };
+  }
+
   const REQUIRED_CREATE_FIELDS = [
     "account_id", "category", "short_description", "description", "state", "priority",
   ];
@@ -125,5 +139,6 @@
     buildIncidentQueryParams, shapePaginationInfo,
     formatNullableField, shapeIncidentRecordFields, sortWorkNotesChronological,
     validateWorkNoteForm, shapeSlaRows, diffIncidentFields, validateCreateIncidentForm,
+    shapeRelatedEscalation,
   };
 });
