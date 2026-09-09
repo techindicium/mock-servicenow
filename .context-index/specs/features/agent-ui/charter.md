@@ -1,7 +1,7 @@
 ---
 status: approved
 kind: feature
-revision: 27
+revision: 30
 updated: 2026-09-09
 ---
 
@@ -44,8 +44,11 @@ presence of a UI at all — a real support desk has a UI agents work tickets fro
   repo's constitution.
 - Creating an incident via a form (`POST /incidents`), all six required fields.
 - An escalations screen: list all Escalations (including ownerless ones, `owner: null` rendered
-  as-is, never hidden or defaulted to a placeholder), and a form to edit `summary`/`owner`/
-  `closed_at` via `PATCH /escalations/{number}`.
+  as-is, never hidden or defaulted to a placeholder), a form to edit `summary`/`owner`/
+  `closed_at` via `PATCH /escalations/{number}`, and a "New Escalation" form calling
+  `POST /escalations` (client supplies `account_id`, `summary`, optional `incident_number`/
+  `owner`; the server assigns `number`/`opened_at`, mirroring the create-incident form's
+  server-assigned-identifier pattern).
 - An SLA panel on the incident record view: that incident's `task_sla` rows (`first_response`,
   `resolution`) with `target_minutes`/`actual_minutes`/`has_breached`/`business_time_only` shown
   factually — no annotation claiming a breach is "wrong" or filtering one out, since the
@@ -75,7 +78,8 @@ presence of a UI at all — a real support desk has a UI agents work tickets fro
   Issues do (five states plus an independent `escalated` flag), which reads better as a
   list/detail pair than a column board; this is a deliberate divergence from `kanban-ui`'s shape,
   not an oversight.
-- Escalation create, and any create/edit/delete the REST API doesn't already expose.
+- Any create/edit/delete the REST API doesn't already expose (e.g., deleting an
+  Incident/Escalation, or creating/editing the SysUser/AssignmentGroup directory).
 - Mobile-responsive polish — a desktop-width browser is the target.
 - Adding any permission boundary, confirmation step, or state-transition guard the API doesn't
   already have — see In Scope's unguarded-editing note. Building that guard is a *consuming*
@@ -124,6 +128,7 @@ presence of a UI at all — a real support desk has a UI agents work tickets fro
 | Create incident | Form calling `POST /incidents` | must-have | mvp | validated |
 | SLA panel | TaskSla rows shown on the incident record view | must-have | mvp | validated |
 | Escalations screen | List + edit form for Escalations, ownerless rows shown as-is | must-have | mvp | validated |
+| Create escalation | "New Escalation" form on the Escalations screen calling `POST /escalations`, server-assigned `number`/`opened_at` | should-have | v2 | planned |
 | Directory screen | Read-only Users/AssignmentGroups list | should-have | mvp | validated |
 | App navigation shell | Persistent left-hand nav (Incidents / Escalations / Directory) | should-have | mvp | validated |
 | End-to-end UI test suite | Real browser automation (a real rendering engine, real clicks/form fills) driving the actual served page — the same interface a person uses, never calling the UI's JS functions directly | must-have | v1.1 | validated |
@@ -135,7 +140,6 @@ presence of a UI at all — a real support desk has a UI agents work tickets fro
 | Capability | Reason | Target Milestone | Depends On |
 |-----------|--------|-------------|------------|
 | Real-time multi-viewer sync | No multi-user requirement yet; polling/reload suffices | v2 | — |
-| Escalation create | itsm-api's Create Escalation capability is now active (v2, planned) but not yet implemented — this UI's "New Escalation" affordance stays deferred until `POST /escalations` lands and can be called | v2 | itsm-api Create Escalation capability (charter revision 19: promoted to active scope, not yet built) |
 | Kanban-style board view | Incident's state model doesn't fit a small fixed-column board the way mock-jira's Issue does | — | — |
 
 ## Interface Contracts
@@ -157,6 +161,7 @@ other modules.
 | `POST /incidents/{number}/work_notes` | itsm-api | Add-work-note form — unguarded author |
 | `GET /escalations` | itsm-api | Populate the escalations screen |
 | `PATCH /escalations/{number}` | itsm-api | Escalations screen's edit form |
+| `POST /escalations` | itsm-api | Escalations screen's "New Escalation" create form |
 | `GET /sla` | itsm-api | Populate the SLA panel (filtered by `incident_number`) and the dashboard's breached-SLA tile (filtered by `breached=true`, `page_size=1`, reading only `total`) |
 | `GET /users` | itsm-api | Populate the directory screen |
 | `GET /assignment_groups` | itsm-api | Populate the directory screen |
