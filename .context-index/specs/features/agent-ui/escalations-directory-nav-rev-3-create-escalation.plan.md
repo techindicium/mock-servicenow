@@ -97,7 +97,7 @@ Add inside `#view-escalations` (after the existing `#escalation-edit-form`, befo
 <button type="button" id="open-create-escalation">New Escalation</button>
 <section id="create-escalation" hidden>
   <h2>New Escalation</h2>
-  <form id="create-escalation-form">
+  <form id="create-escalation-form" novalidate>
     <label>Account ID <input id="create-escalation-account_id" name="account_id" required /></label>
     <label>Summary <input id="create-escalation-summary" name="summary" required /></label>
     <label>Incident number <input id="create-escalation-incident_number" name="incident_number" /></label>
@@ -110,6 +110,8 @@ Add inside `#view-escalations` (after the existing `#escalation-edit-form`, befo
 ```
 
 Follow the existing `#create-incident` id-naming convention (`create-<field>`) but prefixed `create-escalation-<field>` since `create-account_id` etc. are already taken by the incident form on the same page.
+
+`novalidate` on the form is required, not decorative: BEH-8 mandates a custom inline validation message, but the browser's native constraint validation (triggered by `required`) intercepts `submit` before any JS handler runs, so without `novalidate` the custom message in Task 3 is unreachable in a real browser (`required` is kept on the inputs for semantic/accessibility value; only native submit-blocking is disabled). Discovered during Task 3/4's real-browser verification — the original draft omitted this and the e2e RED phase caught it.
 
 - [ ] **Verify**
 
@@ -355,7 +357,7 @@ def test_create_escalation_form_prepends_new_row(page, ui_app_server):
     page.fill("#create-escalation-summary", summary)
     page.click("#create-escalation-form button[type=submit]")
 
-    page.wait_for_selector("#create-escalation[hidden]")
+    page.wait_for_selector("#create-escalation", state="hidden")
     first_row_summary = page.locator("#escalations-table tbody tr").first.locator("td").nth(2).inner_text()
     assert first_row_summary == summary
 
@@ -371,8 +373,8 @@ def test_create_escalation_missing_required_field_shows_inline_error(page, ui_ap
     page.fill("#create-escalation-summary", "missing account id")
     page.click("#create-escalation-form button[type=submit]")
 
+    page.wait_for_selector("#create-escalation-error:not([hidden])")
     error = page.locator("#create-escalation-error")
-    assert error.is_visible()
     assert "account_id" in error.inner_text()
     # form stays open and retains the entered value
     assert page.input_value("#create-escalation-summary") == "missing account id"
@@ -395,8 +397,8 @@ def test_create_escalation_network_failure_shows_error_and_retains_form(page, ui
     page.fill("#create-escalation-summary", "will fail to save")
     page.click("#create-escalation-form button[type=submit]")
 
+    page.wait_for_selector("#create-escalation-error:not([hidden])")
     error = page.locator("#create-escalation-error")
-    assert error.is_visible()
     assert error.inner_text().strip() != ""
     # the form stays open (not hidden) and the entered values are retained, not cleared
     assert page.locator("#create-escalation").is_visible()
