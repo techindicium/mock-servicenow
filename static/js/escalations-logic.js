@@ -30,5 +30,28 @@
     return payload;
   }
 
-  return { OWNER_UNASSIGNED_LABEL, displayOwner, escalationRowCells, buildEscalationPatchPayload };
+  const REQUIRED_CREATE_FIELDS = ["account_id", "summary"];
+
+  function validateCreateEscalationForm(fields) {
+    const errors = {};
+    for (const key of REQUIRED_CREATE_FIELDS) {
+      const value = fields[key];
+      if (value === undefined || value === null || String(value).trim() === "") {
+        errors[key] = `${key} is required`;
+      }
+    }
+    return { valid: Object.keys(errors).length === 0, errors };
+  }
+
+  function buildEscalationCreatePayload(fields) {
+    const payload = { account_id: fields.account_id, summary: fields.summary };
+    if (fields.incident_number) payload.incident_number = fields.incident_number;
+    if (fields.owner) payload.owner = fields.owner;
+    return payload;
+  }
+
+  return {
+    OWNER_UNASSIGNED_LABEL, displayOwner, escalationRowCells, buildEscalationPatchPayload,
+    validateCreateEscalationForm, buildEscalationCreatePayload,
+  };
 });
