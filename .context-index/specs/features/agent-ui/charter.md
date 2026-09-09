@@ -1,8 +1,8 @@
 ---
 status: approved
 kind: feature
-revision: 21
-updated: 2026-09-07
+revision: 22
+updated: 2026-09-09
 ---
 
 # Feature Charter: agent-ui
@@ -53,8 +53,19 @@ presence of a UI at all — a real support desk has a UI agents work tickets fro
   discrepancies, not bugs the UI corrects or hides (constitution Principle 6).
 - A directory screen: read-only list of `sys_user`/`assignment_group` (`GET /users`,
   `GET /assignment_groups`) — no create/edit, since the API doesn't support them.
-- A persistent left-hand navigation shell (Incidents / Escalations / Directory) that switches
-  between view containers client-side, mirroring `kanban-ui`'s nav-rail pattern.
+- A persistent left-hand navigation shell (Incidents / Escalations / Directory / Dashboard) that
+  switches between view containers client-side, mirroring `kanban-ui`'s nav-rail pattern.
+- A dashboard screen: KPI tiles counting Incidents by `state` (one tile per state), a tile for
+  `escalated: true` Incidents, and a tile for breached SLA records — each sourced from the API's
+  own `total` pagination field (`page_size=1` per query), never computed by paging through and
+  counting client-side. The five state tiles and the escalated tile are clickable and navigate to
+  the Incidents view pre-filtered accordingly; the breached-SLA tile is informational only (no
+  filter exists at the Incidents list level to jump to), and is rendered as plain text, never as a
+  disabled-looking button, so it doesn't imply an affordance that isn't there.
+- A "Related Escalation" panel on the incident record view: if any Escalation's `incident_number`
+  matches the open Incident, its `number`/`summary`/`owner`/`closed_at` are shown; if none does,
+  the panel still renders with an explicit "No related escalation" state — never omitted — per
+  this charter's own Invariant that absence is always shown, not hidden.
 
 ### Out of Scope
 
@@ -116,6 +127,8 @@ presence of a UI at all — a real support desk has a UI agents work tickets fro
 | Directory screen | Read-only Users/AssignmentGroups list | should-have | mvp | validated |
 | App navigation shell | Persistent left-hand nav (Incidents / Escalations / Directory) | should-have | mvp | validated |
 | End-to-end UI test suite | Real browser automation (a real rendering engine, real clicks/form fills) driving the actual served page — the same interface a person uses, never calling the UI's JS functions directly | must-have | v1.1 | validated |
+| Incident dashboard | KPI tiles (per-state counts, escalated count, breached-SLA count) sourced from the API's own totals; state/escalated tiles clickable through to a filtered Incidents view | should-have | v1.2 | planned |
+| Related escalation panel | Incident record view shows the matching Escalation (by `incident_number`) or an explicit "none" state | should-have | v1.2 | planned |
 
 ## Deferred Capabilities
 
@@ -144,9 +157,11 @@ other modules.
 | `POST /incidents/{number}/work_notes` | itsm-api | Add-work-note form — unguarded author |
 | `GET /escalations` | itsm-api | Populate the escalations screen |
 | `PATCH /escalations/{number}` | itsm-api | Escalations screen's edit form |
-| `GET /sla` | itsm-api | Populate the SLA panel, filtered by `incident_number` |
+| `GET /sla` | itsm-api | Populate the SLA panel (filtered by `incident_number`) and the dashboard's breached-SLA tile (filtered by `breached=true`, `page_size=1`, reading only `total`) |
 | `GET /users` | itsm-api | Populate the directory screen |
 | `GET /assignment_groups` | itsm-api | Populate the directory screen |
+| `GET /incidents` | itsm-api | Also used by the dashboard's per-state and escalated KPI tiles (`state=<x>` / `escalated=true`, `page_size=1`, reading only `total`) |
+| `GET /escalations` | itsm-api | Also used by the incident record view's Related Escalation panel — the full (small, unpaged) fixture set is fetched and filtered client-side by `incident_number`, since the endpoint has no server-side `incident_number` filter |
 
 ## Quality Attributes
 

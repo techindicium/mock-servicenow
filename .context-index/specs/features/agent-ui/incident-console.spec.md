@@ -1,12 +1,12 @@
 ---
 charter: agent-ui
-status: validated
-risk_level: medium
+status: specified
+risk_level: low
 milestone: mvp
-revision: 2
-charter-revision: 1
+revision: 3
+charter-revision: 22
 created: 2026-09-07
-updated: 2026-09-07
+updated: 2026-09-09
 kind: behavioral
 source-manifest:
   sha: "2c83a8c"
@@ -47,6 +47,12 @@ source-manifest:
   (`POST /incidents/{number}/work_notes`) apply no permission check, confirmation dialog, or
   state-transition guard beyond what `itsm-api` itself enforces — per constitution Non-Negotiable
   Principle 5, this UI never adds a write guard the API and MCP layers intentionally omit.
+- **Revision 3** adds BEH-10 (Related Escalation panel). `itsm-api`'s `escalations` spec is
+  implemented and reachable; `GET /escalations` has no server-side `incident_number` filter, so
+  this behavior fetches the full (small, unpaged) fixture set — reusing the fetch-the-whole-set
+  pattern `escalations-directory-nav.spec.md` BEH-2 already establishes for that endpoint — and
+  then filters client-side by `incident_number`, which is new logic BEH-2 does not itself perform
+  (BEH-2 renders every row unfiltered).
 
 ### Behaviors
 
@@ -92,11 +98,23 @@ source-manifest:
   such as a 422 validation error or 404 unknown incident), **then** the UI shows a visible message
   naming what failed and, for a 422, naming the invalid field the API's error body identifies —
   it never fails silently, shows a blank screen, or swallows the error.
+- **BEH-10** — **When** the record view loads, **then** it also fetches `GET /escalations` and
+  looks for Escalations whose `incident_number` equals the open Incident's `number`. Neither this
+  spec nor `escalations.spec.md` constrains `incident_number` to be unique per Escalation, so if
+  more than one matches, the panel shows the first by `number` ascending — the same order
+  `GET /escalations` itself returns rows in — not all of them; the expected case is 0 or 1 match.
+  If a match exists, a "Related Escalation" panel renders that Escalation's `number`, `summary`,
+  `owner` (explicit "unassigned" when `null` — descriptive prose matching
+  `escalations-directory-nav.spec.md` BEH-2's convention in spirit, not a literal UI string either
+  spec mandates), and `closed_at` (explicit "Open" when `null`); if no match exists, the panel
+  still renders, with an explicit "No related escalation" state — the panel is never omitted
+  either way.
 
 ### Postconditions
 
 - Every user-supplied free-text field this spec renders (`short_description`, `description`,
-  work-note `created_by` and `body`) is inserted as text (via `textContent`/safe DOM APIs), never
+  work-note `created_by` and `body`, and — as of revision 3 — the Related Escalation panel's
+  `summary` and `owner`) is inserted as text (via `textContent`/safe DOM APIs), never
   interpreted as HTML or script, in the list, record view, or work-note timeline — these fields
   are unvalidated content at the API layer (per `work-notes.spec.md` BEH-4's unguarded
   `created_by`), so this UI is the only place safe rendering can be enforced. This is a rendering
@@ -126,7 +144,8 @@ source-manifest:
   API and MCP layers.
 - **Principle 6:** "Seeded discrepancies are load-bearing, not bugs." — Applies directly to BEH-6:
   a breached SLA or a resolved-with-open-breach Incident is rendered factually, never hidden,
-  filtered, or flagged as a UI-detected error.
+  filtered, or flagged as a UI-detected error. Also applies to BEH-10: the two seeded ownerless
+  Escalations render the same explicit "unassigned" state here as everywhere else in this app.
 - **Principle 4:** "The HTTP contract is the boundary." — Applies because every read and write in
   this spec goes through `itsm-api`'s documented endpoints, never a direct database access.
 
@@ -141,6 +160,7 @@ source-manifest:
 | SLA panel | Fetch/render TaskSla rows on the record view | small |
 | Edit incident fields | Inline/form editing + `PATCH` wiring, unguarded | medium |
 | Create incident | Form + `POST` wiring + navigation on success | small |
+| Related Escalation panel (revision 3) | Fetch `GET /escalations`, filter client-side by `incident_number`, render found/none state | small |
 
 ## Acceptance Criteria
 
@@ -153,5 +173,6 @@ source-manifest:
 - [ ] Editing and saving incident fields is fully unguarded, including resolve-with-open-breach (BEH-7)
 - [ ] Creating an incident posts all six fields and navigates to the new record (BEH-8)
 - [ ] Every API failure surfaces a visible, specific message, never a silent failure (BEH-9)
+- [ ] The Related Escalation panel shows the matching Escalation or an explicit "none" state, never omitted (BEH-10)
 - [ ] All quality gates pass (tests, lint)
 - [ ] No constitutional violations introduced

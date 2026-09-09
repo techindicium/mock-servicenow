@@ -16,3 +16,6 @@
 {"event":"step_completed","step":"validate","verdict":"PASS","ts":"2026-09-07T23:42:58.842Z"}
 {"event":"code_drift_detected","drift_source":"static/js/incident.js","drift_at":"2026-09-08T00:11:03.165Z","ts":"2026-09-08T00:11:03.166Z"}
 {"event":"code_drift_detected","drift_source":"static/index.html","drift_at":"2026-09-09T10:24:26.267Z","ts":"2026-09-09T10:24:26.267Z"}
+{"event":"step_completed","step":"specify","verdict":"PASS","revision":3,"ts":"2026-09-09T10:52:14.145Z","diagnostic_warnings":["adev/status-enum-legal"]}
+{"event":"lifecycle_step","step":"review","status":"started","revision":3,"ts":"2026-09-09T10:52:33.497Z","diagnostic_warnings":["adev/status-enum-legal"]}
+{"event":"step_completed","step":"review","verdict":"PASS_WITH_NOTES","revision":3,"ts":"2026-09-09T10:56:29.039Z","diagnostic_warnings":["adev/status-enum-legal"]}

@@ -1,0 +1,3 @@
+{"event":"step_completed","step":"specify","verdict":"PASS","ts":"2026-09-09T10:52:14.071Z"}
+{"event":"lifecycle_step","step":"review","status":"started","revision":1,"ts":"2026-09-09T10:52:33.451Z"}
+{"event":"step_completed","step":"review","verdict":"PASS_WITH_NOTES","revision":1,"ts":"2026-09-09T10:56:28.993Z"}
