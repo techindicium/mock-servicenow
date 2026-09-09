@@ -29,12 +29,16 @@
       loadedViews.add("directory");
       if (typeof loadDirectoryView === "function") loadDirectoryView();
     }
+    if (currentView === "dashboard" && typeof loadDashboardView === "function") {
+      loadDashboardView();
+    }
   }
 
   const navButtonIds = {
     incidents: document.getElementById("nav-incidents"),
     escalations: document.getElementById("nav-escalations"),
     directory: document.getElementById("nav-directory"),
+    dashboard: document.getElementById("nav-dashboard"),
   };
   for (const view of NavLogic.NAV_VIEWS) {
     const navBtn = navButtonIds[view];

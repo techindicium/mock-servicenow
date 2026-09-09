@@ -10,7 +10,7 @@ const {
 
 test("BEH-1: Incidents is the default active view", () => {
   assert.equal(DEFAULT_VIEW, "incidents");
-  assert.deepEqual(NAV_VIEWS, ["incidents", "escalations", "directory"]);
+  assert.deepEqual(NAV_VIEWS, ["incidents", "escalations", "directory", "dashboard"]);
 });
 
 test("BEH-1: exactly one view is visible for each known nav target", () => {
@@ -37,4 +37,11 @@ test("isKnownView recognizes exactly the three nav targets", () => {
   assert.equal(isKnownView("directory"), true);
   assert.equal(isKnownView("kanban"), false);
   assert.equal(isKnownView(undefined), false);
+});
+
+test("BEH-1 (dashboard): Dashboard is a known view but never the default", () => {
+  const { NAV_VIEWS, DEFAULT_VIEW, isKnownView } = require("../static/js/nav-logic.js");
+  assert.equal(isKnownView("dashboard"), true);
+  assert.equal(NAV_VIEWS.includes("dashboard"), true);
+  assert.notEqual(DEFAULT_VIEW, "dashboard");
 });

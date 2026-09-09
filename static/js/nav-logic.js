@@ -5,7 +5,7 @@
     root.NavLogic = factory();
   }
 })(typeof window !== "undefined" ? window : globalThis, function () {
-  const NAV_VIEWS = ["incidents", "escalations", "directory"];
+  const NAV_VIEWS = ["incidents", "escalations", "directory", "dashboard"];
   const DEFAULT_VIEW = "incidents";
 
   function isKnownView(view) {

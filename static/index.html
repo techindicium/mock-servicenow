@@ -5,6 +5,7 @@
   <title>DeskNow Incident Console</title>
   <link rel="stylesheet" href="/static/css/console.css" />
   <link rel="stylesheet" href="/static/css/nav.css">
+  <link rel="stylesheet" href="/static/css/dashboard.css">
   <script src="/static/js/incident-logic.js"></script>
   <script src="/static/js/incident.js" defer></script>
 </head>
@@ -27,6 +28,7 @@
       <button type="button" class="nav-item active" id="nav-incidents" data-view="incidents">Incidents</button>
       <button type="button" class="nav-item" id="nav-escalations" data-view="escalations">Escalations</button>
       <button type="button" class="nav-item" id="nav-directory" data-view="directory">Directory</button>
+      <button type="button" class="nav-item" id="nav-dashboard" data-view="dashboard">Dashboard</button>
     </nav>
 
     <div class="app-main">
@@ -154,6 +156,10 @@
         <table id="users-table"><tbody></tbody></table>
         <table id="assignment-groups-table"><tbody></tbody></table>
       </section>
+      <section id="view-dashboard" class="view" hidden>
+        <h1>Dashboard</h1>
+        <div id="dashboard-tiles"></div>
+      </section>
     </div>
   </div>
   <script src="/static/js/ui-errors.js"></script>
@@ -163,5 +169,7 @@
   <script src="/static/js/escalations.js"></script>
   <script src="/static/js/directory-logic.js"></script>
   <script src="/static/js/directory.js"></script>
+  <script src="/static/js/dashboard-logic.js"></script>
+  <script src="/static/js/dashboard.js"></script>
 </body>
 </html>
