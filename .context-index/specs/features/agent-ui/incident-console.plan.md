@@ -1809,3 +1809,271 @@ full resolved set after all 7 tasks:
 
 After all tasks are complete, `/adev:validate` verifies the full quality gate suite. Results are
 recorded in the validation report (`.validate.md`), not in this plan.
+
+---
+
+## Revision 3 Addendum: Related Escalation panel (BEH-10)
+
+> Tasks 1-7 above are historical record of the already-validated revision-2 build. This addendum
+> is the plan for revision 3's sole new behavior, BEH-10, reviewed in `incident-console.review.md`
+> (quick tier, PASS_WITH_NOTES, 2026-09-09).
+
+**Design note — seed data reality:** `app/fixtures/seed/escalations_seed.json` (generated from
+`course-shared`'s canon; never hand-edited per its own header) currently seeds all five
+Escalations with `incident_number: null`. This means BEH-10's "a match exists" branch cannot be
+exercised against real seeded data today — every real Incident's Related Escalation panel will
+show the "No related escalation" state. This is a true, correct fact about current fixture data,
+not a bug: the matching logic is unit-tested exhaustively with fabricated data (Task 8), and the
+real-browser e2e test (Task 9) proves the "no match" branch against real data, which is the only
+branch currently reachable through the live app.
+
+### File Structure (addendum)
+
+**Create:**
+- `tests_js/beh-10-related-escalation.test.js` — pure-logic coverage for `shapeRelatedEscalation`
+- `tests_e2e/test_ui_related_escalation_e2e.py` — real-browser coverage for BEH-10's "no match" state
+
+**Modify:**
+- `static/js/incident-logic.js` — add `shapeRelatedEscalation`
+- `static/js/incident.js` — fetch `/escalations` in `loadIncidentRecord`, add
+  `renderRelatedEscalation`
+- `static/index.html` — add the Related Escalation panel section to `#incident-record-view`
+
+### Task 8: Related Escalation pure logic + panel wiring (BEH-10) [specialist: none]
+
+**Charter capability:** Related escalation panel
+**Depends on:** Task 3 (record view fetch/render), Task 5 (SLA panel fetch pattern this mirrors)
+**Strategy:** unit (source: fallback, confidence: high)
+**Files:**
+- Modify: `static/js/incident-logic.js`, `static/js/incident.js`, `static/index.html`
+- Test: `tests_js/beh-10-related-escalation.test.js` (create)
+
+**Context to load:**
+- Spec BEH-10, Preconditions (revision-3 bullet), Postconditions (textContent bullet, now naming
+  Escalation `summary`/`owner`)
+- `static/js/incident-logic.js`'s existing `formatNullableField(value, placeholder)` — reused
+  as-is, not reimplemented
+- `app/models.py::EscalationRead` — the exact fields available (`number`, `incident_number`,
+  `account_id`, `summary`, `opened_at`, `closed_at`, `owner`)
+
+- [ ] **Write failing test**
+
+```javascript
+// tests_js/beh-10-related-escalation.test.js
+const test = require("node:test");
+const assert = require("node:assert/strict");
+const { shapeRelatedEscalation } = require("../static/js/incident-logic.js");
+
+const ESCALATIONS = [
+  {
+    number: "ESCALATION-0409", incident_number: null, account_id: "ACCOUNT-1003",
+    summary: "Cold chain temperature export missing rows",
+    opened_at: "2026-07-05T00:00:00Z", closed_at: null, owner: "Priya Nair",
+  },
+  {
+    number: "ESCALATION-0412", incident_number: "TICKET-004401", account_id: "ACCOUNT-1001",
+    summary: "EDI feed rejecting with E-114, root cause not identified",
+    opened_at: "2026-07-13T00:00:00Z", closed_at: null, owner: null,
+  },
+  {
+    number: "ESCALATION-0415", incident_number: "TICKET-004401", account_id: "ACCOUNT-1008",
+    summary: "A second, later escalation on the same incident",
+    opened_at: "2026-07-21T00:00:00Z", closed_at: "2026-08-01T00:00:00Z", owner: "Joao Pinto",
+  },
+];
+
+test("BEH-10: no match returns null", () => {
+  assert.equal(shapeRelatedEscalation(ESCALATIONS, "TICKET-999999"), null);
+});
+
+test("BEH-10: a single match is shaped with real values", () => {
+  const result = shapeRelatedEscalation(
+    [ESCALATIONS[0], ESCALATIONS[1]], "TICKET-004401"
+  );
+  assert.equal(result.number, "ESCALATION-0412");
+  assert.equal(result.summary, "EDI feed rejecting with E-114, root cause not identified");
+});
+
+test("BEH-10: null owner renders as an explicit unassigned state", () => {
+  const result = shapeRelatedEscalation([ESCALATIONS[1]], "TICKET-004401");
+  assert.equal(result.owner, "unassigned");
+});
+
+test("BEH-10: null closed_at renders as an explicit Open state", () => {
+  const result = shapeRelatedEscalation([ESCALATIONS[1]], "TICKET-004401");
+  assert.equal(result.closed_at, "Open");
+});
+
+test("BEH-10: a real, non-null owner/closed_at pass through unchanged", () => {
+  const result = shapeRelatedEscalation([ESCALATIONS[2]], "TICKET-004401");
+  assert.equal(result.owner, "Joao Pinto");
+  assert.equal(result.closed_at, "2026-08-01T00:00:00Z");
+});
+
+test("BEH-10: multiple matches resolve to the first by number ascending", () => {
+  const result = shapeRelatedEscalation(ESCALATIONS, "TICKET-004401");
+  assert.equal(result.number, "ESCALATION-0412"); // 0412 < 0415
+});
+
+test("BEH-10: an empty or missing escalations array is a no-match, not a crash", () => {
+  assert.equal(shapeRelatedEscalation([], "TICKET-004401"), null);
+  assert.equal(shapeRelatedEscalation(undefined, "TICKET-004401"), null);
+});
+```
+
+- [ ] **Verify test fails**
+
+Run: `node --test tests_js/beh-10-related-escalation.test.js`
+Expected: FAIL — `shapeRelatedEscalation` is not exported yet.
+
+- [ ] **Implement**
+
+Add to `static/js/incident-logic.js`, inside the existing UMD factory function, alongside
+`formatNullableField` (do not duplicate that helper — call it):
+
+```javascript
+  function shapeRelatedEscalation(escalations, incidentNumber) {
+    const matches = (Array.isArray(escalations) ? escalations : [])
+      .filter((e) => e.incident_number === incidentNumber)
+      .sort((a, b) => (a.number < b.number ? -1 : a.number > b.number ? 1 : 0));
+    if (matches.length === 0) return null;
+    const match = matches[0];
+    return {
+      number: match.number,
+      summary: match.summary,
+      owner: formatNullableField(match.owner, "unassigned"),
+      closed_at: formatNullableField(match.closed_at, "Open"),
+    };
+  }
+```
+
+Add `shapeRelatedEscalation` to the factory's final `return { ... }` object.
+
+Add to `static/index.html`, inside `#incident-record-view`, after the closing `</section>` of
+`#work-notes-panel` (a new sibling section — do not nest inside it):
+
+```html
+        <section id="related-escalation-panel">
+          <h3>Related Escalation</h3>
+          <div id="related-escalation-content"></div>
+        </section>
+```
+
+Add to `static/js/incident.js`:
+
+```javascript
+  function renderRelatedEscalation(related) {
+    const container = document.getElementById("related-escalation-content");
+    container.innerHTML = ""; // full replace — no stale panel survives a new record load
+    if (!related) {
+      const p = document.createElement("p");
+      p.textContent = "No related escalation";
+      container.appendChild(p);
+      return;
+    }
+    const dl = document.createElement("dl");
+    for (const [label, value] of [
+      ["Number", related.number], ["Summary", related.summary],
+      ["Owner", related.owner], ["Closed at", related.closed_at],
+    ]) {
+      const dt = document.createElement("dt");
+      dt.textContent = label;
+      const dd = document.createElement("dd");
+      dd.textContent = value; // safe DOM insertion — summary/owner are unguarded free text
+      dl.appendChild(dt);
+      dl.appendChild(dd);
+    }
+    container.appendChild(dl);
+  }
+```
+
+Extend `loadIncidentRecord`'s existing try/catch sequence (after the SLA fetch block, same
+pattern — a failure here must not block the fields/work-notes/SLA already rendered):
+
+```javascript
+    try {
+      const escalationsPage = await fetchJson("/escalations");
+      const related = IncidentLogic.shapeRelatedEscalation(escalationsPage.items, number);
+      renderRelatedEscalation(related);
+    } catch (err) {
+      showError(IncidentLogic.formatFetchError("Loading related escalation", err));
+    }
+```
+
+- [ ] **Verify test passes**
+
+Run: `node --test tests_js/beh-10-related-escalation.test.js`
+Expected: PASS. Also re-run the full JS suite to confirm no regression:
+`node --test tests_js/**/*.test.js`
+
+- [ ] **Commit**
+
+```bash
+git add static/js/incident-logic.js static/js/incident.js static/index.html \
+  tests_js/beh-10-related-escalation.test.js
+git commit -m "feat(agent-ui): add Related Escalation panel to the incident record view (BEH-10)"
+```
+
+### Task 9: Real-browser e2e coverage for BEH-10 [specialist: none]
+
+**Charter capability:** Related escalation panel
+**Depends on:** Task 8
+**Strategy:** unit (source: fallback, confidence: high)
+**Files:**
+- Create: `tests_e2e/test_ui_related_escalation_e2e.py`
+
+**Context to load:**
+- This plan's Design note above — every seeded Incident currently has zero matching Escalations,
+  so this test proves the real "No related escalation" state, the only branch reachable against
+  real data today. It reuses the `page`/`ui_app_server` fixtures `ui-e2e.spec.md`'s
+  `tests_e2e/conftest.py` already provides — no new fixture.
+
+- [ ] **Write failing test**
+
+```python
+# tests_e2e/test_ui_related_escalation_e2e.py
+def test_related_escalation_panel_shows_explicit_none_state(page, ui_app_server):
+    page.goto(ui_app_server)
+    page.wait_for_selector('#incidents-table-body tr[data-number]')
+    page.locator("#incidents-table-body tr[data-number]").first.click()
+    page.wait_for_selector("#incident-record-view:not([hidden])")
+
+    page.wait_for_selector("#related-escalation-content")
+    content = page.locator("#related-escalation-content").inner_text()
+    assert "No related escalation" in content
+```
+
+- [ ] **Verify test fails**
+
+Run: `python3 -m pytest -q tests_e2e/test_ui_related_escalation_e2e.py`
+Expected: FAIL — `#related-escalation-content` does not exist until Task 8 lands. If Task 8 is
+already implemented and committed by the time this task runs (same plan, sequential dependency),
+expect PASS directly — document plainly rather than forcing an artificial RED step, per this
+repo's established convention for e2e tasks that follow their own unit-level task.
+
+- [ ] **Implement**
+
+No production code changes expected — Task 8 already implements the panel.
+
+- [ ] **Verify test passes**
+
+Run: `python3 -m pytest -q tests_e2e/test_ui_related_escalation_e2e.py`
+Expected: PASS. Then run the full suite: `python3 -m pytest -q && ruff check . && node --test tests_js/**/*.test.js && python3 -m pytest -q tests_e2e/`
+
+- [ ] **Commit**
+
+```bash
+git add tests_e2e/test_ui_related_escalation_e2e.py
+git commit -m "test(agent-ui): add real-browser coverage for the Related Escalation panel (BEH-10)"
+```
+
+### Revision 3 Quality Gates
+
+- All revision-2 gates (Tasks 1-7's Quality Gates section above) continue to apply unchanged.
+- `tests_js/beh-10-related-escalation.test.js` runs under the existing `test-js` gate — no gate
+  config change needed.
+- `tests_e2e/test_ui_related_escalation_e2e.py` runs under the existing `e2e-smoke` gate — no gate
+  config change needed.
+- Acceptance criterion added: "The Related Escalation panel shows the matching Escalation or an
+  explicit 'none' state, never omitted (BEH-10)" — traced to Task 8 (logic + rendering) and Task 9
+  (real-browser proof of the "none" branch).
