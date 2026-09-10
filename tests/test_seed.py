@@ -80,9 +80,9 @@ def test_narrative_tickets_keep_exact_number_and_csv_sourced_content(conn):
     ).fetchone()
     assert row is not None
     assert row["account_id"] == "ACCOUNT-1001"
-    assert row["category"] == "billing"
-    assert row["short_description"] == "Refund window for over-billing"
-    assert "How long do we have to raise a correction" in row["description"]
+    assert row["category"] == "payments"
+    assert row["short_description"] == "How long do we have to reverse a payment?"
+    assert "paid the wrong supplier" in row["description"]
 
 
 def test_incident_and_work_note_loading_is_idempotent(conn):
