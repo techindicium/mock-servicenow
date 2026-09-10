@@ -4,20 +4,29 @@
     "first_response_minutes": 30,
     "resolution_business_hours": 8,
     "tier1_may_not_close": [
-      "billing",
-      "integrations"
+      "fees",
+      "account-restrictions"
     ]
   },
   "business": {
     "first_response_minutes": 60,
     "resolution_business_hours": 16,
     "tier1_may_not_close": [
-      "billing"
+      "account-restrictions"
     ]
   },
   "standard": {
     "first_response_minutes": 480,
     "resolution_business_hours": 40,
-    "tier1_may_not_close": []
+    "tier1_may_not_close": [
+      "account-restrictions"
+    ]
+  },
+  "free": {
+    "first_response_minutes": 2400,
+    "resolution_business_hours": 80,
+    "tier1_may_not_close": [
+      "account-restrictions"
+    ]
   }
 }

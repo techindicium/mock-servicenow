@@ -1,133 +1,92 @@
 [
   {
     "account_id": "ACCOUNT-1001",
-    "name": "Nordkai Logistics",
+    "name": "Marchetti Construction",
     "tier": "enterprise",
     "region": "EU",
-    "seats": 340,
-    "modules": [
-      "receiving",
-      "putaway",
-      "picking",
-      "billing",
-      "integrations"
-    ],
-    "portal_enabled": true
+    "users": 24,
+    "trades_as": "A building firm, twelve sites",
+    "opened": "2019-03-11"
   },
   {
     "account_id": "ACCOUNT-1002",
-    "name": "Tavares Distribuicao",
-    "tier": "business",
+    "name": "Ferreira Padarias",
+    "tier": "enterprise",
     "region": "LATAM",
-    "seats": 88,
-    "modules": [
-      "receiving",
-      "picking",
-      "cycle-count"
-    ],
-    "portal_enabled": true
+    "users": 18,
+    "trades_as": "A bakery chain, nine shops",
+    "opened": "2020-06-02"
   },
   {
     "account_id": "ACCOUNT-1003",
-    "name": "Halden Cold Chain",
+    "name": "Hollis Veterinary Group",
     "tier": "enterprise",
-    "region": "EU",
-    "seats": 275,
-    "modules": [
-      "receiving",
-      "putaway",
-      "picking",
-      "cycle-count",
-      "integrations"
-    ],
-    "portal_enabled": true
+    "region": "NA",
+    "users": 31,
+    "trades_as": "Four veterinary practices",
+    "opened": "2018-11-19"
   },
   {
     "account_id": "ACCOUNT-1004",
-    "name": "Brightpath Freight",
+    "name": "Atlantic Marine Supplies",
     "tier": "business",
-    "region": "NA",
-    "seats": 120,
-    "modules": [
-      "picking",
-      "billing"
-    ],
-    "portal_enabled": true
+    "region": "EU",
+    "users": 15,
+    "trades_as": "A chandlery and wholesaler",
+    "opened": "2021-01-28"
   },
   {
     "account_id": "ACCOUNT-1005",
-    "name": "Meseta Almacenes",
-    "tier": "standard",
+    "name": "Cafe Nordeste",
+    "tier": "business",
     "region": "LATAM",
-    "seats": 24,
-    "modules": [
-      "receiving",
-      "picking"
-    ],
-    "portal_enabled": false
+    "users": 12,
+    "trades_as": "Six coffee shops",
+    "opened": "2021-09-14"
   },
   {
     "account_id": "ACCOUNT-1006",
-    "name": "Kestrel Parts Group",
+    "name": "Vaz e Filhos Transportes",
     "tier": "business",
-    "region": "NA",
-    "seats": 96,
-    "modules": [
-      "receiving",
-      "putaway",
-      "billing",
-      "integrations"
-    ],
-    "portal_enabled": true
+    "region": "LATAM",
+    "users": 9,
+    "trades_as": "A haulier, eleven vans",
+    "opened": "2022-02-07"
   },
   {
     "account_id": "ACCOUNT-1007",
-    "name": "Vlietwerk BV",
+    "name": "Clinica Dental Aurora",
     "tier": "standard",
     "region": "EU",
-    "seats": 18,
-    "modules": [
-      "picking"
-    ],
-    "portal_enabled": false
+    "users": 6,
+    "trades_as": "A dental practice",
+    "opened": "2022-08-30"
   },
   {
     "account_id": "ACCOUNT-1008",
-    "name": "Sunder Retail Supply",
-    "tier": "enterprise",
+    "name": "Bright Path Tutoring",
+    "tier": "standard",
     "region": "NA",
-    "seats": 410,
-    "modules": [
-      "receiving",
-      "putaway",
-      "picking",
-      "cycle-count",
-      "billing",
-      "integrations"
-    ],
-    "portal_enabled": true
+    "users": 7,
+    "trades_as": "A tutoring company",
+    "opened": "2023-04-17"
   },
   {
     "account_id": "ACCOUNT-1009",
-    "name": "Copal Andina",
-    "tier": "business",
-    "region": "LATAM",
-    "seats": 71,
-    "modules": [
-      "receiving",
-      "cycle-count"
-    ],
-    "portal_enabled": false
+    "name": "Studio Lumen",
+    "tier": "free",
+    "region": "EU",
+    "users": 4,
+    "trades_as": "A design studio",
+    "opened": "2019-07-23"
   },
   {
     "account_id": "ACCOUNT-1010",
-    "name": "Fjordline Depot",
-    "tier": "standard",
-    "region": "EU",
-    "seats": 12,
-    "modules": [
-      "receiving"
-    ],
-    "portal_enabled": false
+    "name": "Oliveira Serralharia",
+    "tier": "free",
+    "region": "LATAM",
+    "users": 5,
+    "trades_as": "A metalwork shop",
+    "opened": "2020-02-11"
   }
 ]

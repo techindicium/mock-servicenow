@@ -22,7 +22,7 @@ def test_paginate_rows_slices_and_reports_total():
 
 
 def test_list_assignment_groups_returns_exactly_the_three_named_groups(client, conn):
-    for name in ("Support Tier 1", "Support Tier 2", "Solution Consultants"):
+    for name in ("Support Tier 1", "Support Tier 2", "Financial Crime"):
         conn.execute("INSERT INTO assignment_group (name) VALUES (?)", (name,))
     conn.commit()
 
@@ -31,12 +31,12 @@ def test_list_assignment_groups_returns_exactly_the_three_named_groups(client, c
     assert resp.status_code == 200
     body = resp.json()
     names = {g["name"] for g in body["items"]}
-    assert names == {"Support Tier 1", "Support Tier 2", "Solution Consultants"}
+    assert names == {"Support Tier 1", "Support Tier 2", "Financial Crime"}
     assert body["total"] == 3
 
 
 def _seed_directory(conn):
-    for name in ("Support Tier 1", "Support Tier 2", "Solution Consultants"):
+    for name in ("Support Tier 1", "Support Tier 2", "Financial Crime"):
         conn.execute("INSERT INTO assignment_group (name) VALUES (?)", (name,))
     conn.execute(
         "INSERT INTO sys_user (name, role, assignment_group) VALUES (?, ?, ?)",
@@ -44,7 +44,7 @@ def _seed_directory(conn):
     )
     conn.execute(
         "INSERT INTO sys_user (name, role, assignment_group) VALUES (?, ?, ?)",
-        ("Priya Nair", "Solution Consultant", "Solution Consultants"),
+        ("Priya Nair", "Complaints Specialist", "Support Tier 2"),
     )
     conn.execute(
         "INSERT INTO sys_user (name, role, assignment_group) VALUES (?, ?, ?)",
@@ -67,7 +67,7 @@ def test_list_users_returns_full_seeded_directory(client, conn):
 
 def test_every_user_group_membership_names_a_known_assignment_group(client, conn):
     _seed_directory(conn)
-    valid_groups = {"Support Tier 1", "Support Tier 2", "Solution Consultants"}
+    valid_groups = {"Support Tier 1", "Support Tier 2", "Financial Crime"}
 
     resp = client.get("/users")
 
@@ -88,7 +88,7 @@ def test_users_page_shape_returns_all_rows_in_one_page_by_default(client, conn):
 
 
 def test_assignment_groups_page_shape_returns_all_rows_in_one_page_by_default(client, conn):
-    for name in ("Support Tier 1", "Support Tier 2", "Solution Consultants"):
+    for name in ("Support Tier 1", "Support Tier 2", "Financial Crime"):
         conn.execute("INSERT INTO assignment_group (name) VALUES (?)", (name,))
     conn.commit()
 

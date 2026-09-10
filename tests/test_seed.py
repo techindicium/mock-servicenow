@@ -50,16 +50,17 @@ def test_vendored_escalations_seed_has_five_rows_two_ownerless():
     }
 
 
-def test_vendored_roster_has_eleven_named_people_and_three_groups():
+def test_vendored_roster_has_twelve_named_people_and_three_groups():
     roster = json.loads((FIXTURES / "roster_seed.json").read_text())
-    assert len(roster["sys_users"]) == 11  # 9 support team + Mei Tan + Kofi Adjei
+    assert len(roster["sys_users"]) == 12  # 10 on the desk + Mei Tan + Kofi Adjei
     assert set(roster["assignment_groups"]) == {
-        "Support Tier 1", "Support Tier 2", "Solution Consultants",
+        "Support Tier 1", "Support Tier 2", "Financial Crime",
     }
-    canon_named = {"Rui Bastos", "Priya Nair", "Joao Pinto", "Mei Tan", "Kofi Adjei"}
+    canon_named = {"Rui Bastos", "Priya Nair", "Joao Pinto", "Anabela Cruz",
+                   "Mei Tan", "Kofi Adjei"}
     names = {u["name"] for u in roster["sys_users"]}
     assert canon_named.issubset(names)
-    assert len(names) == 11  # no accidental duplicate/collision
+    assert len(names) == 12  # no accidental duplicate/collision
 
 
 def test_fresh_seed_loads_exact_incident_and_work_note_counts(conn):
@@ -199,15 +200,15 @@ def test_business_hours_resolution_disagrees_with_wall_clock_for_a_weekend_ticke
     assert disagreements >= 1
 
 
-def test_roster_loads_eleven_sys_users_and_three_assignment_groups(conn):
+def test_roster_loads_twelve_sys_users_and_three_assignment_groups(conn):
     from app.seed import load_roster
 
     load_roster(conn)
     users = conn.execute("SELECT * FROM sys_user").fetchall()
     groups = conn.execute("SELECT * FROM assignment_group").fetchall()
-    assert len(users) == 11
+    assert len(users) == 12
     assert {g["name"] for g in groups} == {
-        "Support Tier 1", "Support Tier 2", "Solution Consultants",
+        "Support Tier 1", "Support Tier 2", "Financial Crime",
     }
     group_names = {g["name"] for g in groups}
     for u in users:
@@ -220,7 +221,7 @@ def test_roster_loading_is_idempotent(conn):
 
     load_roster(conn)
     load_roster(conn)
-    assert conn.execute("SELECT COUNT(*) AS n FROM sys_user").fetchone()["n"] == 11
+    assert conn.execute("SELECT COUNT(*) AS n FROM sys_user").fetchone()["n"] == 12
     assert conn.execute("SELECT COUNT(*) AS n FROM assignment_group").fetchone()["n"] == 3
 
 
@@ -241,7 +242,7 @@ def test_seed_all_is_idempotent_across_many_repeated_runs(conn):
     fixed_counts = {k: v for k, v in counts_after[0].items() if k != "task_sla"}
     assert fixed_counts == {
         "incidents": 1307, "work_notes": 2614, "escalations": 5,
-        "sys_user": 11, "assignment_group": 3,
+        "sys_user": 12, "assignment_group": 3,
     }
     assert counts_after[0]["task_sla"] > 0
     assert all(c == counts_after[0] for c in counts_after[1:])  # stable across all 4 runs

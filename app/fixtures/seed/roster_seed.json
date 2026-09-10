@@ -39,13 +39,18 @@
     },
     {
       "name": "Priya Nair",
-      "role": "Solution Consultant",
-      "assignment_group": "Solution Consultants"
+      "role": "Complaints Specialist",
+      "assignment_group": "Support Tier 2"
+    },
+    {
+      "name": "Anabela Cruz",
+      "role": "Financial Crime Analyst",
+      "assignment_group": "Financial Crime"
     },
     {
       "name": "Noor Haddad",
-      "role": "Solution Consultant",
-      "assignment_group": "Solution Consultants"
+      "role": "Financial Crime Analyst",
+      "assignment_group": "Financial Crime"
     },
     {
       "name": "Mei Tan",
@@ -61,6 +66,6 @@
   "assignment_groups": [
     "Support Tier 1",
     "Support Tier 2",
-    "Solution Consultants"
+    "Financial Crime"
   ]
 }
