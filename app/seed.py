@@ -65,14 +65,27 @@ def _derive_priority(tier: str, area: str) -> int:
     raise SeedError("SEED_DATA_INVALID", f"unknown account tier: {tier!r}")
 
 
+def _incident_count() -> int:
+    """How many incidents a full seed writes: the historical CSV plus the narrative tickets.
+
+    Derived rather than written down. It was 1307 as a literal in four places, so every change
+    to the fixture's volume was also a change to this module.
+    """
+    with open(_FIXTURES / "tickets.csv", newline="", encoding="utf-8") as f:
+        historical = sum(1 for _ in csv.DictReader(f))
+    narrative = json.loads((_FIXTURES / "narrative_tickets.json").read_text())
+    return historical + len(narrative)
+
+
 def load_incidents_and_work_notes(conn) -> None:
+    expected = _incident_count()
     existing = conn.execute("SELECT COUNT(*) AS n FROM incidents").fetchone()["n"]
-    if existing == 1307:
+    if existing == expected:
         return  # BEH-2: already seeded
-    if existing not in (0, 1307):
+    if existing != 0:
         raise SeedError(
             "SEED_STATE_INCONSISTENT",
-            f"incidents table has {existing} rows; expected 0 or 1307",
+            f"incidents table has {existing} rows; expected 0 or {expected}",
         )
 
     tiers_by_account = {
@@ -383,8 +396,9 @@ def _expected_counts() -> dict:
     so that changing the canon does not require changing this module."""
     roster = json.loads((_FIXTURES / "roster_seed.json").read_text())
     escalations = json.loads((_FIXTURES / "escalations_seed.json").read_text())["escalations"]
+    incidents = _incident_count()
     return {
-        "incidents": 1307, "work_notes": 2614,
+        "incidents": incidents, "work_notes": incidents * 2,
         "escalations": len(escalations),
         "sys_user": len(roster["sys_users"]),
         "assignment_group": len(roster["assignment_groups"]),

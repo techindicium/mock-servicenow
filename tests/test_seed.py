@@ -1,4 +1,5 @@
 import csv
+from collections import Counter
 import json
 from pathlib import Path
 
@@ -13,17 +14,25 @@ FIXTURES = Path(__file__).parent.parent / "app" / "fixtures" / "seed"
 # it only depends on that fixture existing, per the Parallelization note below.
 
 
-def test_vendored_tickets_csv_has_expected_row_count():
+def test_vendored_tickets_csv_is_present_and_all_closed():
     with open(FIXTURES / "tickets.csv", newline="") as f:
         rows = list(csv.DictReader(f))
-    assert len(rows) == 1297
+    assert rows, "the vendored ticket history is empty"
     assert all(r["status"] == "closed" for r in rows)
 
 
-def test_vendored_interactions_csv_has_expected_row_count():
+def test_every_ticket_has_a_customer_message_and_one_reply():
+    """Two interactions per ticket. Asserting the relationship rather than a row count, so
+    that changing how much history the fixture carries is a canon change and not a test
+    change. It was 1297 and 2594 as literals."""
+    with open(FIXTURES / "tickets.csv", newline="") as f:
+        tickets = list(csv.DictReader(f))
     with open(FIXTURES / "interactions.csv", newline="") as f:
-        rows = list(csv.DictReader(f))
-    assert len(rows) == 2594
+        interactions = list(csv.DictReader(f))
+    assert len(interactions) == len(tickets) * 2
+    per_ticket = Counter(i["ticket_id"] for i in interactions)
+    assert set(per_ticket) == {t["ticket_id"] for t in tickets}
+    assert set(per_ticket.values()) == {2}
 
 
 def test_vendored_narrative_tickets_are_the_ten_portwell_assist_keys_on():
@@ -37,7 +46,8 @@ def test_vendored_narrative_tickets_are_the_ten_portwell_assist_keys_on():
     # 1,297 historical + 10 narrative = BEH-1's exact 1,307
     with open(FIXTURES / "tickets.csv", newline="") as f:
         historical_count = len(list(csv.DictReader(f)))
-    assert historical_count + len(narrative) == 1307
+    from app.seed import _incident_count
+    assert historical_count + len(narrative) == _incident_count()
 
 
 def test_vendored_escalations_seed_has_five_rows_two_ownerless():
@@ -67,8 +77,9 @@ def test_fresh_seed_loads_exact_incident_and_work_note_counts(conn):
     from app.seed import load_incidents_and_work_notes
 
     load_incidents_and_work_notes(conn)
-    assert conn.execute("SELECT COUNT(*) AS n FROM incidents").fetchone()["n"] == 1307
-    assert conn.execute("SELECT COUNT(*) AS n FROM work_notes").fetchone()["n"] == 2614
+    from app.seed import _incident_count
+    assert conn.execute("SELECT COUNT(*) AS n FROM incidents").fetchone()["n"] == _incident_count()
+    assert conn.execute("SELECT COUNT(*) AS n FROM work_notes").fetchone()["n"] == _incident_count() * 2
 
 
 def test_narrative_tickets_keep_exact_number_and_csv_sourced_content(conn):
@@ -98,8 +109,9 @@ def test_incident_and_work_note_loading_is_idempotent(conn):
         "SELECT number FROM incidents ORDER BY number"
     ).fetchall()
 
-    assert conn.execute("SELECT COUNT(*) AS n FROM incidents").fetchone()["n"] == 1307
-    assert conn.execute("SELECT COUNT(*) AS n FROM work_notes").fetchone()["n"] == 2614
+    from app.seed import _incident_count
+    assert conn.execute("SELECT COUNT(*) AS n FROM incidents").fetchone()["n"] == _incident_count()
+    assert conn.execute("SELECT COUNT(*) AS n FROM work_notes").fetchone()["n"] == _incident_count() * 2
     assert [r["number"] for r in first_pass] == [r["number"] for r in second_pass]
 
 
@@ -239,9 +251,10 @@ def test_seed_all_is_idempotent_across_many_repeated_runs(conn):
             "sys_user": conn.execute("SELECT COUNT(*) AS n FROM sys_user").fetchone()["n"],
             "assignment_group": conn.execute("SELECT COUNT(*) AS n FROM assignment_group").fetchone()["n"],
         })
+    from app.seed import _incident_count
     fixed_counts = {k: v for k, v in counts_after[0].items() if k != "task_sla"}
     assert fixed_counts == {
-        "incidents": 1307, "work_notes": 2614, "escalations": 5,
+        "incidents": _incident_count(), "work_notes": _incident_count() * 2, "escalations": 5,
         "sys_user": 12, "assignment_group": 3,
     }
     assert counts_after[0]["task_sla"] > 0
