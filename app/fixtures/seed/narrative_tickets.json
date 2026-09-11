@@ -73,7 +73,7 @@
   },
   {
     "ticket_id": "TICKET-004438",
-    "account_id": "ACCOUNT-1004",
+    "account_id": "ACCOUNT-1002",
     "area": "account-restrictions",
     "opened_at": "2026-08-25T07:30:00Z",
     "subject": "Why has the account been restricted?",
