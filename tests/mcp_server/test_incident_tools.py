@@ -172,8 +172,8 @@ async def test_create_incident_tool_invalid_category_errors_with_verbatim_messag
     fake = _FakeCreateClient(
         error=UpstreamError(
             422,
-            "category must be one of: receiving, putaway, picking, cycle-count, billing, "
-            "integrations, auth, reporting",
+            "category must be one of: account-opening, payments, cards, "
+            "scheduled-payments, fees, statements, access, account-restrictions",
         )
     )
     monkeypatch.setattr(incidents_tools, "_client", lambda: fake)

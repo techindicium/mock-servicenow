@@ -102,8 +102,9 @@ async def test_create_incident_invalid_category_raises_upstream_error_for_422():
         return httpx.Response(
             422,
             json={
-                "message": "category must be one of: receiving, putaway, picking, cycle-count, "
-                           "billing, integrations, auth, reporting",
+                "message": "category must be one of: account-opening, payments, cards, "
+                           "scheduled-payments, fees, statements, access, "
+                           "account-restrictions",
                 "code": "VALIDATION_ERROR",
             },
         )

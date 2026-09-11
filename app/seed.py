@@ -9,14 +9,14 @@ _FIXTURES = Path(__file__).parent / "fixtures" / "seed"
 _RISKY_AREAS = {"fees", "account-restrictions"}
 _NARRATIVE_STATE_CYCLE = ["new", "in_progress", "on_hold"]
 
-# The three narrative tickets whose subject/area mirror the pilot's two documented incidents
-# (company.md's "pilot" section: INCIDENT-01 billing/superseded-refund-window,
-# INCIDENT-02 integrations/webhook-retry) get a fixed, named work-note reply author instead of
-# their own derived `assigned_to` — deterministic, not a random pick.
+# The three narrative tickets whose subject and area mirror the two documented incidents
+# (INCIDENT-01, a superseded reversal window on payments; INCIDENT-02, an answer about a
+# restricted account) get a fixed, named work-note reply author instead of their own derived
+# `assigned_to` — deterministic, not a random pick.
 _NARRATIVE_FIXED_REPLY_AUTHOR = {
     "TICKET-004401": "Kofi Adjei",
-    "TICKET-004417": "Kofi Adjei",
-    "TICKET-004409": "Mei Tan",
+    "TICKET-004417": "Kofi Adjei",   # INCIDENT-01
+    "TICKET-004438": "Mei Tan",      # INCIDENT-02
 }
 
 

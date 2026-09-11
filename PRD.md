@@ -18,7 +18,7 @@ looking at it, not just to a program calling its API.
 
 | Track | Uses it for | Module it first matters in |
 | :- | :- | :- |
-| `portwell-portal` (SDLC) | The support desk the Assist service reads tickets from and writes proposals against | 2 |
+| `portwell-engineering` (SDLC) | The support desk the help centre reads tickets from and writes proposals against | 2 |
 | `portwell-analytics` (DDLC) | The source it extracts ticket and interaction data from | 2 |
 | `portwell-knowledge` (KDLC) | Open escalations and their ages, quoted in the monthly service review packs | 2 |
 
@@ -64,7 +64,7 @@ The support ticket. 1,307 of them across June to August 2026.
 | :- | :- | :- |
 | `number` | text, PK | `TICKET-004417`. Matches the canon exactly; never renumbered. |
 | `account_id` | text | `ACCOUNT-1001`. Reconciles with the canon and with mock-salesforce. |
-| `category` | text | One of the eight product areas: receiving, putaway, picking, cycle-count, billing, integrations, auth, reporting |
+| `category` | text | One of the eight product areas: account-opening, payments, cards, scheduled-payments, fees, statements, access, account-restrictions |
 | `short_description` | text | The subject line |
 | `description` | text | The body |
 | `state` | text | `new`, `in_progress`, `on_hold`, `resolved`, `closed` |
@@ -206,14 +206,14 @@ over.
 
 | From | Into | Rows |
 | :- | :- | :- |
-| `portwell-portal/data/seed/history/tickets.csv` | `incident` | 1,307 |
-| `portwell-portal/data/seed/history/interactions.csv` | `work_note` | 2,614 |
+| `mock-servicenow/app/fixtures/seed/tickets.csv` | `incident` | 1,307 |
+| `mock-servicenow/app/fixtures/seed/interactions.csv` | `work_note` | 2,614 |
 | `portwell-knowledge` pack escalation sheets | `escalation` | 5 |
 | Derived from tier commitments and work-note timestamps | `task_sla` | one or two per incident |
 | `course-shared/canon/company.md` | `sys_user`, `assignment_group` | ~12 |
 
 The ten narrative tickets keep their exact identifiers and content, because tests in
-`portwell-portal` key on them.
+`portwell-engineering` key on them.
 
 Seeding must be a documented command that runs from a clean container, and re-running it must be
 idempotent.
