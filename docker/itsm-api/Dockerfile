@@ -7,6 +7,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app/ ./app/
 COPY static/ ./static/
+COPY docker/itsm-api/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 ENV PORT=8030
 ENV DATABASE_PATH=/data/mock_servicenow.db
@@ -19,5 +21,7 @@ HEALTHCHECK --interval=10s --timeout=3s --start-period=5s --retries=5 \
 # The seed command is documented as a separate, explicitly-invoked step (never wired into
 # app/main.py's own startup — see fixture-seeding.spec.md's Preconditions), so it is invoked
 # here as its own command before uvicorn starts, not folded into the ASGI app's lifecycle.
-# It is idempotent, so this is safe on every container start/restart, not just the first.
-CMD ["sh", "-c", "python3 -m app.seed && uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"]
+# It is idempotent, so this is safe on every container start/restart, not just the first --
+# entrypoint.sh additionally recovers a database an interrupted prior run left partially
+# seeded (see its own comment, and app/seed.py's main()).
+CMD ["/entrypoint.sh"]

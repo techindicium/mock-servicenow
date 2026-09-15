@@ -406,7 +406,15 @@ def seed_all(conn) -> None:
 
 def main() -> None:
     """`python -m app.seed` — the documented, explicitly-invoked seed command. Never called from
-    app startup (see this plan's Architecture section)."""
+    app startup (see this plan's Architecture section).
+
+    Exit code distinguishes the two `SeedError` codes, so a caller (docker/itsm-api/entrypoint.sh)
+    can react differently to each: `SEED_STATE_INCONSISTENT` (exit 2) only ever means a previous
+    seed run was interrupted before finishing -- since every row this command writes comes from a
+    committed fixture, that state is always safe to recover from by wiping the database and
+    reseeding, never a reason to preserve anything. `SEED_DATA_INVALID` (exit 1) means the
+    fixtures themselves disagree with this code's assumptions -- retrying against the same
+    fixtures would just fail again the same way, so it is not treated as recoverable here."""
     import os
     import sys
 
@@ -419,7 +427,7 @@ def main() -> None:
         seed_all(conn)
     except SeedError as exc:
         print(f"{exc.code}: {exc}", file=sys.stderr)
-        raise SystemExit(1) from exc
+        raise SystemExit(2 if exc.code == "SEED_STATE_INCONSISTENT" else 1) from exc
 
 
 if __name__ == "__main__":

@@ -304,3 +304,41 @@ def test_reseeding_never_corrects_any_of_the_three_discrepancies(conn):
 
     assert [r["number"] for r in before] == [r["number"] for r in after]
     assert len(after) == 2
+
+
+def test_main_exits_2_on_seed_state_inconsistent(tmp_path, monkeypatch):
+    """`docker/itsm-api/entrypoint.sh` retries with a wiped database only on exit code 2 --
+    this pins that code to the one failure that is always safe to recover from that way."""
+    from app.db import create_schema, get_connection
+    from app.seed import load_incidents_and_work_notes, main
+
+    db_path = tmp_path / "partial.db"
+    monkeypatch.setenv("DATABASE_PATH", str(db_path))
+
+    conn = get_connection(str(db_path))
+    create_schema(conn)
+    load_incidents_and_work_notes(conn)  # incidents seeded, everything else still empty
+    conn.close()
+
+    with pytest.raises(SystemExit) as exc_info:
+        main()
+    assert exc_info.value.code == 2
+
+
+def test_main_exits_1_on_seed_data_invalid(tmp_path, monkeypatch):
+    """A `SeedError` that isn't `SEED_STATE_INCONSISTENT` must not be retried by
+    entrypoint.sh -- exit 1 signals that, distinctly from exit 2."""
+    from app import seed as seed_module
+
+    monkeypatch.setenv("DATABASE_PATH", str(tmp_path / "invalid.db"))
+    monkeypatch.setattr(
+        seed_module,
+        "seed_all",
+        lambda conn: (_ for _ in ()).throw(
+            seed_module.SeedError("SEED_DATA_INVALID", "unknown account tier")
+        ),
+    )
+
+    with pytest.raises(SystemExit) as exc_info:
+        seed_module.main()
+    assert exc_info.value.code == 1
