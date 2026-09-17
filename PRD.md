@@ -20,7 +20,7 @@ looking at it, not just to a program calling its API.
 | :- | :- | :- |
 | `portwell-engineering` (SDLC) | The support desk the help centre reads tickets from and writes proposals against | 2 |
 | `portwell-analytics` (DDLC) | The source it extracts ticket and interaction data from | 2 |
-| `portwell-knowledge` (KDLC) | Open escalations and their ages, quoted in the monthly service review packs | 2 |
+| `portwell-knowledge` (KDLC) | Open escalations and their ages, quoted in the monthly service reports | 2 |
 
 Three of four tracks. It is the most depended-on system in the course, which is why it is worth
 building properly.
@@ -91,7 +91,7 @@ computed from.
 
 ### `escalation`
 
-Five seeded, open, with real ages. The reporting packs quote these and nothing verifies them.
+Five seeded, open, with real ages. The monthly service reports quote these and nothing verifies them.
 
 | Field | Type | Notes |
 | :- | :- | :- |
@@ -108,8 +108,8 @@ Five seeded, open, with real ages. The reporting packs quote these and nothing v
 **The most important table in this system, and the reason it is worth building.**
 
 Today, SLA attainment is computed by the analytics warehouse from interaction timestamps, and the
-reporting packs quote that figure. In real ServiceNow, SLA is a first-class record the platform
-maintains. Putting it here means the pack's central number has a *source* that can be checked,
+monthly service reports quote that figure. In real ServiceNow, SLA is a first-class record the platform
+maintains. Putting it here means the report's central number has a *source* that can be checked,
 and a computed figure disagreeing with the system of record becomes a real, findable problem
 rather than a hypothetical one.
 
@@ -208,7 +208,7 @@ over.
 | :- | :- | :- |
 | `mock-servicenow/app/fixtures/seed/tickets.csv` | `incident` | 1,307 |
 | `mock-servicenow/app/fixtures/seed/interactions.csv` | `work_note` | 2,614 |
-| `portwell-knowledge` pack escalation sheets | `escalation` | 5 |
+| `portwell-knowledge` report escalation sheets | `escalation` | 5 |
 | Derived from tier commitments and work-note timestamps | `task_sla` | one or two per incident |
 | `course-shared/canon/company.md` | `sys_user`, `assignment_group` | ~12 |
 
@@ -234,10 +234,10 @@ anywhere participants can read.
 
 1. **The SLA disagreement.** `task_sla.actual_minutes` for resolution SLAs is measured in business
    hours; the analytics warehouse computes elapsed wall-clock. For accounts with weekend tickets
-   the two disagree, and the reporting pack quotes the warehouse figure. Neither is wrong. Nobody
+   the two disagree, and the monthly service report quotes the warehouse figure. Neither is wrong. Nobody
    has noticed they are different measures.
 
-2. **Escalations with no owner.** Two of the five have `owner` null. The packs quote the count and
+2. **Escalations with no owner.** Two of the five have `owner` null. The reports quote the count and
    the age; nothing asks who is chasing them.
 
 3. **Resolved with an open breach.** A large share of incidents — driven honestly by the account
