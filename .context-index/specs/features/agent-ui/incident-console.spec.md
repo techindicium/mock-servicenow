@@ -30,6 +30,7 @@ source-manifest:
     - tests_js/beh-8-create-incident.test.js
     - tests_js/beh-9-error-formatting.test.js
   computed-at: "2026-09-09T11:23:47.333Z"
+drift_detected: true
 ---
 
 # Live Spec: Incident console (list, record view, work notes, SLA, editing, create)

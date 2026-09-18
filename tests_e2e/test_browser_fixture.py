@@ -36,8 +36,7 @@ def test_launch_chromium_wraps_missing_binary_error(monkeypatch):
         "tests_e2e.browser.sync_playwright", lambda: _FakePlaywrightContext()
     )
 
-    with pytest.raises(E2EBrowserNotInstalled) as exc_info:
-        with launch_chromium():
-            pass  # pragma: no cover - should never be reached
+    with pytest.raises(E2EBrowserNotInstalled) as exc_info, launch_chromium():
+        pass  # pragma: no cover - should never be reached
 
     assert "playwright install chromium" in str(exc_info.value)

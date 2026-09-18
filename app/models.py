@@ -132,6 +132,13 @@ class EscalationRead(BaseModel):
     owner: str | None
 
 
+class EscalationCreate(BaseModel):
+    account_id: str
+    summary: str
+    incident_number: str | None = None
+    owner: str | None = None
+
+
 class EscalationPatch(BaseModel):
     # Deliberately no `number`, `account_id`, `opened_at`, or `incident_number` field — this is
     # the structural enforcement of the immutable-fields list (see escalations router's PATCH):

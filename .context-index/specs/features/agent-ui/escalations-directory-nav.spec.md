@@ -29,6 +29,7 @@ source-manifest:
     - tests_js/nav-beh-1-view-switch-logic.test.js
     - tests_js/nav-beh-1-wiring.test.js
   computed-at: "2026-09-09T11:23:47.397Z"
+drift_detected: true
 ---
 
 # Live Spec: Escalations screen, directory screen, and navigation shell

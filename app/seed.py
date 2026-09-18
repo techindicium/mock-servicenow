@@ -6,17 +6,17 @@ from pathlib import Path
 
 _FIXTURES = Path(__file__).parent / "fixtures" / "seed"
 
-_RISKY_AREAS = {"billing", "integrations"}
+_RISKY_AREAS = {"fees", "account-restrictions"}
 _NARRATIVE_STATE_CYCLE = ["new", "in_progress", "on_hold"]
 
-# The three narrative tickets whose subject/area mirror the pilot's two documented incidents
-# (company.md's "pilot" section: INCIDENT-01 billing/superseded-refund-window,
-# INCIDENT-02 integrations/webhook-retry) get a fixed, named work-note reply author instead of
-# their own derived `assigned_to` — deterministic, not a random pick.
+# The three narrative tickets whose subject and area mirror the two documented incidents
+# (INCIDENT-01, a superseded reversal window on payments; INCIDENT-02, an answer about a
+# restricted account) get a fixed, named work-note reply author instead of their own derived
+# `assigned_to` — deterministic, not a random pick.
 _NARRATIVE_FIXED_REPLY_AUTHOR = {
     "TICKET-004401": "Kofi Adjei",
-    "TICKET-004417": "Kofi Adjei",
-    "TICKET-004409": "Mei Tan",
+    "TICKET-004417": "Kofi Adjei",   # INCIDENT-01
+    "TICKET-004438": "Mei Tan",      # INCIDENT-02
 }
 
 
@@ -58,17 +58,34 @@ def _derive_priority(tier: str, area: str) -> int:
         return 2 if risky else 3
     if tier == "standard":
         return 3 if risky else 4
+    if tier == "free":
+        # Retired for new business in 2025. Grandfathered accounts get the lowest priority,
+        # which is not a policy anyone wrote down and is worth noticing.
+        return 4 if risky else 5
     raise SeedError("SEED_DATA_INVALID", f"unknown account tier: {tier!r}")
 
 
+def _incident_count() -> int:
+    """How many incidents a full seed writes: the historical CSV plus the narrative tickets.
+
+    Derived rather than written down. It was 1307 as a literal in four places, so every change
+    to the fixture's volume was also a change to this module.
+    """
+    with open(_FIXTURES / "tickets.csv", newline="", encoding="utf-8") as f:
+        historical = sum(1 for _ in csv.DictReader(f))
+    narrative = json.loads((_FIXTURES / "narrative_tickets.json").read_text())
+    return historical + len(narrative)
+
+
 def load_incidents_and_work_notes(conn) -> None:
+    expected = _incident_count()
     existing = conn.execute("SELECT COUNT(*) AS n FROM incidents").fetchone()["n"]
-    if existing == 1307:
+    if existing == expected:
         return  # BEH-2: already seeded
-    if existing not in (0, 1307):
+    if existing != 0:
         raise SeedError(
             "SEED_STATE_INCONSISTENT",
-            f"incidents table has {existing} rows; expected 0 or 1307",
+            f"incidents table has {existing} rows; expected 0 or {expected}",
         )
 
     tiers_by_account = {
@@ -350,15 +367,20 @@ def derive_task_sla(conn) -> None:
 
 
 def load_roster(conn) -> None:
+    data = json.loads((_FIXTURES / "roster_seed.json").read_text())
+    # The expected count comes from the fixture rather than a literal, so that changing the
+    # roster is a canon change and not a code change. It was 11 and hardcoded in three places.
+    expected = len(data["sys_users"])
+
     existing = conn.execute("SELECT COUNT(*) AS n FROM sys_user").fetchone()["n"]
-    if existing == 11:
+    if existing == expected:
         return  # BEH-2
-    if existing not in (0, 11):
+    if existing != 0:
         raise SeedError(
-            "SEED_STATE_INCONSISTENT", f"sys_user has {existing} rows; expected 0 or 11"
+            "SEED_STATE_INCONSISTENT",
+            f"sys_user has {existing} rows; expected 0 or {expected}",
         )
 
-    data = json.loads((_FIXTURES / "roster_seed.json").read_text())
     for group in data["assignment_groups"]:
         conn.execute("INSERT INTO assignment_group (name) VALUES (?)", (group,))
     for user in data["sys_users"]:
@@ -369,16 +391,24 @@ def load_roster(conn) -> None:
     conn.commit()
 
 
-_EXPECTED_COUNTS = {
-    "incidents": 1307, "work_notes": 2614, "escalations": 5,
-    "sys_user": 11, "assignment_group": 3,
-}
+def _expected_counts() -> dict:
+    """What a fully seeded database holds. Read from the fixtures rather than written here,
+    so that changing the canon does not require changing this module."""
+    roster = json.loads((_FIXTURES / "roster_seed.json").read_text())
+    escalations = json.loads((_FIXTURES / "escalations_seed.json").read_text())["escalations"]
+    incidents = _incident_count()
+    return {
+        "incidents": incidents, "work_notes": incidents * 2,
+        "escalations": len(escalations),
+        "sys_user": len(roster["sys_users"]),
+        "assignment_group": len(roster["assignment_groups"]),
+    }
 
 
 def _table_counts(conn) -> dict:
     return {
         table: conn.execute(f"SELECT COUNT(*) AS n FROM {table}").fetchone()["n"]
-        for table in (*_EXPECTED_COUNTS, "task_sla")
+        for table in (*_expected_counts(), "task_sla")
     }
 
 
@@ -388,9 +418,9 @@ def seed_all(conn) -> None:
     partial prior run, a mid-migration state) -> SEED_STATE_INCONSISTENT, per this spec's Error
     Cases; this command never guesses."""
     counts = _table_counts(conn)
-    if all(counts[t] == 0 for t in _EXPECTED_COUNTS) and counts["task_sla"] == 0:
+    if all(counts[t] == 0 for t in _expected_counts()) and counts["task_sla"] == 0:
         pass  # fresh database — fall through to full seed
-    elif all(counts[t] == n for t, n in _EXPECTED_COUNTS.items()) and counts["task_sla"] > 0:
+    elif all(counts[t] == n for t, n in _expected_counts().items()) and counts["task_sla"] > 0:
         return  # already fully seeded — BEH-2 no-op
     else:
         raise SeedError(

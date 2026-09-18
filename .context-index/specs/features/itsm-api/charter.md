@@ -1,8 +1,8 @@
 ---
 status: approved
 kind: feature
-revision: 17
-updated: 2026-09-07
+revision: 24
+updated: 2026-09-09
 ---
 
 # Feature Charter: itsm-api
@@ -40,8 +40,8 @@ ticket) is the point of building this at all.
 - Sys user and assignment group entities: the support team directory, per
   `course-shared/canon/company.md`.
 - Full CRUD-shaped HTTP endpoints exactly as PRD.md's "API surface" section specifies: incident
-  list/get/create/update, work-note list/add, escalation list/get/update, SLA list, user list,
-  assignment-group list. Pagination on every list endpoint.
+  list/get/create/update, work-note list/add, escalation list/get/create/update, SLA list, user
+  list, assignment-group list. Pagination on every list endpoint.
 - SQLite persistence, a single local file, created fresh on first run.
 - A documented, idempotent seed command loading all six tables from the sources PRD.md's "Seed
   data" section names (`portwell-portal` ticket/interaction CSVs, `portwell-knowledge` escalation
@@ -124,6 +124,7 @@ ticket) is the point of building this at all.
 | Create/update Incident | Create an Incident; update `state`, `priority`, `assigned_to`, `assignment_group` — unguarded | must-have | mvp | validated |
 | List/add Work Notes | List an Incident's work notes; post a new one as any author, any note_type — unguarded | must-have | mvp | validated |
 | List/get/update Escalations | List (filterable by `account_id`, `open_only`), fetch, and update Escalations | must-have | mvp | validated |
+| Create Escalation | Server-assigns `number`/`opened_at`; client supplies `account_id`, `summary`, optional `incident_number`/`owner` — mirrors `POST /incidents`' server-assigned-identifier pattern | must-have | v2 | validated |
 | List SLA records | List Task SLA records (filterable by `incident_number`, `breached`, `sla_definition`) | must-have | mvp | validated |
 | List users and assignment groups | List the support-team directory | must-have | mvp | validated |
 | Seed fixture data | Idempotent seed command populating all six tables from the sources PRD.md names, preserving the ten narrative tickets and the three seeded discrepancies | must-have | mvp | validated |
@@ -136,7 +137,6 @@ ticket) is the point of building this at all.
 |-----------|--------|-------------|------------|
 | Delete Incident/Escalation | No consumer requires it; ITSM tickets are never hard-deleted in practice | v2 | — |
 | Create/delete SysUser or AssignmentGroup via API | The support team roster is fixed course fixture data; no consumer needs to mutate it | v2 | — |
-| Escalation create via API | PRD.md seeds exactly five Escalations; no consumer creates new ones this milestone | v2 | — |
 
 ## Interface Contracts
 
@@ -153,6 +153,7 @@ ticket) is the point of building this at all.
 | `POST /incidents/{number}/work_notes` | REST endpoint | Add a work note — unguarded author/note_type |
 | `GET /escalations` | REST endpoint | List Escalations, filtered |
 | `GET /escalations/{number}` | REST endpoint | Fetch one Escalation |
+| `POST /escalations` | REST endpoint | Create an Escalation — server-assigned `number`/`opened_at` |
 | `PATCH /escalations/{number}` | REST endpoint | Update an Escalation |
 | `GET /sla` | REST endpoint | List Task SLA records, filtered |
 | `GET /users` | REST endpoint | List SysUsers |

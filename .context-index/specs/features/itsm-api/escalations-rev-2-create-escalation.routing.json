@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "_generated_by": "/adev:route — do not hand-edit; re-run instead.",
+  "entries": [
+    {
+      "task_id": "1",
+      "selected_agent": "auto-agent",
+      "scores": {
+        "spec_completeness": 1,
+        "pattern_coverage": 0.6,
+        "blast_radius": 1,
+        "novelty": 1
+      },
+      "rationale": "Mechanical mirror of next_incident_number with an explicit spec-mandated scheme; 2 files, no boundary crossing, no curated sample but strong codebase precedent."
+    },
+    {
+      "task_id": "2",
+      "selected_agent": "auto-agent",
+      "scores": {
+        "spec_completeness": 1,
+        "pattern_coverage": 0.6,
+        "blast_radius": 0.8,
+        "novelty": 0.8
+      },
+      "rationale": "BEH-9..13 and error cases fully specified; mirrors POST /incidents' create pattern across 3 files, no curated sample but strong codebase precedent."
+    }
+  ]
+}

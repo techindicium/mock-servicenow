@@ -21,3 +21,5 @@
 {"event":"validator_report","step":"validate","validator":"validate.check-9-transition-gates","severity":"warning","verdict":"PASS","notes":"SKIP: no transitions configured","ts":"2026-09-07T19:49:48.291Z"}
 {"event":"validator_report","step":"validate","validator":"validate.check-14-gate-executability","severity":"warning","verdict":"PASS_WITH_NOTES","notes":"4 warning-severity gate-doctor findings (unwired integration-test, no CI config, ruff runner unrecognized)","ts":"2026-09-07T19:49:48.412Z"}
 {"event":"step_completed","step":"validate","verdict":"PASS_WITH_NOTES","ts":"2026-09-07T19:50:40.825Z"}
+{"event":"spec_amended","amendment_slug":"escalations-rev-2-create-escalation","amendment_path":".context-index/specs/features/itsm-api/escalations-rev-2-create-escalation.spec.md","target_revision":2,"ts":"2026-09-09T16:37:15.227Z"}
+{"event":"code_drift_detected","drift_source":"tests/test_escalations.py","drift_at":"2026-09-09T16:55:08.563Z","ts":"2026-09-09T16:55:08.564Z"}

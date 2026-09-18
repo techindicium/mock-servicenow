@@ -30,6 +30,7 @@ infra_requirements:
         - name: playwright
       notes: "One-time local setup: `playwright install chromium` downloads the browser binary this suite drives. No credentials, no network target beyond the real server this suite itself starts on localhost."
   ci_tag: "e2e"
+drift_detected: true
 ---
 
 # Live Spec: End-to-end UI test suite (real browser)

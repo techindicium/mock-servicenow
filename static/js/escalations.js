@@ -76,3 +76,53 @@ function showEscalationsError(message) {
   el.textContent = message;
   el.hidden = false;
 }
+
+document.getElementById("open-create-escalation").addEventListener("click", () => {
+  document.getElementById("create-escalation").hidden = false;
+});
+
+document.getElementById("cancel-create-escalation").addEventListener("click", (event) => {
+  event.preventDefault();
+  document.getElementById("create-escalation-form").reset();
+  document.getElementById("create-escalation-error").hidden = true;
+  document.getElementById("create-escalation").hidden = true;
+});
+
+async function onCreateEscalationSubmit(event) {
+  event.preventDefault();
+  const form = event.target;
+  const fields = {
+    account_id: form.account_id.value,
+    summary: form.summary.value,
+    incident_number: form.incident_number.value,
+    owner: form.owner.value,
+  };
+  const errorEl = document.getElementById("create-escalation-error");
+  const { valid, errors } = EscalationsLogic.validateCreateEscalationForm(fields);
+  if (!valid) {
+    errorEl.textContent = Object.values(errors)[0];
+    errorEl.hidden = false;
+    return;
+  }
+  errorEl.hidden = true;
+  const payload = EscalationsLogic.buildEscalationCreatePayload(fields);
+  try {
+    const resp = await fetch("/escalations", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!resp.ok) throw { status: resp.status };
+    const created = await resp.json();
+    escalationsCache = [created, ...escalationsCache]; // BEH-6/7: prepend, no reload
+    renderEscalationsTable(escalationsCache); // reuses existing textContent-only render path
+    form.reset();
+    document.getElementById("create-escalation").hidden = true;
+  } catch (err) {
+    // BEH-9: form values are retained (no form.reset(), section stays open) and the error is shown
+    errorEl.textContent = UiErrors.formatApiError("Creating escalation", err);
+    errorEl.hidden = false;
+  }
+}
+
+document.getElementById("create-escalation-form").addEventListener("submit", onCreateEscalationSubmit);

@@ -18,6 +18,7 @@ source-manifest:
     - tests/conftest.py
     - tests/test_sla.py
   computed-at: "2026-09-09T11:24:00.266Z"
+drift_detected: true
 ---
 
 # Live Spec: Task SLA record listing

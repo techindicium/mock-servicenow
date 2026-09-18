@@ -1,4 +1,9 @@
-from app.db import create_schema, get_connection, next_incident_number
+from app.db import (
+    create_schema,
+    get_connection,
+    next_escalation_number,
+    next_incident_number,
+)
 
 _ALL_TABLES = (
     "incidents", "work_notes", "escalations", "task_sla", "sys_user", "assignment_group",
@@ -49,6 +54,23 @@ def test_next_incident_number_never_collides_with_existing_rows(tmp_path):
     )
     conn.commit()
     assert next_incident_number(conn) == "TICKET-000006"
+
+
+def test_next_escalation_number_starts_at_escalation_0001(tmp_path):
+    conn = get_connection(str(tmp_path / "test.db"))
+    create_schema(conn)
+    assert next_escalation_number(conn) == "ESCALATION-0001"
+
+
+def test_next_escalation_number_never_collides_with_existing_rows(tmp_path):
+    conn = get_connection(str(tmp_path / "test.db"))
+    create_schema(conn)
+    conn.execute(
+        "INSERT INTO escalations (number, account_id, summary, opened_at) "
+        "VALUES ('ESCALATION-0412', 'ACC-1', 'x', '2026-01-01T00:00:00Z')"
+    )
+    conn.commit()
+    assert next_escalation_number(conn) == "ESCALATION-0413"
 
 
 # `work_notes` table creation is already covered by incident-lifecycle.plan.md's Task 1

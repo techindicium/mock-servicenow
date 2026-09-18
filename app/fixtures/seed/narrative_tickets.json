@@ -2,81 +2,81 @@
   {
     "ticket_id": "TICKET-004401",
     "account_id": "ACCOUNT-1001",
-    "area": "billing",
+    "area": "fees",
     "opened_at": "2026-08-17T08:31:00Z",
-    "subject": "Storage fees on invoice 88214 look wrong",
-    "body": "We were charged storage on pallets that shipped on the 3rd. The invoice is dated the 12th. Can this be corrected? It is now 41 days since the invoice."
+    "subject": "Charge on the statement nobody recognises",
+    "body": "There is a charge of 84 euro on the 14th. Nobody here set it up and it is not on last month's statement. What is it?"
   },
   {
     "ticket_id": "TICKET-004405",
     "account_id": "ACCOUNT-1007",
-    "area": "picking",
+    "area": "scheduled-payments",
     "opened_at": "2026-08-17T11:02:00Z",
-    "subject": "Wave 4471 will not release",
-    "body": "The release job runs and nothing happens. No error on screen."
+    "subject": "Standing payment did not go out",
+    "body": "The insurance payment was due on the 1st and never left the account. Nothing on screen says why."
   },
   {
     "ticket_id": "TICKET-004409",
     "account_id": "ACCOUNT-1003",
-    "area": "integrations",
+    "area": "fees",
     "opened_at": "2026-08-18T06:44:00Z",
-    "subject": "EDI feed rejecting with E-114",
-    "body": "Our inbound ASN messages started rejecting overnight with E-114. Should we turn off the webhook retries to stop the noise?"
+    "subject": "Charged interest at a rate we were not quoted",
+    "body": "The credit line statement shows a rate above the one we agreed. Should we just cancel the credit line to stop it?"
   },
   {
     "ticket_id": "TICKET-004411",
     "account_id": "ACCOUNT-1005",
-    "area": "auth",
+    "area": "access",
     "opened_at": "2026-08-18T09:10:00Z",
-    "subject": "Operator cannot log in",
-    "body": "One of our operators forgot the password and there is no reset link on the login screen."
+    "subject": "Locked out and the code is not arriving",
+    "body": "One of the team cannot get in. The text message with the code never comes and there is no other way through on the screen."
   },
   {
     "ticket_id": "TICKET-004417",
     "account_id": "ACCOUNT-1001",
-    "area": "billing",
-    "opened_at": "2026-08-19T09:02:00Z",
-    "subject": "Refund window for over-billing",
-    "body": "How long do we have to raise a correction on an over-billed storage fee?"
+    "area": "payments",
+    "opened_at": "2026-08-19T14:22:00Z",
+    "subject": "How long do we have to reverse a payment?",
+    "body": "We paid the wrong supplier six weeks ago and have only just noticed. Is it too late to get it back?"
   },
   {
     "ticket_id": "TICKET-004420",
     "account_id": "ACCOUNT-1002",
-    "area": "cycle-count",
-    "opened_at": "2026-08-19T13:55:00Z",
-    "subject": "Variance threshold",
-    "body": "What variance opens a discrepancy task? Our team reports different numbers."
+    "area": "account-opening",
+    "opened_at": "2026-08-20T08:05:00Z",
+    "subject": "Which documents do you actually need?",
+    "body": "We are adding a second company and the list on the site does not match what the email asked for."
   },
   {
     "ticket_id": "TICKET-004424",
     "account_id": "ACCOUNT-1008",
-    "area": "reporting",
-    "opened_at": "2026-08-20T07:19:00Z",
-    "subject": "Self-service number changed",
-    "body": "The self-service figure on our dashboard dropped by six points this month with no change on our side. What changed?"
+    "area": "statements",
+    "opened_at": "2026-08-20T16:40:00Z",
+    "subject": "The self-service number on our report changed",
+    "body": "The figure in this month's report is different from last month and nothing else changed at our end. Why did it move?"
   },
   {
     "ticket_id": "TICKET-004429",
     "account_id": "ACCOUNT-1010",
-    "area": "receiving",
-    "opened_at": "2026-08-20T15:41:00Z",
-    "subject": "Receipt posting twice",
-    "body": "A receipt posted twice against the same ASN. We have duplicate stock on hand."
+    "area": "payments",
+    "opened_at": "2026-08-21T10:18:00Z",
+    "subject": "Payment shows twice on the statement",
+    "body": "The same payment to the same supplier appears twice, one minute apart. Only one was made."
   },
   {
     "ticket_id": "TICKET-004433",
     "account_id": "ACCOUNT-1006",
-    "area": "billing",
-    "opened_at": "2026-08-21T08:05:00Z",
-    "subject": "How fast are corrections processed",
-    "body": "What is the turnaround on a billing correction? Our finance team needs to plan the close."
+    "area": "payments",
+    "opened_at": "2026-08-24T09:55:00Z",
+    "subject": "How long does a reversal take to come back?",
+    "body": "A reversal was approved on Thursday and the money is still not in the account."
   },
   {
     "ticket_id": "TICKET-004438",
-    "account_id": "ACCOUNT-1004",
-    "area": "putaway",
-    "opened_at": "2026-08-21T10:33:00Z",
-    "subject": "Putaway suggesting a full zone",
-    "body": "Putaway keeps suggesting zone B3 which is already full."
+    "account_id": "ACCOUNT-1002",
+    "area": "account-restrictions",
+    "opened_at": "2026-08-25T07:30:00Z",
+    "subject": "Why has the account been restricted?",
+    "body": "We cannot make payments and payroll is Friday. Nobody will tell us what has happened or how long it lasts."
   }
 ]

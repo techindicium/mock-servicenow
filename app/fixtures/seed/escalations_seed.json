@@ -3,46 +3,46 @@
   "escalations": [
     {
       "number": "ESCALATION-0409",
-      "account_id": "ACCOUNT-1003",
+      "account_id": "ACCOUNT-1002",
       "incident_number": null,
-      "summary": "Cold chain temperature export missing rows",
+      "summary": "Account restricted for eleven days, customer cannot pay staff",
       "opened_at": "2026-07-05T00:00:00Z",
       "closed_at": null,
-      "owner": "Priya Nair"
+      "owner": null
     },
     {
       "number": "ESCALATION-0412",
       "account_id": "ACCOUNT-1001",
       "incident_number": null,
-      "summary": "EDI feed rejecting with E-114, root cause not identified",
+      "summary": "Supplier payment sent on the 3rd, still not arrived on the 9th",
       "opened_at": "2026-07-13T00:00:00Z",
-      "closed_at": null,
-      "owner": null
-    },
-    {
-      "number": "ESCALATION-0415",
-      "account_id": "ACCOUNT-1008",
-      "incident_number": null,
-      "summary": "Cycle count variance threshold behaviour",
-      "opened_at": "2026-07-21T00:00:00Z",
       "closed_at": null,
       "owner": "Joao Pinto"
     },
     {
-      "number": "ESCALATION-0418",
-      "account_id": "ACCOUNT-1001",
+      "number": "ESCALATION-0415",
+      "account_id": "ACCOUNT-1003",
       "incident_number": null,
-      "summary": "Billing correction turnaround disputed",
+      "summary": "Rent taken twice in the same month, refund promised and not made",
+      "opened_at": "2026-07-21T00:00:00Z",
+      "closed_at": null,
+      "owner": "Priya Nair"
+    },
+    {
+      "number": "ESCALATION-0418",
+      "account_id": "ACCOUNT-1004",
+      "incident_number": null,
+      "summary": "Credit line interest charged at a rate the customer was not quoted",
       "opened_at": "2026-07-26T00:00:00Z",
       "closed_at": null,
       "owner": "Priya Nair"
     },
     {
       "number": "ESCALATION-0421",
-      "account_id": "ACCOUNT-1008",
+      "account_id": "ACCOUNT-1006",
       "incident_number": null,
-      "summary": "Reporting figure differs from the portal",
-      "opened_at": "2026-07-28T00:00:00Z",
+      "summary": "Cards declining abroad for the whole team, no explanation given",
+      "opened_at": "2026-08-04T00:00:00Z",
       "closed_at": null,
       "owner": null
     }

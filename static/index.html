@@ -149,6 +149,19 @@
           <label>Closed at <input type="text" name="closed_at"></label>
           <button type="submit">Save</button>
         </form>
+        <button type="button" id="open-create-escalation">New Escalation</button>
+        <section id="create-escalation" hidden>
+          <h2>New Escalation</h2>
+          <form id="create-escalation-form" novalidate>
+            <label>Account ID <input id="create-escalation-account_id" name="account_id" required /></label>
+            <label>Summary <input id="create-escalation-summary" name="summary" required /></label>
+            <label>Incident number <input id="create-escalation-incident_number" name="incident_number" /></label>
+            <label>Owner <input id="create-escalation-owner" name="owner" /></label>
+            <button type="submit">Create Escalation</button>
+            <button id="cancel-create-escalation" type="button">Cancel</button>
+            <p id="create-escalation-error" role="alert" hidden></p>
+          </form>
+        </section>
       </section>
       <section id="view-directory" class="view" hidden>
         <h1>Directory</h1>
